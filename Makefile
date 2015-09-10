@@ -4,8 +4,7 @@ LIBS= -lpci
 
 INCLUDES= -I.
 
-SRCS= smutool.c \
-	  mmap.c
+SRCS= smutool.c
 
 OBJS = $(SRCS:.c=.o)
 

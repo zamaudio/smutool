@@ -18,39 +18,17 @@
 #include <stdio.h>
 #include <inttypes.h>
 #include <pci/pci.h>
+#include <fcntl.h>
+#include <sys/mman.h>
 #include <sys/io.h>
 #include <stdlib.h>
-#include "mmap.h"
 
 #define SIZE 0x40000
 
-extern int fd_mem;
-
-void dumpmem(uint8_t *phys, uint32_t size)
-{
-	uint32_t i;
-	fprintf(stderr, "Dumping memory:\n");
-	for (i = 0; i < size; i++) {
-		printf("%02X",*((uint8_t *) (phys + i)));
-	}
-	printf("\n");
-}
-
-void dumpmemfile(uint8_t *phys, uint32_t size)
-{
-	FILE *fp = fopen("dump.bin", "w");
-	uint32_t i;
-	for (i = 0; i < size; i++) {
-		fprintf(fp, "%c", *((uint8_t *) (phys + i)));
-	}
-	fclose(fp);
-}
-
 int main(void)
 {
+	uint32_t fd_mem;
 	uint32_t i;
-	uint32_t smu_phys;
-	volatile uint8_t *smu;
 	struct pci_access *pacc;
 	struct pci_dev *nb;
 	if (iopl(3)) {
@@ -71,9 +49,7 @@ int main(void)
 	nb = pci_get_dev(pacc, 0, 0, 0x0, 0);
 	pci_fill_info(nb, PCI_FILL_IDENT | PCI_FILL_BASES | PCI_FILL_SIZES | PCI_FILL_CLASS);
 	
-	smu_phys = pci_read_long(nb, 0xb8) & ~1;
-	smu = map_physical(smu_phys, SIZE);
-	fprintf(stderr, "SMU at 0x%08" PRIx32 "\n", (uint32_t)smu_phys);
+	fprintf(stderr, "Reading SMU...\n");
 
 	uint32_t data[SIZE];
 	for (i = 0; i < SIZE; i+=4) {
@@ -84,6 +60,5 @@ int main(void)
 
 	fprintf(stderr, "exiting\n");
 	pci_cleanup(pacc);
-	munmap((void*)smu, SIZE);
 	return 0;
 }
