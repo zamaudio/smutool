@@ -170,7 +170,7 @@ int main(int argc, char* argv[])
 			//fprintf(stderr, "ack3:%08x\n", ack);
 		} while ((ack & 0x2) == 0);
 		
-		sleep(1);
+		usleep(10000);
 		//fprintf(stderr, "Peeking...\n");
 		uint32_t roml;
 		pci_write_long(nb, 0xb8, 0x1fff0);
