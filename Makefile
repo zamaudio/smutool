@@ -4,22 +4,27 @@ LIBS= -lpci
 
 INCLUDES= -I.
 
-SRCS= smutool.c
+SRCS1= smutool.c
+SRCS2= smudump.c
 
-OBJS = $(SRCS:.c=.o)
+OBJS1 = $(SRCS1:.c=.o)
+OBJS2 = $(SRCS2:.c=.o)
 
-TARGET= smutool
+TARGET1= smutool
+TARGET2= smudump
 
 
 .PHONY: depend clean
 
-all: $(TARGET)
+all: $(TARGET1) $(TARGET2)
 
-$(TARGET): $(OBJS)
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(TARGET) $(OBJS) $(LIBS)
+$(TARGET1): $(OBJS1) $(SRCS1)
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(TARGET1) $(OBJS1) $(LIBS)
+$(TARGET2): $(OBJS2) $(SRCS2)
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(TARGET2) $(OBJS2) $(LIBS)
 
 .c.o:
 	$(CC) $(CFLAGS) $(INCLUDES) -c $<  -o $@
 
 clean:
-	rm $(TARGET) *.o
+	rm $(TARGET1) $(TARGET2) *.o
