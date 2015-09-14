@@ -1,18 +1,16 @@
-/* smutool  Dump SMU region on AMD systems
+/* smutool  Tool for SMU
  * Copyright (C) 2015  Damien Zammit <damien@zamaudio.com>
  *
- * This program is free software; you can redistribute it and/or modify
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 2 of the License.
- *
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+ * See <http://www.gnu.org/licenses/>. 
  */
 
 #include <stdio.h>
@@ -26,13 +24,6 @@
 
 #define SIZE 0x10000
 
-#define BYTESWAP16(x)                   \
-    ((((x) >> 8) & 0x00FF) | (((x) << 8) & 0xFF00))
-
-#define BYTESWAP32(x)      (x)/*          \
-	((((x) >> 24) & 0x000000FF) | (((x) >> 8) & 0x0000FF00) | \
-         (((x) << 8) & 0x00FF0000) | (((x) << 24) & 0xFF000000))
-*/
 int main(int argc, char* argv[])
 {
 	uint32_t fd_mem;
@@ -92,7 +83,6 @@ int main(int argc, char* argv[])
 	
 	uint32_t peek;
 	for (peek = 0; peek < SIZE; peek += 4) {
-		//fprintf(stderr, "Injecting copy service...\n");
 		uint16_t peeklo = peek & 0xffff;
 		uint16_t peekhi = (peek >> 16) & 0xffff;
 		pci_write_long(nb, 0xb8, 0x1ff80);
@@ -134,7 +124,6 @@ int main(int argc, char* argv[])
 		pci_write_long(nb, 0xb8, 0x1ffc8);
 		pci_write_long(nb, 0xbc, (0xc3a00000));  // ret
 		
-		//fprintf(stderr, "Replacing service request handler pointer...\n");
 		// add new service request
 		uint32_t addr;
 		for (addr = 0x1dbe0; addr < 0x1dbec; addr+=4) {
@@ -142,14 +131,10 @@ int main(int argc, char* argv[])
 			pci_write_long(nb, 0xbc, 0x1ff80);
 		}
 
-		//pci_write_byte(nb, 0xdc, 0x00);
-
-		//fprintf(stderr, "Trigger a dummy service request...\n");
 		uint8_t ack = 0;
 		while ((ack & 0x3) == 0) {  // 0x4
 			pci_write_long(nb, 0xb8, 0xe0003004);
 			ack = pci_read_long(nb, 0xbc);
-			//fprintf(stderr, "ack1:%08x\n", ack);
 		}
 		pci_write_long(nb, 0xb8, 0xe0003000);
 		ack = pci_read_long(nb, 0xbc);
@@ -161,17 +146,14 @@ int main(int argc, char* argv[])
 		do {
 			pci_write_long(nb, 0xb8, 0xe0003004);
 			ack = pci_read_long(nb, 0xbc);
-			//fprintf(stderr, "ack2:%08x\n", ack);
 		} while ((ack & 0x1) == 0);
 		
 		do {
 			pci_write_long(nb, 0xb8, 0xe0003004);
 			ack = pci_read_long(nb, 0xbc);
-			//fprintf(stderr, "ack3:%08x\n", ack);
 		} while ((ack & 0x2) == 0);
 		
 		usleep(10000);
-		//fprintf(stderr, "Peeking...\n");
 		uint32_t roml;
 		pci_write_long(nb, 0xb8, 0x1fff0);
 		roml = pci_read_long(nb, 0xbc);
