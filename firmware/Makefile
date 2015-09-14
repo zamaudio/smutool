@@ -28,7 +28,7 @@ all: $(TARGET)
 
 $(TARGET): $(OBJS) $(OBJS2)
 	$(LD) $(LIBS) $(OBJS) $(OBJS2) -static -M -T smu.ld -o $(TARGET)
-	$(OC) -I elf32-lm32 -O binary $(TARGET) smu.rom
+	$(OC) -S -I elf32-lm32 -O binary $(TARGET) smu.rom
 
 .c.o:
 	$(CC) $(LIBS) -O0 -Wall -ffreestanding -c $< -o $@
@@ -37,4 +37,4 @@ $(TARGET): $(OBJS) $(OBJS2)
 	$(CC) $(LIBS) -O0 -Wall -ffreestanding -c $< -o $@
 
 clean:
-	rm -f *.o $(TARGET) smu.rom
+	rm -f *.o *~ $(TARGET) smu.rom

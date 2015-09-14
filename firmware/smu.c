@@ -13,43 +13,7 @@
  * See <http://www.gnu.org/licenses/>.-
  */
 
-/* Not used */
-//#define SMC_MSG_FIRMWARE_AUTH              0
-
-#define SMC_MSG_HALT                       1
-#define SMC_MSG_PHY_LN_OFF                 2
-#define SMC_MSG_PHY_LN_ON                  3
-#define SMC_MSG_DDI_PHY_OFF                4
-#define SMC_MSG_DDI_PHY_ON                 5
-#define SMC_MSG_CASCADE_PLL_OFF            6
-#define SMC_MSG_CASCADE_PLL_ON             7
-#define SMC_MSG_PWR_OFF_x16                8
-#define SMC_MSG_CONFIG_LCLK_DPM            9
-#define SMC_MSG_FLUSH_DATA_CACHE           10
-#define SMC_MSG_FLUSH_INSTRUCTION_CACHE    11
-#define SMC_MSG_CONFIG_VPC_ACCUMULATOR     12
-#define SMC_MSG_CONFIG_BAPM                13
-#define SMC_MSG_CONFIG_TDC_LIMIT           14
-#define SMC_MSG_CONFIG_LPMx                15
-#define SMC_MSG_CONFIG_HTC_LIMIT           16
-#define SMC_MSG_CONFIG_THERMAL_CNTL        17
-#define SMC_MSG_CONFIG_VOLTAGE_CNTL        18
-#define SMC_MSG_CONFIG_TDP_CNTL            19
-#define SMC_MSG_EN_PM_CNTL                 20
-#define SMC_MSG_DIS_PM_CNTL                21
-#define SMC_MSG_CONFIG_NBDPM               22
-#define SMC_MSG_CONFIG_LOADLINE            23
-#define SMC_MSG_ADJUST_LOADLINE            24
-#define SMC_MSG_RECONFIGURE                25
-#define SMC_MSG_PCIE_PLLSWITCH             27
-#define SMC_MSG_ENABLE_BAPM                32
-#define SMC_MSG_DISABLE_BAPM               33
-
-#define MICO32_CPU_CLOCK_MHZ (25000000)
-#define MICO_SLEEP_MICROSEC  (MICO32_CPU_CLOCK_MHZ/11000000)
-#define MICO_SLEEP_MILLISEC  (MICO32_CPU_CLOCK_MHZ/11000)
-
-#define REG_WRITE(addr, val) (*((volatile unsigned int *)(addr)) = val)
+#include "smu.h"
 
 extern void MicoSleepHelper(int tick, int clock);
 
