@@ -16,7 +16,10 @@
 #ifndef _SMU_H
 #define _SMU_H
 
+typedef unsigned char u8;
+typedef unsigned short u16;
 typedef unsigned int u32;
+
 
 #define SMC_MSG_HALT                       1
 #define SMC_MSG_PHY_LN_OFF                 2
@@ -51,8 +54,12 @@ typedef unsigned int u32;
 #define MICO_SLEEP_MICROSEC  (MICO32_CPU_CLOCK_MHZ/11000000)
 #define MICO_SLEEP_MILLISEC  (MICO32_CPU_CLOCK_MHZ/11000)
 
-#define REG_WRITE(addr, val) (*((volatile unsigned int *)(addr)) = val)
-#define REG_READ(addr) (*((volatile unsigned int *)(addr)))
+#define write8(addr, val) (*((volatile u8 *)(addr))) = (val)
+#define read8(addr) (*((volatile u8 *)(addr)))
+#define write16(addr, val) (*((volatile u16 *)(addr))) = (val)
+#define read16(addr) (*((volatile u16 *)(addr)))
+#define write32(addr, val) (*((volatile u32 *)(addr))) = (val)
+#define read32(addr) (*((volatile u32 *)(addr)))
 
 /// x1F200
 typedef union {

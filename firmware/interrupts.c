@@ -16,13 +16,46 @@
 #include "smu.h"
 #include "interrupts.h"
 
-static void halt()
+#define OFF 0
+#define ON 1
+
+static void halt(void)
 {
 	return;
 }
 
 static void set_phyln(int onoff)
 {
+/*
+	r2 = read(0x1f39c)
+	r1 = r2 & 3
+	r3 = r2 & 8
+	if (r1 == 0)
+		goto x1a9a0
+	if (r3 != 0)
+		goto x1a9a0
+	r11 = sp+16
+	r1 = r11
+	call 17bdc
+	r2 = read(0x1f39c)
+	r1 = r11
+	call 1916c
+x1a9a0:
+	r1 = read(0x1f39c)
+	r1 = r1 >> 2
+	r1 &= 1
+	r1 = (r1 == 0)
+	if (r1 != 0)
+		goto x1a9c8
+	call 17cf0
+	r1 = read(0x1f39c)
+	r1 &= 0x10
+	if (r1 != 0)
+		goto x1a9c8
+	call 1a200
+x1a9c8:
+	return;
+*/
 }
 
 static void set_ddiphy(int onoff)
@@ -99,10 +132,34 @@ static void config_tdp(void)
 
 static void set_pm(int onoff)
 {
+	u32 pm1 = 0x80010000;
+	u32 pm2 = 0x80010084;
+	u32 pm3 = 0x80010800;
+	u32 pm4 = 0x1dbdc;
+
+	switch(onoff) {
+	default:
+	case OFF:
+		write8(pm3, 0);
+		write32(pm2, read32(pm2) | 1);
+		write32(pm4, read32(pm4) & 0xfffe);
+		break;
+	case ON:
+		write32(pm3+12, 1);
+		write32(pm3+16, read32(0x1f468));
+		write32(pm3+8, 1);
+		write8(pm3+1, 1);
+		write8(pm3, 1);
+		write32(pm2, read32(pm2) | 1);
+		write32(pm4, read32(pm4) | 1);
+		break;
+	}
+	return;
 }
 
 static void config_nbdpm()
 {
+	return;
 }
 
 static void config_loadline()
@@ -128,8 +185,8 @@ static void set_bapm(int onoff)
 void SMUServiceRequest(unsigned int level, void *ctx)
 {
 	int requestid;
-	REG_WRITE(0xe0003004, 1);
-	requestid = REG_READ(0xe0003000);
+	write32(0xe0003004, 1);
+	requestid = read32(0xe0003000);
 	requestid &= 0x1fffe;
 	requestid >>= 1;
 
@@ -138,22 +195,22 @@ void SMUServiceRequest(unsigned int level, void *ctx)
 		halt();
 		break;
 	case SMC_MSG_PHY_LN_OFF:
-		set_phyln(0);
+		set_phyln(OFF);
 		break;
 	case SMC_MSG_PHY_LN_ON:
-		set_phyln(1);
+		set_phyln(ON);
 		break;
 	case SMC_MSG_DDI_PHY_OFF:
-		set_ddiphy(0);
+		set_ddiphy(OFF);
 		break;
 	case SMC_MSG_DDI_PHY_ON:
-		set_ddiphy(1);
+		set_ddiphy(ON);
 		break;
 	case SMC_MSG_CASCADE_PLL_OFF:
-		set_cascadepll(0);
+		set_cascadepll(OFF);
 		break;
 	case SMC_MSG_CASCADE_PLL_ON:
-		set_cascadepll(1);
+		set_cascadepll(ON);
 		break;
 	case SMC_MSG_PWR_OFF_x16:
 		set_x16off();
@@ -192,10 +249,10 @@ void SMUServiceRequest(unsigned int level, void *ctx)
 		config_tdp();
 		break;
 	case SMC_MSG_EN_PM_CNTL:
-		set_pm(1);
+		set_pm(ON);
 		break;
 	case SMC_MSG_DIS_PM_CNTL:
-		set_pm(0);
+		set_pm(OFF);
 		break;
 	case SMC_MSG_CONFIG_NBDPM:
 		config_nbdpm();
@@ -213,16 +270,16 @@ void SMUServiceRequest(unsigned int level, void *ctx)
 		pciepllswitch();
 		break;
 	case SMC_MSG_ENABLE_BAPM:
-		set_bapm(1);
+		set_bapm(ON);
 		break;
 	case SMC_MSG_DISABLE_BAPM:
-		set_bapm(0);
+		set_bapm(OFF);
 		break;
 	default:
 		break;
 	}
 
-	REG_WRITE(0xe0003004, 3);
+	write32(0xe0003004, 3);
 }
 
 void MicoISRHandler(void)
