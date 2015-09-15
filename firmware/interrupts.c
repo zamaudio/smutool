@@ -18,6 +18,7 @@
 
 static void halt()
 {
+	return;
 }
 
 static void set_phyln(int onoff)
@@ -42,10 +43,26 @@ static void config_lclkdpm(void)
 
 static void flush_datacache(void)
 {
+	asm volatile (
+		"addi r1, r0, 1\n\t"
+		"wcsr DCC, r1\n\t"
+		"nop\n\t"
+		"nop\n\t"
+		"nop\n\t"
+		"nop\n\t"
+	);
 }
 
 static void flush_instcache(void)
 {
+	asm volatile (
+		"addi r1, r0, 1\n\t"
+		"wcsr ICC, r1\n\t"
+		"nop\n\t"
+		"nop\n\t"
+		"nop\n\t"
+		"nop\n\t"
+	);
 }
 
 static void config_vpc(void)
