@@ -221,7 +221,7 @@ _crt0:
 	mvi     r1, 0
 	mvi     r2, 0
 	mvi     r3, 0
-	calli	bootblock
+	calli	main
 	/* Call exit, which doesn't return, to perform any clean up */
 	calli	_fini
 	calli	_exit

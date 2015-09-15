@@ -13,38 +13,14 @@
  * See <http://www.gnu.org/licenses/>.-
  */
 
-#include "smu.h"
-#include "delay.h"
-#include "interrupts.h"
+typedef void(*ISRCallback)(unsigned int, void *);
 
-void main(void)
-{
-	int ie, mask, im;
+typedef struct ISREntry{
+	ISRCallback Callback;
+	void *Context;
+} ISREntry_t;
 
-	int irq = 1;
+static ISREntry_t ISREntryTable[32];
 
-	mask = 0x1 * 2; // << irq
-
-	/* disable peripheral interrupts */
-	asm volatile ("rcsr %0,ie":"=r"(ie));
-	ie &= (~0x1);
-	asm volatile ("wcsr ie, %0"::"r"(ie));
-
-	ISREntryTable[irq].Callback = &SMUServiceRequest;
-	ISREntryTable[irq].Context = 0; //?
-
-	/* enable mask in the im */
-	asm volatile ("rcsr %0, im":"=r"(im));
-	im |= mask;
-	asm volatile ("wcsr im, %0"::"r"(im));
-
-	/* enable interrupts */
-	ie |= 0x1;
-	asm volatile ("wcsr ie, %0"::"r"(ie));
-
-	while (1) {
-		mdelay(10);
-		
-		MicoISRHandler();
-	}
-}
+void MicoISRHandler(void);
+void SMUServiceRequest(unsigned int, void*);

@@ -13,16 +13,80 @@
  * See <http://www.gnu.org/licenses/>.-
  */
 
-typedef void(*ISRCallback)(unsigned int, void *);
+#include "smu.h"
+#include "interrupts.h"
 
-typedef struct ISREntry{
-	ISRCallback Callback;
-	void *Context;
-} ISREntry_t;
+void SMUServiceRequest(unsigned int level, void *ctx)
+{
+	int requestid;
+	REG_WRITE(0xe0003004, 1);
+	requestid = REG_READ(0xe0003000);
+	requestid &= 0x1fffe;
+	
+	switch(requestid) {
+	case SMC_MSG_HALT:
+		break;
+	case SMC_MSG_PHY_LN_OFF:
+		break;
+	case SMC_MSG_PHY_LN_ON:
+		break;
+	case SMC_MSG_DDI_PHY_OFF:
+		break;
+	case SMC_MSG_DDI_PHY_ON:
+		break;
+	case SMC_MSG_CASCADE_PLL_OFF:
+		break;
+	case SMC_MSG_CASCADE_PLL_ON:
+		break;
+	case SMC_MSG_PWR_OFF_x16:
+		break;
+	case SMC_MSG_CONFIG_LCLK_DPM:
+		break;
+	case SMC_MSG_FLUSH_DATA_CACHE:
+		break;
+	case SMC_MSG_FLUSH_INSTRUCTION_CACHE:
+		break;
+	case SMC_MSG_CONFIG_VPC_ACCUMULATOR:
+		break;
+	case SMC_MSG_CONFIG_BAPM:
+		break;
+	case SMC_MSG_CONFIG_TDC_LIMIT:
+		break;
+	case SMC_MSG_CONFIG_LPMx:
+		break;
+	case SMC_MSG_CONFIG_HTC_LIMIT:
+		break;
+	case SMC_MSG_CONFIG_THERMAL_CNTL:
+		break;
+	case SMC_MSG_CONFIG_VOLTAGE_CNTL:
+		break;
+	case SMC_MSG_CONFIG_TDP_CNTL:
+		break;
+	case SMC_MSG_EN_PM_CNTL:
+		break;
+	case SMC_MSG_DIS_PM_CNTL:
+		break;
+	case SMC_MSG_CONFIG_NBDPM:
+		break;
+	case SMC_MSG_CONFIG_LOADLINE:
+		break;
+	case SMC_MSG_ADJUST_LOADLINE:
+		break;
+	case SMC_MSG_RECONFIGURE:
+		break;
+	case SMC_MSG_PCIE_PLLSWITCH:
+		break;
+	case SMC_MSG_ENABLE_BAPM:
+		break;
+	case SMC_MSG_DISABLE_BAPM:
+		break;
+	default:
+		break;
+	}
+}
 
-static ISREntry_t ISREntryTable[32];
-
-void MicoISRHandler(void){
+void MicoISRHandler(void)
+{
 	/*
 	 * If an interrupt-handler exists for the relevant interrupt (as detected
 	 * from ip and im cpu registers), then invoke the handler else disable the
@@ -57,7 +121,7 @@ void MicoISRHandler(void){
 					break;
 				}
 			}
-			Mask <<= 0x1;
+			Mask = Mask << 0x1;
 			++IntLevel;
 		} while(1);
 

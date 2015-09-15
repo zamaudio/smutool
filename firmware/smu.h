@@ -13,6 +13,9 @@
  * See <http://www.gnu.org/licenses/>.-
  */
 
+#ifndef _SMU_H
+#define _SMU_H
+
 typedef unsigned int u32;
 
 #define SMC_MSG_HALT                       1
@@ -49,7 +52,7 @@ typedef unsigned int u32;
 #define MICO_SLEEP_MILLISEC  (MICO32_CPU_CLOCK_MHZ/11000)
 
 #define REG_WRITE(addr, val) (*((volatile unsigned int *)(addr)) = val)
-#define REG_READ(addr, val) (*((volatile unsigned int *)(addr)))
+#define REG_READ(addr) (*((volatile unsigned int *)(addr)))
 
 /// x1F200
 typedef union {
@@ -607,6 +610,15 @@ typedef union {
   } Field;
   u32 Value;
 } x1F6B4_t;
+
+/// x1F840
+typedef union {
+  struct {
+    u32                                              IddspikeOCP:16;
+    u32                                            IddNbspikeOCP:16;
+  } Field;
+  u32 Value;
+} x1F840_t;
 
 /// x1F844
 typedef union {
@@ -1620,15 +1632,6 @@ typedef union {
   u32 Value;
 } xFF000000_t;
 
-/// x1F840
-typedef union {
-  struct {
-    u32                                              IddspikeOCP:16;
-    u32                                            IddNbspikeOCP:16;
-  } Field;
-  u32 Value;
-} x1F840_t;
-
 /// xE010703C
 typedef union {
   struct {
@@ -1958,3 +1961,4 @@ typedef union {
   u32 Value;
 } xE010707F_t;
 
+#endif
