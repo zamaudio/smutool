@@ -66,8 +66,141 @@ static void set_cascadepll(int onoff)
 {
 }
 
+static void x1a200(void)
+{
+/*
+	r1 = 0x1f6c4;
+	r2 = read32(r1)
+	r13 = 0x01318010
+	r11 = 0x1f688
+	r1 = 0xff0000
+	r1 = r2 & r1
+	if (r1 == 0)
+		goto end;
+	r1 = 0xff00ffff
+	r1 = r2 & r1
+	if (r1 != 0)
+		goto end;
+	r12 = r1
+try0:
+	r1 = 0x01318010 + r12
+	x16fc4()
+	write32(r11, r1)
+	r12 = r12 + 1
+	r1 = (r12 > 7)
+	r11 = r11 + 4
+	if (r1 == 0)
+		goto try0;
+	r1 = 0x02010011
+	r11 = 0x1f6a8
+	x16fc4()
+	write32(r11, r1)
+	r1 = 0x01110012
+	r11 = 0x1df78
+	x16fc4()
+	write32(r11, r1)
+	r1 = 0x01110013
+	x16fc4()
+	write32(r11+4, r1)
+	r1 = 0x02110012
+	x16fc4()
+	write32(r11+8, r1)
+	r1 = 0x02110013
+	x16fc4()
+	write32(r11+12, r1)
+	
+	r1 = 0x03210009
+	r2 = 0x81000000
+	x16fd8()
+	r1 = 0x0321000a
+	r2 = 0x81000000
+	x16fd8()
+	r1 = 0x01318011
+	r2 = 0x100
+	x16fd8()
+	
+	r1 = 0x01328014
+	r2 = 0x20000000
+	r3 = 0xf0000000
+	x17010()
+	r1 = 0x01308014
+	r2 = 0x10000000
+	r3 = 0xf0000000
+	x17010()
+	r1 = 0x01308014
+	r2 = 0x10000000
+	r3 = 0xf0000000
+	x17010()
+	r1 = 0x01110010
+	r2 = 0xfffe
+	x16ff4()
+	r1 = 0x01328014
+	r2 = 0x30000000
+	r3 = 0xf0000000
+	x17010()
+	r1 = 0x01328071
+	r2 = 1
+	x17034()
+
+	r1 = 0x64
+	r2 = read32(0xe0002028)
+	r11 = r2 & 0x7f
+	x1b2d0()
+	x1b280()
+	
+	r4 = 0xe0000000
+	r3 = r4
+	r3 = r3 | 0xc
+	r1 = read32(r3)
+	r1 = r1 | 0x4
+	r2 = 0xe0300000
+	write32(r3, r1)
+
+	r1 = 0x5ff
+	write32(r2+12, r1)
+	r1 = read32(r2+516)
+	r1 = r1 & 0x400
+	if (r1 != 0)
+		goto x1a3fc
+	
+	r3 = r4
+	r3 |= 0xc
+	r2 = read32(r3)
+	r1 = r11
+	r14 = r14 | 0xffff
+	r2 = r2 | 0x3
+	write32(r3, r2)
+	x1b280()
+	r2 = 0x1f604
+	r1 = read32(r2)
+	r3 = 0xfffd
+	r1 = r1 & r3
+	write32(r2, r1)
+
+	adjust_loadline()
+
+	r2 = 0x1f6c4
+	r1 = read32(r2)
+	r1 = r1 & r14
+	write32(r2, r1)
+end:
+	return;
+*/
+}
+
+static void x18b20(void)
+{
+
+}
+
 static void set_x16off(void)
 {
+	if ((read32(0x1f39c) & 0x10) != 0)
+		goto skip;
+	x1a200();
+	x18b20();
+skip:
+	return;
 }
 
 static void config_lclkdpm(void)
