@@ -239,8 +239,40 @@ static void config_bapm(void)
 {
 }
 
+static void x1c330(void)
+{
+}
+
+static void x1c374(void)
+{
+}
+
+
 static void config_tdc(void)
 {
+	u32 r11, r1, r2;
+
+	x1c330();
+	r11 = r1;
+	r2 = read32(0x1f428) & 4;
+	if (r2 == 0)
+		goto x12428;
+	write8(0x1dcf4, read8(0x1f638+3));
+	write8(read32(0x1d8f0), read8(0x1f638+3));
+	write32(0x1f634, 0);
+	write32(0x1f624, 0);
+
+	r1 = read32(r11+64);
+	x1c374();
+	r1 |= 1;
+	write32(r11+68, r1);
+	goto end;
+x12428:
+	write8(0x1dcf4, 0);
+	write8(read32(0x1df80), 0);
+	write8(0x1d950, 0);
+end:
+	return;
 }
 
 static void config_lpmx(void)
