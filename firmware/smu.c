@@ -19,32 +19,30 @@
 
 void main(void)
 {
-	int ie, mask, im;
+	int ie;
+//	int mask, im;
+//	int irq = 1;
+//	mask = 0x1 << irq; // << irq
 
-	int irq = 1;
-
-	mask = 0x1 << irq; // << irq
-
-	/* disable peripheral interrupts */
+	/* disable interrupts */
 	asm volatile ("rcsr %0,ie":"=r"(ie));
 	ie &= (~0x1);
 	asm volatile ("wcsr ie, %0"::"r"(ie));
 
+/**** Enable interrupts and handler
 	ISREntryTable[irq].Callback = &smu_service_request;
 	ISREntryTable[irq].Context = 0; //?
 
-	/* enable mask in the im */
 	asm volatile ("rcsr %0, im":"=r"(im));
 	im |= mask;
 	asm volatile ("wcsr im, %0"::"r"(im));
 
-	/* enable interrupts */
 	ie |= 0x1;
 	asm volatile ("wcsr ie, %0"::"r"(ie));
-
+*/
 	while (1) {
 		mdelay(10);
 		
-		MicoISRHandler();
+		smu_service_request();
 	}
 }

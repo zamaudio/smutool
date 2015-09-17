@@ -1371,6 +1371,21 @@ x180ac:
 	return;
 }
 
+static void x18d04(void)
+{
+	
+}
+
+static void x18490(void)
+{
+	
+}
+
+static void x180f0(void)
+{
+	
+}
+
 static void set_phyln(int onoff)
 {
 	u32 r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16;
@@ -1866,7 +1881,7 @@ static void set_bapm(int onoff)
 {
 }
 
-void smu_service_request(unsigned int level, void* empty)
+void smu_service_request(void)
 {
 	int requestid;
 	write32(0xe0003004, 1);
@@ -1968,20 +1983,12 @@ void smu_service_request(unsigned int level, void* empty)
 
 void MicoISRHandler(void)
 {
-	/*
-	 * If an interrupt-handler exists for the relevant interrupt (as detected
-	 * from ip and im cpu registers), then invoke the handler else disable the
-	 * interrupt in the im.
-	 */
 	unsigned int ip, im, Mask, IntLevel;
 	asm volatile ("rcsr %0,im":"=r"(im));
 
-	/* Inform that we've entered main ISR */
 	//OSIntEnter();
 
-	/* Service all interrupts */
 	do {
-		/* read ip and calculate effective ip */
 		asm volatile ("rcsr %0,ip":"=r"(ip));
 		ip &= im;
 		Mask = 0x1;
@@ -2012,9 +2019,7 @@ void MicoISRHandler(void)
 
 	} while(1);
 
-	/* Inform that we're done with servicing interrupts */
 	//OSIntExit();
 	
 	return;
 }
-
