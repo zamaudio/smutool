@@ -275,21 +275,11 @@ static void config_lpmx(void)
 {
 }
 
-static void x1c330()
-{
-}
-
-static void x1c33c()
-{
-}
-
 static void config_htc(void)
 {
 	u32 r1, r2, r3, r4, r11, r12, r13;
 
-	x1c330();
-	r4 = r1;
-	
+	r4 = 0x1d9a4;
 	r1 = 0x1f428;
 	r1 = read32(r1);
 	r11 = r1 & 0x10;
@@ -315,7 +305,10 @@ skip1:
 	r2 = r2 & r3;
 	write32(r4+68, r2);
 
-	x1c33c();
+	r1 = r1 << 2;
+	r3 = 0xe0400000;
+	r1 = r1 + r3;
+	write32(r1, r2);
 
 	r12 = 0x1d8f0;
 	r1 = read32(r12);
