@@ -1171,7 +1171,9 @@ x19678:
 
 static void set_phyln(int onoff)
 {
-	u32 r1, r2, r3, r4, r5, r6, r7, r8, r11, r12, r13, r14, r15, r16;
+	u32 r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16;
+	u32 r11a, r12a, r13a;
+
 	switch (onoff) {
 	default:
 	case OFF:
@@ -1276,19 +1278,103 @@ x1a0e4:
 		if (r1 == 0)
 			goto x1a168;
 		r1 = 0x01318014;
-		x16fc4();
+		r2 = 0x80080000;
+		write32(r2+160, r1);
+		r1 = read32(r2+164);
 
 		r11 = r1;
 		r1 = 0x01318014;
 		r2 = 0xffc3;
 		r2 = r11 & r2;
-		x16fb0();
+		r3 = 0x80080000;
+		write32(r3+160, r1);
+		write32(r3+164, r2);
 
 		r2 = read32(r13);
 		r12 = 0; // sp+32
 		r1 = r12;
-		x17d88();
-		
+		r11a = r11;
+		r12a = r12;
+		r13a = r13;
+
+		r5 = r2 >> 16;
+		r11 = r2 >> 24;
+		r9 = r2;
+		r12 = 0x1f6c8;
+		r2 = -r11;
+		r13 = r1;
+		r5 &= 0xff;
+		r2 = r2 + 7;
+		r7 = 8;
+		r6 = 0;
+x17dc4:
+		r8 = r6 << 3;
+		r10 = 0xff;
+		r1 = r5 - r8;
+		r4 = r10 << r1;
+		r3 = r13 + r6;
+		r6++;
+		r1 = (r6 > 4);
+		if (r5 >= r7)
+			goto x17e08;
+		write8(r3, r4);
+		write8(r3+5, r4);
+		r5 = r8 + 8;
+		if (r11 >= r7)
+			goto x17e08;
+		r1 = r10 >> r2;
+		r1 = r4 & r1;
+		write8(r3+5, r1);
+		write8(r3, r1);
+		goto x17e14;
+
+x17e08:
+		r7 = r7 + 8;
+		r2 = r2 + 8;
+		if (r1 == 0)
+			goto x17dc4;
+x17e14:
+		r7 = r9 >> 1;
+		r6 = 0;
+x17e1c:
+		r3 = r13 + r6;
+		r1 = r9 & 1;
+		r5 = read8(r3);
+		r4 = (r1 == 0);
+		if (r5 == 0)
+			goto x17e74;
+		r2 = r12 + r6;
+		if (r4 != 0)
+			goto x17e48;
+		r1 = read8(r2);
+		r1 |= r5;
+		write8(r2, r1);
+		goto x17e4c;
+x17e48:
+		write8(r3, r1);
+x17e4c:
+		r2 = r7 & 1;
+		r1 = (r2 == 0);
+		r4 = r12 + r6;
+		if (r1 != 0)
+			goto x17e70;
+		r2 = read8(r3+5);
+		r1 = read8(r4+8);
+		r1 |= r2;
+		write8(r4+8, r1);
+		goto x17e74;
+x17e70:
+		write8(r3+5, r2);
+x17e74:
+		r6++;
+		r1 = (r6 > 4);
+		if (r1 == 0)
+			goto x17e1c;
+
+		r11 = r11a;
+		r12 = r12a;
+		r13 = r13a;
+
 		r2 = read32(r13);
 		r1 = r12;
 		x18d04();
@@ -1306,7 +1392,9 @@ x1a0e4:
 
 		r1 = 0x01318014;
 		r2 = r11;
-		x16fb0();
+		r3 = 0x80080000;
+		write32(r3+160, r1);
+		write32(r3+164, r2);
 
 x1a168:
 		r1 = read32(r13);
@@ -1329,7 +1417,9 @@ x1a1a8:
 		r2 = read32(r12);
 		r1 = r13 + r11;
 		r11++;
-		x16fb0();
+		r3 = 0x80080000;
+		write32(r3+160, r1);
+		write32(r3+164, r2);
 
 		r1 = (r11 > 7);
 		r12 += 4;
@@ -1338,7 +1428,9 @@ x1a1a8:
 		r1 = 0x1f6a8;
 		r2 = read32(r1);
 		r1 = 0x02010011;
-		x16fb0();
+		r3 = 0x80080000;
+		write32(r3+160, r1);
+		write32(r3+164, r2);
 		break;
 	}
 end:
