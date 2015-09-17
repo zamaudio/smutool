@@ -75,126 +75,292 @@ static void set_cascadepll(int onoff)
 {
 }
 
+static void adjust_loadline()
+{
+}
+
 static void x1a200(void)
 {
-/*
+	u32 r1, r2, r3, r4;
+	u32 r11, r12, r13, r14;
+	
+	r14 = 0;
 	r1 = 0x1f6c4;
-	r2 = read32(r1)
-	r13 = 0x01318010
-	r11 = 0x1f688
-	r1 = 0xff0000
-	r1 = r2 & r1
+	r2 = read32(r1);
+	r13 = 0x01318010;
+	r11 = 0x1f688;
+	r1 = 0xff0000;
+	r1 = r2 & r1;
 	if (r1 == 0)
 		goto end;
-	r1 = 0xff00ffff
-	r1 = r2 & r1
+	r1 = 0xff00ffff;
+	r1 = r2 & r1;
 	if (r1 != 0)
 		goto end;
-	r12 = r1
+	r12 = r1;
 try0:
-	r1 = 0x01318010 + r12
-	x16fc4()
-	write32(r11, r1)
-	r12 = r12 + 1
-	r1 = (r12 > 7)
-	r11 = r11 + 4
+	r1 = 0x01318010 + r12;
+	
+	r2 = 0x80080000;
+	write32(r2+160, r1);
+	r1 = read32(r2+164);
+
+	write32(r11, r1);
+	r12 = r12 + 1;
+	r1 = (r12 > 7);
+	r11 = r11 + 4;
 	if (r1 == 0)
 		goto try0;
-	r1 = 0x02010011
-	r11 = 0x1f6a8
-	x16fc4()
-	write32(r11, r1)
-	r1 = 0x01110012
-	r11 = 0x1df78
-	x16fc4()
-	write32(r11, r1)
-	r1 = 0x01110013
-	x16fc4()
-	write32(r11+4, r1)
-	r1 = 0x02110012
-	x16fc4()
-	write32(r11+8, r1)
-	r1 = 0x02110013
-	x16fc4()
-	write32(r11+12, r1)
-	
-	r1 = 0x03210009
-	r2 = 0x81000000
-	x16fd8()
-	r1 = 0x0321000a
-	r2 = 0x81000000
-	x16fd8()
-	r1 = 0x01318011
-	r2 = 0x100
-	x16fd8()
-	
-	r1 = 0x01328014
-	r2 = 0x20000000
-	r3 = 0xf0000000
-	x17010()
-	r1 = 0x01308014
-	r2 = 0x10000000
-	r3 = 0xf0000000
-	x17010()
-	r1 = 0x01308014
-	r2 = 0x10000000
-	r3 = 0xf0000000
-	x17010()
-	r1 = 0x01110010
-	r2 = 0xfffe
-	x16ff4()
-	r1 = 0x01328014
-	r2 = 0x30000000
-	r3 = 0xf0000000
-	x17010()
-	r1 = 0x01328071
-	r2 = 1
-	x17034()
+	r1 = 0x02010011;
+	r11 = 0x1f6a8;
 
-	r1 = 0x64
-	r2 = read32(0xe0002028)
-	r11 = r2 & 0x7f
-	x1b2d0()
-	x1b280()
-	
-	r4 = 0xe0000000
-	r3 = r4
-	r3 = r3 | 0xc
-	r1 = read32(r3)
-	r1 = r1 | 0x4
-	r2 = 0xe0300000
-	write32(r3, r1)
+	r2 = 0x80080000;
+	write32(r2+160, r1);
+	r1 = read32(r2+164);
 
-	r1 = 0x5ff
-	write32(r2+12, r1)
-	r1 = read32(r2+516)
-	r1 = r1 & 0x400
+	write32(r11, r1);
+	r1 = 0x01110012;
+	r11 = 0x1df78;
+
+	r2 = 0x80080000;
+	write32(r2+160, r1);
+	r1 = read32(r2+164);
+
+	write32(r11, r1);
+	r1 = 0x01110013;
+
+	r2 = 0x80080000;
+	write32(r2+160, r1);
+	r1 = read32(r2+164);
+
+	write32(r11+4, r1);
+	r1 = 0x02110012;
+
+	r2 = 0x80080000;
+	write32(r2+160, r1);
+	r1 = read32(r2+164);
+	
+	write32(r11+8, r1);
+	r1 = 0x02110013;
+
+	r2 = 0x80080000;
+	write32(r2+160, r1);
+	r1 = read32(r2+164);
+
+	write32(r11+12, r1);
+	
+	r1 = 0x03210009;
+	r2 = 0x81000000;
+
+	r3 = 0x80080000;
+	write32(r3+160, r1);
+	r1 = read32(r3+164) | r2;
+	write32(r3+164, r1);
+
+	r1 = 0x0321000a;
+	r2 = 0x81000000;
+
+	r3 = 0x80080000;
+	write32(r3+160, r1);
+	r1 = read32(r3+164) | r2;
+	write32(r3+164, r1);
+	
+	r1 = 0x01318011;
+	r2 = 0x100;
+
+	r3 = 0x80080000;
+	write32(r3+160, r1);
+	r1 = read32(r3+164) | r2;
+	write32(r3+164, r1);
+	
+	r1 = 0x01328014;
+	r2 = 0x20000000;
+	r3 = 0xf0000000;
+	
+	r4 = 0x80080000;
+	write32(r4+160, r1);
+	r1 = read32(r4+164);
+	r3 = ~r3;
+	r1 &= r3;
+	r1 |= r2;
+	write32(r4+164, r1);
+	
+	r1 = 0x01308014;
+	r2 = 0x10000000;
+	r3 = 0xf0000000;
+	
+	r4 = 0x80080000;
+	write32(r4+160, r1);
+	r1 = read32(r4+164);
+	r3 = ~r3;
+	r1 &= r3;
+	r1 |= r2;
+	write32(r4+164, r1);
+
+	r1 = 0x01308014;
+	r2 = 0x10000000;
+	r3 = 0xf0000000;
+
+	r4 = 0x80080000;
+	write32(r4+160, r1);
+	r1 = read32(r4+164);
+	r3 = ~r3;
+	r1 &= r3;
+	r1 |= r2;
+	write32(r4+164, r1);
+	
+	r1 = 0x01110010;
+	r2 = 0xfffe;
+	
+	r3 = 0x80080000;
+	write32(r3+160, r1);
+	r1 = read32(r3+164);
+	r1 = r1 & r2;
+	write32(r3+164, r1);
+
+	r1 = 0x01328014;
+	r2 = 0x30000000;
+	r3 = 0xf0000000;
+
+	r4 = 0x80080000;
+	write32(r4+160, r1);
+	r1 = read32(r4+164);
+	r3 = ~r3;
+	r1 &= r3;
+	r1 |= r2;
+	write32(r4+164, r1);
+	
+	r1 = 0x01328071;
+	r2 = 1;
+
+	r3 = 0x80080000;
+	write32(r3+160, r1);
+	r1 = read32(r3+164);
+back:
+	r1 = r2 & r1;
+	if (r1 != r2)
+		goto back;
+
+	r1 = 0x64;
+	r2 = read32(0xe0002028);
+	r11 = r2 & 0x7f;
+	
+// 1b2d0
+	r2 = 0xe0003020;
+	r2 = read32(r2);
+	r2 = r2 * 100;
+	r2 = r2 << 8;
+	r3 = r2 / r1;
+	r1 = r3 >> 8;
+	r2 = r3 >> 6;
+	r4 = r1 + 64;
+	r2 = r2 & 0xff;
+	r1 = 0x1fff;
+	if (r1 >= r3)
+		goto skip3;
+	r2 = r4 & 0xff;
+	goto x1b324;
+skip3:
+	r1 = r3 + r3;
+	r1 = r1 - 0x2000;
+	r4 = r1 >> 8;
+	r1 = 0xfff;
+	if (r1 >= r3)
+		goto x1b324;
+	r1 = r4 + 0x40;
+	r2 = r1 & 0xff;
+x1b324:
+	r1 = (r2 > 7);
 	if (r1 != 0)
-		goto x1a3fc
+		goto skip4;
+	r2 = 8;
+skip4:
+	r1 = r2 & 0xff;
+
+	r4 = r1 & 0xff;
+	r1 = 0xff;
+	if (r4 == 0)
+		goto skip0;
+	r2 = 0xe000205c;
+back2:
+	r1 = read32(r2);
+	r1 &= 1;
+	if (r1 == 0)
+		goto back2;
+	r1 = 0xe0002058;
+	r3 = 0xe000205c;
+	write32(r1, r4);
+back3:
+	r1 = read32(r3);
+	r1 ^= 1;
+	r2 = r1 & 1;
+	r1 = (r2 == 0);
+	if (r1 == 0)
+		goto back3;
+	r1 = r2;
+skip0:
+
+	r4 = 0xe0000000;
+	r3 = r4;
+	r3 = r3 | 0xc;
+	r1 = read32(r3);
+	r1 = r1 | 0x4;
+	r2 = 0xe0300000;
+	write32(r3, r1);
+
+	r1 = 0x5ff;
+	write32(r2+12, r1);
+x1a3fc:
+	r1 = read32(r2+516);
+	r1 = r1 & 0x400;
+	if (r1 != 0)
+		goto x1a3fc;
 	
-	r3 = r4
-	r3 |= 0xc
-	r2 = read32(r3)
-	r1 = r11
-	r14 = r14 | 0xffff
-	r2 = r2 | 0x3
-	write32(r3, r2)
-	x1b280()
-	r2 = 0x1f604
-	r1 = read32(r2)
-	r3 = 0xfffd
-	r1 = r1 & r3
-	write32(r2, r1)
+	r3 = r4;
+	r3 |= 0xc;
+	r2 = read32(r3);
+	r1 = r11;
+	r14 = r14 | 0xffff;
+	r2 = r2 | 0x3;
+	write32(r3, r2);
 
-	adjust_loadline()
+	r4 = r1 & 0xff;
+	r1 = 0xff;
+	if (r4 == 0)
+		goto skip1;
+	r2 = 0xe000205c;
+back4:
+	r1 = read32(r2);
+	r1 &= 1;
+	if (r1 == 0)
+		goto back4;
+	r1 = 0xe0002058;
+	r3 = 0xe000205c;
+	write32(r1, r4);
+back5:
+	r1 = read32(r3);
+	r1 ^= 1;
+	r2 = r1 & 1;
+	r1 = (r2 == 0);
+	if (r1 == 0)
+		goto back5;
+	r1 = r2;
+skip1:
 
-	r2 = 0x1f6c4
-	r1 = read32(r2)
-	r1 = r1 & r14
-	write32(r2, r1)
+	r2 = 0x1f604;
+	r1 = read32(r2);
+	r3 = 0xfffd;
+	r1 = r1 & r3;
+	write32(r2, r1);
+
+	adjust_loadline();
+
+	r2 = 0x1f6c4;
+	r1 = read32(r2);
+	r1 = r1 & r14;
+	write32(r2, r1);
 end:
 	return;
-*/
 }
 
 
@@ -496,10 +662,6 @@ static void config_nbdpm()
 }
 
 static void config_loadline()
-{
-}
-
-static void adjust_loadline()
 {
 }
 
