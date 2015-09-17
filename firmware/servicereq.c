@@ -1695,14 +1695,255 @@ x19124:
 	return;
 }
 
-static void x18490(u32 r1, u32 r2)
+static void x18490(u32 rr1, u32 rr2)
 {
 	
 }
 
-static void x180f0(u32 r1, u32 r2)
+static void x180f0(u32 rr1, u32 rr2)
 {
+	u32 r1, r2, r3, r4, r5, r6, r7, r8, r9;
+	u32 r11, r12, r13, r14, r15, r16, r17, r18, r19, r20;
+	r4 = rr2 >> 1;
+	r3 = 0;
+	r18 = 0x1f6c8;
+	r16 = rr1;
+	r4 &= 1;
+	r13 = r3;
+	r9 = rr2 & 1;
+x18158:
+	r7 = r16 + r13;
+	r1 = read8(r7);
+	r8 = 0;
+	r3 = r8;
+	if (r1 != r8)
+		goto x18174;
+	r1 = read8(r7+5);
+	if (r1 == r8)
+		goto x1820c;
+x18174:
+	r6 = r18 + r13;
+	r1 = read8(r6+56);
+	r2 = read8(r6+64);
+	r1 |= r2;
+	r1 &= 0xff;
+	if (r1 != 0)
+		goto x181a4;
+	r1 = rr1; // arg?
+	r2 = r1 + r13;
+	r1 = 1;
+	r8 = r1;
+	write8(r2-4, r1);
+	r3 = r1;
+x181a4:
+	r1 = r9 | r3;
+	r1 = (r1 == 0);
+	if (r1 == 0)
+		goto x181d8;
+	r1 = read8(r6+56);
+	r3 = read8(r7);
+	r2 = 0; // sp+48
+	r1 = ~r1;
+	r2 = r2 + r13;
+	r1 = r1 + r3;
+	r5 = 1;
+	if (r1 == r3)
+		goto x181d4;
+	r5 = read8(r2);
+x181d4:
+	write8(r2, r5);
+x181d8:
+	r1 = r4 | r8;
+	r1 = (r1 == 0);
+	if (r1 == 0)
+		goto x1820c;
+	r1 = read8(r6+64);
+	r3 = read8(r7+5);
+	r2 = 0; // sp+56
+	r1 = ~r1;
+	r2 = r2 + r13;
+	r1 = r1 & r3;
+	r5 = 1;
+	if (r1 == r3)
+		goto x18208;
+	r5 = read8(r2);
+x18208:
+	write8(r2, r5);
+x1820c:
+	r13++;
+	r1 = (r13 > 4);
+	if (r1 == 0)
+		goto x18158;
 	
+	r17 = 0x1f3c0;
+	r13 = 0;
+	r15 = r16;
+x18228:
+	r20 = 0; // sp+56
+	r1 = r20 + r13;
+	r1 = read8(r1);
+	if (r1 == 0)
+		goto x1824c;
+	r1 = r18 + r13;
+	r2 = read8(r1+64);
+	r3 = read8(r15+5);
+	r2 |= r3;
+	write8(r1+64, r2);
+x1824c:
+	r19 = 0; // sp+48
+	r1 = r19 + r13;
+	r1 = read8(r1);
+	if (r1 == 0)
+		goto x1834c;
+	if (r13 != 0)
+		goto x182d0;
+
+	r12 = 0x1f3b0;
+	r11 = r13;
+x1826c:
+	r2 = read8(r16);
+	r14 = r11 << 7;
+	r1 = 0x01204011;
+	r2 >>= r11;
+	r2 &= 1;
+	r2 = (r2 == 0);
+	r1 = r14 + r1;
+	if (r2 != 0)
+		goto x182c0;
+	r2 = read32(r12);
+	r3 = 0x80080000;
+	write32(r3+160, r1);
+	write32(r3+164, r2);
+
+
+	r1 = 0x01204010;
+	r1 = r14 + r1;
+	r12 = r12 + 4;
+	r2 = 2;
+	if (r2 >= r11)
+		goto x182b8;
+	r12 = 0x1f3a4;
+x182b8:
+	r2 = read32(r17);
+	r3 = 0x80080000;
+	write32(r3+160, r1);
+	write32(r3+164, r2);
+
+x182c0:
+	r11++;
+	r1 = (r11 > 7);
+	if (r1 == 0)
+		goto x1826c;
+	goto x1834c;
+
+x182d0:
+	r1 = r13 - 1;
+	r1 = (r1 > 1);
+	if (r1 != 0)
+		goto x1834c;
+	r12 = 0x1f3ac;
+	r2 = (r13 != 1);
+	if (r2 == 0)
+		goto x182f4;
+	r12 = 0x1f3a8;
+x182f4:
+	r1 = 0x01214010;
+	if (r2 == 0)
+		goto x18308;
+	r1 = 0x02214010;
+x18308:
+	r11 = r1;
+	r14 = 0;
+x18310:
+	r2 = read8(r15);
+	r1 = r11 + 1;
+	r2 >>= r14;
+	r2 &= 1;
+	r2 = (r2 == 0);
+	r14++;
+	if (r2 != 0)
+		goto x18340;
+	r2 = read32(r12);
+	r3 = 0x80080000;
+	write32(r3+160, r1);
+	write32(r3+164, r2);
+
+	r2 = read32(r17);
+	r1 = r11;
+	r3 = 0x80080000;
+	write32(r3+160, r1);
+	write32(r3+164, r2);
+
+x18340:
+	r1 = (r14 > 7);
+	r11 += 0x80;
+	if (r1 == 0)
+		goto x18310;
+x1834c:
+	r1 = r19 + r13;
+	r1 = read8(r1);
+	if (r1 != 0)
+		goto x18364;
+	r1 = r20 + r13;
+	r1 = read8(r1);
+	if (r1 == 0)
+		goto x183dc;
+x18364:
+	r1 = 0x1d830;
+	r12 = r13 << 2;
+	r3 = read8(r15+5);
+	r2 = read8(r15);
+	r1 = r12 + r1;
+	r11 = read32(r1);
+	r2 |= r3;
+	r2 &= 0xff;
+	r2 = ~r2;
+	r1 = r11 | 2;
+	r3 = 0x80080000;
+	write32(r3+160, r1);
+	r1 = read32(r3+164);
+	r1 &= r2;
+	write32(r3+164, r1);
+
+	r2 = 1;
+	r1 = r11 | 0x10;
+	r3 = 0x80080000;
+	write32(r3+160, r1);
+	r1 = read32(r3+164);
+	r1 |= r2;
+	write32(r3+164, r1);
+
+
+	r2 = rr1; // sp+68;
+	r1 = r2 + r13;
+	r1 = read8(r1-4);
+	if (r1 == 0)
+		goto x183dc;
+	r1 = 0x1d81c;
+	r1 = r12 + r1;
+	r2 = read32(r1);
+	r3 = (r13 != 2);
+	r1 = 0x8070;
+	r1 = r2 + r1;
+	if (r3 != 0)
+		goto x183d4;
+	r1 = r1 + 4;
+x183d4:
+	r2 = 1;
+	r3 = 0x80080000;
+	write32(r3+160, r1);
+	r1 = read32(r3+164);
+	r1 |= r2;
+	write32(r3+164, r1);
+
+x183dc:
+	r13++;
+	r1 = (r13 > 4);
+	r15++;
+	if (r1 == 0)
+		goto x18228;
+	
+	return;
 }
 
 static void set_phyln(int onoff)
