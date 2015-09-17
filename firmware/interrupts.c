@@ -14,6 +14,7 @@
  */
 
 #include "smu.h"
+#include "ops.h"
 #include "interrupts.h"
 
 #define OFF 0
@@ -196,9 +197,142 @@ end:
 */
 }
 
+
 static void x18b20(void)
 {
+	u32 r1, r2, r3, r4, r5, r6, r7, r8, r9;
+	u32 r10, r11, r12, r13, r14, r15, r16, ra;
+	
+	r3 = 0x1dff4;
+	r1 = read32(r3+28);
+	r2 = 0x1f850;
+	if (r1 >= 0)
+		goto skip;
+	r2 = r3;
+skip:
+	r1 = r2;
+	r12 = r1;
 
+	r1 = 0x1dd94;
+	r8 = 0x1f610;
+	r11 = 0x1f438;
+	r13 = r8;
+	r2 = read8(r8);
+	r3 = read8(r11);
+	r15 = 0x1f43c;
+	r14 = 0x1f6bc;
+	r16 = r1;
+	r9 = 0;
+	if (r3 == r9)
+		goto x18bc4;
+	r4 = read32(r12+20);
+	r1 = r4 >> (u16)8;
+	r8 = r4 & 0xff;
+	r7 = r1 & 0xff;
+retry1:
+	r5 = r3 & 1;
+	r1 = r2 & 1;
+	r2 >>= 1;
+	r6 = r3 >> 1;
+	r4 = r8*r5;
+	r1 = (r1 == 0);
+	r2 = r2 & 0xff;
+	r3 = r6 & 0xff;
+	if (r1 == 0)
+		goto x18bbc;
+	r4 = r7*r5;
+x18bbc:
+	r9 = r9 + r4;
+	if (r3 != 0)
+		goto retry1;
+x18bc4:
+	r8 = 0x1f614;
+	r11 = r11 + 1;
+	r7 = 2;
+x18bd4:
+	r1 = r11 + r7;
+	r2 = r8 + r7;
+	r3 = read8(r1);
+	r2 = read8(r2);
+	if (r3 == 0)
+		goto x18c28;
+	r4 = read32(r12+28);
+	r1 = r4 >> 8;
+	ra = r4 & 0xff;
+	r10 = r1 & 0xff;
+x18bf8:
+	r5 = r3 & 1;
+	r1 = r2 & 1;
+	r4 = ra * r5;
+	r1 = (r1 == 0);
+	r2 = r2 & 0xff;
+	r3 = r6 & 0xff;
+	if (r1 == 0)
+		goto x18c20;
+	r4 = r10 * r5;
+x18c20:
+	r9 = r9 + r4;
+	if (r3 != 0)
+		goto x18bf8;
+x18c28:
+	r7 = r7 + 1;
+	r1 = (r7 > 3);
+	if (r1 == 0)
+		goto x18bd4;
+	r8 = 0x1f610;
+	r7 = 0;
+x18c40:
+	r1 = r11 + r7;
+	r2 = r14 + r7;
+	r3 = read8(r1);
+	r2 = read8(r2);
+	r5 = 0;
+	if (r3 == r5)
+		goto x18cc4;
+	r10 = r8 + r7;
+x18c5c:
+	r1 = r2 & 1;
+	r6 = r3 >> 1;
+	r13 = r2 >> 1;
+	r1 = (r1 == 0);
+	r3 = r3 & 1;
+	ra = r5 + 1;
+	if (r1 != 0)
+		goto x18c84;
+	r2 = read8(r10+4);
+	r4 = read32(r12+28);
+	goto x18c8c;
+x18c84:
+	r2 = read8(r10+1);
+	r4 = read32(r12+20);
+x18c8c:
+	r2 = r2 >> r5;
+	r1 = r4 & 0xff;
+	r5 = r1 * r3;
+	r2 |= 1;
+	r2 = (r2 == 0);
+	r1 = r4 >> 8;
+	r1 = r1 & 0xff;
+	if (r2 == 0)
+		goto x18cb0;
+	r5 = r1 * r3;
+x18cb0:
+	r9 = r9 + r5;
+	r3 = r6 & 0xff;
+	r2 = r13 & 0xff;
+	r5 = ra;
+	if (r3 != 0)
+		goto x18c5c;
+x18cc4:
+	r7 = r7 + 1;
+	r1 = (r7 > 1);
+	if (r1 == 0)
+		goto x18c40;
+	r1 = r9 * 131;
+	r9 = r1 >> 11;
+	write16(r15+2, r9);
+	write16(r16+60, r9);
+	return;
 }
 
 static void set_x16off(void)
@@ -285,12 +419,12 @@ static void config_htc(void)
 	r11 = r1 & 0x10;
 	r2 = 0x1f638;
 	r3 = 0x1f624;
+	r13 = 0x1dcf4;
+	r12 = 0x1d8f0;
 	if (r11 == 0)
 		goto skip1;
 
 	r1 = read8(r2+2);
-	r13 = 0x1dcf4;
-	r12 = 0x1d8f0;
 	write8(r13+9, r1);
 	r1 = read32(r12);
 	r2 = read8(r2+2);

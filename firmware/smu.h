@@ -20,7 +20,6 @@ typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
 
-
 #define SMC_MSG_HALT                       1
 #define SMC_MSG_PHY_LN_OFF                 2
 #define SMC_MSG_PHY_LN_ON                  3
