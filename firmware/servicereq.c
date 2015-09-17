@@ -15,7 +15,7 @@
 
 #include "smu.h"
 #include "ops.h"
-#include "interrupts.h"
+#include "servicereq.h"
 
 #define OFF 0
 #define ON 1

@@ -15,7 +15,7 @@
 
 #include "smu.h"
 #include "delay.h"
-#include "interrupts.h"
+#include "servicereq.h"
 
 void main(void)
 {

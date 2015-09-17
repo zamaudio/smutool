@@ -18,7 +18,7 @@ LD = lm32-elf-ld
 OC = lm32-elf-objcopy
 
 LIBS=-L/opt/lm32/lib/gcc/lm32-elf/4.5.4
-SRCS=interrupts.c memcpy.c smu.c
+SRCS=servicereq.c memcpy.c smu.c
 ASMS=MicoSleepHelper.S crt0ram-smu.S
 OBJS=$(SRCS:.c=.o)
 OBJS2=$(ASMS:.S=.o)
