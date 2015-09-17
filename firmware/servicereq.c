@@ -37,8 +37,87 @@ found:
 	return;
 }
 
+static u32 x16e90(u32 rr1)
+{
+	u32 r1, r2, r3, r4, r5, r6;
+
+	r2 = 0x1f850;
+	r5 = rr1;
+	r6 = r2 + 0x2c;
+	r4 = 0;
+	r3 = 1;
+x16ea8:
+	r2 = r3 + r3;
+	r1 = r5 >> r3;
+	r2 = r2 + r6;
+	r2 = read16(r2);
+	r1 &= 1;
+	r1 ^= 1;
+	r2 = r2 * r1;
+	r3++;
+	r1 = (r3 > 6);
+	r4 += r2;
+	if (r1 == 0)
+		goto x16ea8;
+	return r4;
+}
+
+static void x1b65c(void)
+{
+}
+
 static void adjust_loadline()
 {
+	u32 r1, r2, r3, r4;
+	u32 r11, r12, r13;
+	r1 = 0x1f850;
+	r4 = read8(r1+140);
+	r11 = 0x1d989;
+	r1 = read8(r11+7);
+	r2 = 0x1f600;
+	r3 = 0x1f604;
+	r13 = 0x7e;
+	r12 = 0x10000;
+	if (r1 == 0)
+		goto x16f34;
+	r2 = read32(r2);
+	r1 = read32(r3);
+	r13 = r2 | r1;
+x16f34:
+	r1 = read8(r11+8);
+	if (r1 != r4)
+		goto x16f64;
+	r2 = read8(r11+9);
+	r1 = r13;
+	if (r2 != r4)
+		goto x16f64;
+	r1 = x16e90(r1);
+
+	r1 = r1 & 0xff;
+	x1b65c();
+	
+	r1 = 0x1f608;
+	write32(r1, r13);
+	goto end;
+x16f64:
+	r2 = read8(r11+9);
+	r1 = r13;
+	r3 = 0;
+	if (r2 != r4)
+		goto x16f88;
+	r1 = x16e90(r1);
+
+	write8(r11+10, r1);
+	r12 |= 0xf608;
+	write32(r12, r13);
+	goto end;
+x16f88:
+	write8(r11+10, r3);
+	r12 |= 0xf608;
+	r1 = 0x7e;
+	write32(r12, r1);
+end:
+	return;
 }
 
 static void x18b20(void)
