@@ -239,10 +239,6 @@ static void config_bapm(void)
 {
 }
 
-static void x1c330(void)
-{
-}
-
 static void x1c374(void)
 {
 }
@@ -250,24 +246,21 @@ static void x1c374(void)
 
 static void config_tdc(void)
 {
-	u32 r11, r1, r2;
+	u32 r1, r2;
 
-	x1c330();
-	r11 = r1;
 	r2 = read32(0x1f428) & 4;
 	if (r2 == 0)
-		goto x12428;
+		goto skip;
 	write8(0x1dcf4, read8(0x1f638+3));
 	write8(read32(0x1d8f0), read8(0x1f638+3));
 	write32(0x1f634, 0);
 	write32(0x1f624, 0);
 
-	r1 = read32(r11+64);
-	x1c374();
+	r1 = read32(0xe0400000 + (read32(0x1d9a4+64) << 2));
 	r1 |= 1;
-	write32(r11+68, r1);
+	write32(0x1d9a4+68, r1);
 	goto end;
-x12428:
+skip:
 	write8(0x1dcf4, 0);
 	write8(read32(0x1df80), 0);
 	write8(0x1d950, 0);
@@ -339,8 +332,34 @@ static void reconfigure()
 {
 }
 
+static void x1c300(u32 r1)
+{
+	u32 reg, r3;
+
+	reg = 0x800108d8;
+	write8(reg, 1);
+	write8(reg+1, 1);
+retry:
+	r3 = read32(reg+32);
+	if (r3 >= r1)
+		goto found;
+	goto retry;
+found:
+	write8(reg, 0);
+	return;
+}
+
 static void pciepllswitch()
 {
+	u32 r1, reg, r2;
+
+	reg = 0xe0003014;
+	r1 = (read32(0x1f630) & 0xff) * 100;
+	write32(reg, read32(reg) | 2);
+
+	x1c300(r1);
+
+	write32(reg, read32(reg) & 0xfffd);
 }
 
 static void set_bapm(int onoff)
