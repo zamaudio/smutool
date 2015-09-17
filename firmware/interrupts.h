@@ -23,4 +23,4 @@ typedef struct ISREntry{
 static ISREntry_t ISREntryTable[32];
 
 void MicoISRHandler(void);
-void SMUServiceRequest(unsigned int, void*);
+void smu_service_request(unsigned int, void*);

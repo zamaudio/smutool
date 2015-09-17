@@ -23,14 +23,14 @@ void main(void)
 
 	int irq = 1;
 
-	mask = 0x1 * 2; // << irq
+	mask = 0x1 << irq; // << irq
 
 	/* disable peripheral interrupts */
 	asm volatile ("rcsr %0,ie":"=r"(ie));
 	ie &= (~0x1);
 	asm volatile ("wcsr ie, %0"::"r"(ie));
 
-	ISREntryTable[irq].Callback = &SMUServiceRequest;
+	ISREntryTable[irq].Callback = &smu_service_request;
 	ISREntryTable[irq].Context = 0; //?
 
 	/* enable mask in the im */
