@@ -24,9 +24,17 @@ static void halt(void)
 	return;
 }
 
+/*
+static void x17bdc()
+{
+	
+}
+*/
+
 static void set_phyln(int onoff)
 {
 /*
+	// off
 	r2 = read(0x1f39c)
 	r1 = r2 & 3
 	r3 = r2 & 8
@@ -239,11 +247,6 @@ static void config_bapm(void)
 {
 }
 
-static void x1c374(void)
-{
-}
-
-
 static void config_tdc(void)
 {
 	u32 r1, r2;
@@ -272,8 +275,54 @@ static void config_lpmx(void)
 {
 }
 
+static void x1c330()
+{
+}
+
+static void x1c33c()
+{
+}
+
 static void config_htc(void)
 {
+	u32 r1, r2, r3, r4, r11, r12, r13;
+
+	x1c330();
+	r4 = r1;
+	
+	r1 = 0x1f428;
+	r1 = read32(r1);
+	r11 = r1 & 0x10;
+	r2 = 0x1f638;
+	r3 = 0x1f624;
+	if (r11 == 0)
+		goto skip1;
+
+	r1 = read8(r2+2);
+	r13 = 0x1dcf4;
+	r12 = 0x1d8f0;
+	write8(r13+9, r1);
+	r1 = read32(r12);
+	r2 = read8(r2+2);
+	write8(r1+9, r2);
+	r1 = 0;
+	write32(r3, r1);
+	goto end;
+skip1:
+	r2 = read32(r4+68);
+	r1 = read32(r4+64);
+	r3 = 0xfff1;
+	r2 = r2 & r3;
+	write32(r4+68, r2);
+
+	x1c33c();
+
+	r12 = 0x1d8f0;
+	r1 = read32(r12);
+	write8(r13+9, r11);
+	write8(r1+9, r11);
+end:
+	return;
 }
 
 static void config_thermal(void)
@@ -290,7 +339,6 @@ static void config_tdp(void)
 
 static void set_pm(int onoff)
 {
-	u32 pm1 = 0x80010000;
 	u32 pm2 = 0x80010084;
 	u32 pm3 = 0x80010800;
 	u32 pm4 = 0x1dbdc;
@@ -351,7 +399,7 @@ found:
 
 static void pciepllswitch()
 {
-	u32 r1, reg, r2;
+	u32 r1, reg;
 
 	reg = 0xe0003014;
 	r1 = (read32(0x1f630) & 0xff) * 100;
