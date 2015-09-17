@@ -1371,17 +1371,336 @@ x180ac:
 	return;
 }
 
-static void x18d04(void)
+static void x18d04(u32 rr1, u32 rr2, u32 rr3)
+{
+	u32 r1, r2, r3, r4, r5, r6, r7, r8, r9, r10;
+	u32 r11, r12, r13, r14, r15, r16, r17, r18, r19, r20, r21;
+	r15 = rr1;
+	r16 = 0x00010000;
+	r1 = 0;
+	r16 |= 0xf3c4;
+	r20 = 0x1f438;
+	r12 = 0x1f6c8;
+	r19 = 0x1f710;
+	r18 = 0x1f718;
+	r13 = r1;
+	r21 = rr2;
+	r11 = r15;
+	r17 = r1;
+	r14 = r16;
+x18d8c:
+	r5 = read8(r11);
+	r8 = 0;
+	r10 = r8;
+	if (r5 != r8)
+		goto x18da4;
+	r1 = read8(r11+5);
+	if (r1 == r8)
+		goto x18f68;
+x18da4:
+	r1 = read8(r12+56);
+	r2 = read8(r12+64);
+	r7 = read8(r11+5);
+	r4 = r19 + r13;
+	r1 |= r2;
+	r1 &= 0xff;
+	r6 = r18 + r13;
+	r9 = r21 & 1;
+	if (r1 == 0)
+		goto x18e1c;
+
+	r2 = read8(r4);
+	r3 = 1;
+	r2 = r3 << r2;
+	r2 = ~r2;
+	r2 &= r5;
+	write8(r11, r2);
+	r1 = read8(r6);
+	r1 = r3 << r1;
+	r1 = ~r1;
+	r2 &= r1;
+	write8(r11, r2);
+	r1 = read8(r4);
+	r1 = r3 << r1;
+	r1 = ~r1;
+	r1 &= r7;
+	write8(r11+5, r1);
+	r2 = read8(r6);
+	r3 <<= r2;
+	r3 = ~r3;
+	r1 &= r3;
+	goto x18e64;
+
+x18e1c:
+	r2 = read8(r4);
+	r3 = 1;
+	r8 = r3;
+	r2 = r3 << r2;
+	r10 = r3;
+	r2 |= r5;
+	write8(r11, r2);
+	r1 = read8(r6);
+	r1 = r3 << r1;
+	r2 |= r1;
+	write8(r11, r2);
+	r1 = read8(r4);
+	r1 = r3 << r1;
+	r1 |= r7;
+	write8(r11+5, r1);
+	r2 = read8(r6);
+	r3 <<= r2;
+	r1 |= r3;
+x18e64:
+	write8(r11+5, r1);
+	r1 = r9 | r10;
+	r1 = (r1 == 0);
+	if (r1 == 0)
+		goto x18e9c;
+	
+	r1 = read8(r12+56);
+	r3 = read8(r11);
+	r2 = r15; // arg?
+	r1 = ~r1;
+	r2 = r2 + r13;
+	r1 = r1 & r3;
+	r4 = 1;
+	if (r1 == r3)
+		goto x18e98;
+	r4 = read8(r2);
+x18e98:
+	write8(r2, r4);
+x18e9c:
+	r1 = r21 >> 1;
+	r1 &= 1;
+	r1 |= r8;
+	r1 = (r1 == 0);
+	if (r1 != 0)
+		goto x18ed8;
+	r1 = read8(r12+64);
+	r3 = read8(r11+5);
+	r2 = rr3; // arg?
+	r1 = ~r1;
+	r2 += r13;
+	r1 &= r3;
+	r4 = 1;
+	if (r1 == r3)
+		goto x18ed4;
+	r4 = read8(r2);
+x18ed4:
+	write8(r2, r4);
+x18ed8:
+	r1 = rr1; // arg?
+	r4 = r1 + r13;
+	r1 = read8(r4);
+	if (r1 == 0)
+		goto x18efc;
+	r1 = read8(r11);
+	r2 = read8(r14);
+	r1 = ~r1;
+	r1 &= r2;
+	write8(r14+1, r1);
+x18efc:
+	r1 = rr3; // arg?
+	r3 = r1 + r13;
+	r1 = read8(r3);
+	if (r1 == 0)
+		goto x18f20;
+	r1 = read8(r11+5);
+	r2 = read8(r14+3);
+	r1 = ~r1;
+	r1 &= r2;
+	write8(r14+3, r1);
+x18f20:
+	r1 = read8(r3);
+	if (r1 != 0)
+		goto x18f30;
+	r1 = read8(r4);
+	if (r1 == 0)
+		goto x18f68;
+x18f30:
+	r1 = 0x1d844;
+	r1 = r17 + r1;
+	r1 = read32(r1);
+	r2 = read32(r14);
+	r1 |= 0x12;
+	r3 = 0x80080000;
+	write32(r3+160, r1);
+	write32(r3+164, r2);
+
+	r4 = r20 + r13;
+	r1 = read8(r11);
+	r2 = read8(r11+5);
+	r3 = read8(r4);
+	r1 |= r2;
+	r1 |= r3;
+	write8(r4, r1);
+x18f68:
+	r13++;
+	r1 = (r13 > 4);
+	r12++;
+	r14 += 4;
+	r17 += 4;
+	r11++;
+	if (r1 == 0)
+		goto x18d8c;
+
+	r1 = 500;
+	r13 = 0;
+	x1c300(r1);
+
+	r11 = r16;
+	r12 = r13;
+x18f98:
+	r1 = 0x1d844;
+	r14 = rr3; // arg?
+	r6 = r12 + r1;
+	r3 = r14 + r13;
+	r16 = rr1; // arg?
+	r1 = read8(r3);
+	r2 = r15 + r13;
+	r4 = r16 + r13;
+	r5 = r2;
+	r13++;
+	r12 += 4;
+	if (r1 == 0)
+		goto x18fe0;
+	r1 = read8(r2+5);
+	r2 = read8(r11+2);
+	r1 = ~r1;
+	r1 &= r2;
+	write8(r11+2, r1);
+x18fe0:
+	r1 = read8(r4);
+	if (r1 == 0)
+		goto x18ffc;
+	r1 = read8(r5);
+	r2 = read8(r11);
+	r1 = ~r1;
+	r1 &= r2;
+	write8(r11, r1);
+x18ffc:
+	r1 = read8(r3);
+	if (r1 != 0)
+		goto x1900c;
+	r1 = read8(r4);
+	if (r1 == 0)
+		goto x1901c;
+x1900c:
+	r1 = read32(r6);
+	r2 = read32(r11);
+	r1 |= 0x12;
+	r3 = 0x80080000;
+	write32(r3+160, r1);
+	write32(r3+164, r2);
+
+x1901c:
+	r1 = (r13 > 4);
+	r11 += 4;
+	if (r1 == 0)
+		goto x18f98;
+	
+	r13 = 0;
+x1902c:
+	r1 = r14 + r13;
+	r1 = read8(r1);
+	if (r1 == 0)
+		goto x190a0;
+	
+	r12 = 0;
+x1903c:
+	r1 = r15 + r13;
+	r2 = read8(r1+5);
+	r5 = r13 << 2;
+	r3 = 0x1df50;
+	r1 = 0x1d844;
+	r2 >>= r12;
+	r4 = r13 << 3;
+	r1 = r5 & r1;
+	r4 &= r3;
+	r5 = r12 << 7;
+	r2 &= 1;
+	r4 += r12;
+	r2 = (r2 == 0);
+	r12++;
+	if (r2 == 0)
+		goto x19098;
+	
+	r1 = read32(r1);
+	r2 = read8(r4);
+	r1 = r1 + r5;
+	r2 = r2 << 24;
+	r1 = r1 + 0x6005;
+	r3 = 0x80080000;
+	write32(r3+160, r1);
+	write32(r3+164, r2);
+x19098:
+	r1 = (r12 > 7);
+	if (r1 == 0)
+		goto x1903c;
+x190a0:
+	r13++;
+	r1 = (r13 > 4);
+	if (r1 == 0)
+		goto x1902c;
+	r13 = 0;
+x190b0:
+	r1 = r16 + r13;
+	r1 = read8(r1);
+	if (r1 == 0)
+		goto x19124;
+	
+	r12 = 0;
+x190c0:
+	r3 = r13 << 2;
+	r1 = 0x1d844;
+	r11 = r3 + r1;
+	r1 = 0x1dfb0;
+	r14 = r3 + r1;
+	r2 = r15 + r13;
+	r1 = read8(r2);
+	r3 = r12 << 7;
+	r1 >>= r12;
+	r1 &= 1;
+	r1 = (r1 == 0);
+	r12++;
+	if (r1 != 0)
+		goto x1911c;
+	
+	r11 = read32(r11);
+	r2 = read32(r14);
+	r11 = r11 + r3;
+	r1 = r11 + 0x400f;
+	r3 = 0x80080000;
+	write32(r3+160, r1);
+	write32(r3+164, r2);
+
+	r2 = read32(r14+20);
+	r1 = r11 + 0x400a;
+	r3 = 0x80080000;
+	write32(r3+160, r1);
+	write32(r3+164, r2);
+
+x1911c:
+	r1 = (r12 > 7);
+	if (r1 == 0)
+		goto x190c0;
+
+x19124:
+	r13++;
+	r1 = (r13 > 2);
+	if (r1 == 0)
+		goto x190b0;
+	
+	x18b20();
+	return;
+}
+
+static void x18490(u32 r1, u32 r2)
 {
 	
 }
 
-static void x18490(void)
-{
-	
-}
-
-static void x180f0(void)
+static void x180f0(u32 r1, u32 r2)
 {
 	
 }
@@ -1594,15 +1913,15 @@ x17e74:
 
 		r2 = read32(r13);
 		r1 = r12;
-		x18d04();
+		x18d04(r1, r2, r3);
 
 		r2 = read32(r13);
 		r1 = r12;
-		x180f0();
+		x180f0(r1, r2);
 
 		r2 = read32(r13);
 		r1 = r12;
-		x18490();
+		x18490(r1, r2);
 
 		r1 = r12;
 		x17e94(r1);
