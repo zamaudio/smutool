@@ -20,6 +20,19 @@
 #define OFF 0
 #define ON 1
 
+typedef struct {
+	u8 d1;
+	u8 d2;
+	u8 d3;
+	u8 d4;
+	u8 d5;
+	u8 d6;
+	u8 d7;
+	u8 d8;
+	u8 d9;
+	u8 d10;
+} ddi_t;
+
 static void x1c300(u32 r1)
 {
 	u32 reg, r3;
@@ -2114,9 +2127,192 @@ x183dc:
 	return;
 }
 
-static void set_ddiphy(int onoff)
+static void set_ddiphy(int onoff, ddi_t *ddi)
 {
-	
+	u32 r1, r2, r3, r4, r5, r6, r7;
+	u32 r11, r12, r13, r14, r15;
+	switch (onoff) {
+	default:
+	case OFF:
+		r1 = 0;
+		ddi->d1 = 0; // sp+28
+		ddi->d2 = 0;
+		ddi->d3 = 0;
+		ddi->d4 = 0;
+		ddi->d5 = 0;
+		ddi->d6 = 0;
+		ddi->d7 = 0;
+		ddi->d8 = 0;
+		ddi->d9 = 0;
+		ddi->d10 = 0;
+		r14 = 0x1f478;
+		r2 = read32(r14);
+		r3 = 0xff00ffff;
+		r1 = r2 >> 24;
+		r7 = r2;
+		r1 <<= 2;
+		r12 = r2 & 0xffff;
+		r1 += 8;
+		r1 &= 0xff;
+		r2 = r1 << 16;
+		r12 &= r3;
+		r1 <<= 24;
+		r4 = r7 >> 16;
+		r12 |= r2;
+		r15 = 0x1f6c4;
+		r13 = 0x1f6c8;
+		r12 |= r1;
+		r4 &= 0xff;
+		r5 = 0;
+x1a59c:
+		r1 = r12 >> 16;
+		r2 = r4 >> r5;
+		r1++;
+		r1 &= 0xff;
+		r5++;
+		r2 &= 1;
+		r1 <<= 16;
+		r6 = (r5 > 3);
+		r2 = (r2 == 0);
+		if (r2 == 0)
+			goto x1a5d0;
+		r12 &= r3;
+		r12 |= r1;
+		if (r6 == 0)
+			goto x1a59c;
+x1a5d0:
+		r2 = r12 >> 16;
+		r1 = r12 >> 24;
+		r2 &= 0xff;
+		r1 = r2 - r1;
+		r5 = r1 + 1;
+		r1 = (r1 & ~0xff000000) | 0x00ff0000;
+		r3 = r1;
+		r2 <<= 24;
+		r3 |= 0xffff;
+		r12 &= r3;
+		r12 |= r2;
+		if (r1 != 0)
+			goto x1a640;
+		
+		r1 = r7 >> 16;
+		r6 = r3;
+		r4 = r1 & 0xff;
+x1a610:
+		r2 = r4 >> r5;
+		r1 = r12 >> 24;
+		r5++;
+		r1++;
+		r2 &= 1;
+		r1 <<= 24;
+		r3 = (r5 > 3);
+		r2 = (r2 == 0);
+		if (r2 != 0)
+			goto x1a640;
+		r12 &= r6;
+		r12 |= r1;
+		if (r3 == 0)
+			goto x1a610;
+x1a640:
+		r1 = r12 & 3;
+		if (r1 == 0)
+			goto x1a70c;
+		r1 = 0x1f39c;
+		r1 = read32(r1);
+		r1 &= 8;
+		if (r1 != 0)
+			goto x1a70c;
+		r11 = (u32)ddi; //sp+28;
+		r1 = r11;
+		r2 = r12;
+		x17bdc(r1, r2);
+
+		r5 = 1;
+x1a674:
+		r1 = ddi->d2;
+		r2 = ddi->d7;
+		r4 = r13 + r5;
+		r1 |= r2;
+		r1 &= 0xff;
+		r3 = r1 & 0xf0;
+		r1 &= 0xf;
+		if (r1 == 0)
+			goto x1a6a4;
+		r1 = read8(r4+16);
+		r1 &= 0xf0;
+		write8(r4+16, r1);
+		goto x1a6b8;
+x1a6a4:
+		r2 = r13 + r5;
+		if (r3 == 0)
+			goto x1a6b8;
+		r1 = read8(r2+16);
+		r1 &= 0xf;
+		write8(r2+16, r1);
+x1a6b8:
+		r1 = ddi->d2;
+		r2 = ddi->d7;
+		r5++;
+		r3 = (r5 > 4);
+		r1 |= r2;
+		r6++;
+		r1 &= 0xff;
+		if (r1 != 0)
+			goto x1a6dc;
+		if (r3 == 0)
+			goto x1a674;
+x1a6dc:
+		r2 = read8(r14);
+		r1 = 3;
+		if (r1 >= r2)
+			goto x1a6ec;
+		goto x1a700;
+x1a6ec:
+		r2 = read32(r15);
+		r1 = 0x00ff0000;
+		r2 &= r1;
+		if (r2 == 0)
+			goto x1a70c;
+x1a700:
+		r1 = r11;
+		r2 = r12;
+		x1916c(r1, r2);
+
+x1a70c:
+		r1 = read8(r14);
+		r1 = (r1 > 3);
+		if (r1 != 0)
+			goto end;
+		r1 = r12 & 4;
+		if (r1 == 0)
+			goto end;
+		
+		r2 = 0x1f6c4;
+		r1 = read8(r2+62);
+		r4 = read8(r2+70);
+		r3 = read8(r2+61);
+		r5 = read8(r2+69);
+		r1 |= r4;
+		r1 <<= 8;
+		r3 |= r5;
+		r1 |= r3;
+		write16(r2+2, r1);
+
+		r1 = 0x1f39c;
+		r1 = read32(r1);
+		r1 &= 0x10;
+		if (r1 != 0)
+			goto end;
+		
+		x1a200();
+		
+		break;
+	case ON:
+		break;
+	}
+
+end:
+	return;
 }
 
 static void set_phyln(int onoff)
@@ -4117,8 +4313,9 @@ end:
 
 void smu_service_request(void)
 {
-	static u32 bapm = 0;
 
+	static ddi_t ddi = {0};
+	static u32 bapm = 0;
 	int requestid;
 	
 	write32(0xe0003004, 1);
@@ -4137,10 +4334,10 @@ void smu_service_request(void)
 		set_phyln(ON);
 		break;
 	case SMC_MSG_DDI_PHY_OFF:
-		set_ddiphy(OFF);
+		set_ddiphy(OFF, &ddi);
 		break;
 	case SMC_MSG_DDI_PHY_ON:
-		set_ddiphy(ON);
+		set_ddiphy(ON, &ddi);
 		break;
 	case SMC_MSG_CASCADE_PLL_OFF:
 		set_cascadepll(OFF);
