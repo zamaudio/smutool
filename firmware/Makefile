@@ -31,10 +31,10 @@ $(TARGET): $(OBJS) $(OBJS2)
 	$(OC) -S -I elf32-lm32 -O binary $(TARGET) smu.rom
 
 .c.o:
-	$(CC) $(LIBS) -O0 -Wall -ffreestanding -c $< -o $@
+	$(CC) $(LIBS) -fPIC -O0 -Wall -ffreestanding -c $< -o $@
 
 .S.o:
-	$(CC) $(LIBS) -O0 -Wall -ffreestanding -c $< -o $@
+	$(CC) $(LIBS) -fPIC -O0 -Wall -ffreestanding -c $< -o $@
 
 clean:
 	rm -f *.o *~ $(TARGET) smu.rom
