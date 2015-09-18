@@ -632,6 +632,7 @@ static void halt(void)
 
 static void set_ddiphy(int onoff)
 {
+	
 }
 
 
@@ -2589,6 +2590,22 @@ static void config_nbdpm()
 
 static void config_loadline()
 {
+	u32 r1, r2, r3;
+
+	r1 = 0x1f428;
+	r1 = read32(r1);
+	r2 = 0x1d989;
+	r3 = 1;
+	r1 &= 0x40;
+	if (r1 == 0)
+		goto x12564;
+	write8(r2+7, r3);
+	goto end;
+x12564:
+	write8(r2+7, r1);
+end:
+	adjust_loadline();
+	return;
 }
 
 static void reconfigure()
@@ -2714,6 +2731,7 @@ void smu_service_request(void)
 
 void MicoISRHandler(void)
 {
+/*
 	unsigned int ip, im, Mask, IntLevel;
 	asm volatile ("rcsr %0,im":"=r"(im));
 
@@ -2751,6 +2769,6 @@ void MicoISRHandler(void)
 	} while(1);
 
 	//OSIntExit();
-	
+*/	
 	return;
 }

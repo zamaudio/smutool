@@ -20,7 +20,7 @@ typedef struct ISREntry{
 	void *Context;
 } ISREntry_t;
 
-static ISREntry_t ISREntryTable[32];
+//static ISREntry_t ISREntryTable[32];
 
 void MicoISRHandler(void);
 void smu_service_request(void);
