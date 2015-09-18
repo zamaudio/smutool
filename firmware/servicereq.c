@@ -2668,42 +2668,14 @@ static void config_vpc(void)
 {
 }
 
-static void config_bapm(void)
-{
-}
-
-static void config_tdc(void)
-{
-	u32 r1, r2;
-
-	r2 = read32(0x1f428) & 4;
-	if (r2 == 0)
-		goto skip;
-	write8(0x1dcf4, read8(0x1f638+3));
-	write8(read32(0x1d8f0), read8(0x1f638+3));
-	write32(0x1f634, 0);
-	write32(0x1f624, 0);
-
-	r1 = read32(0xe0400000 + (read32(0x1d9a4+64) << 2));
-	r1 |= 1;
-	write32(0x1d9a4+68, r1);
-	goto end;
-skip:
-	write8(0x1dcf4, 0);
-	write8(read32(0x1df80), 0);
-	write8(0x1d950, 0);
-end:
-	return;
-}
-
-static void config_lpmx(void)
+static void x13970()
 {
 }
 
 static void config_htc(void)
 {
 	u32 r1, r2, r3, r4, r11, r12, r13;
-
+	
 	r4 = 0x1d9a4;
 	r1 = 0x1f428;
 	r1 = read32(r1);
@@ -2741,6 +2713,282 @@ skip1:
 	write8(r1+9, r11);
 end:
 	return;
+}
+static void config_bapm(u32 *value)
+{
+	u32 r1, r2, r3, r4, r5, r6;
+	u32 r11, r12, r13, r14, r15, r16, r17;
+
+	r1 = 0x1d9a4;
+	r11 = r1;
+	r1 = 0x1d8f0;
+	r1 = read32(r1);
+	r16 = r1;
+	r1 = 0x1dcf4;
+	r15 = r1;
+	
+	r3 = 0x1dff4;
+	r1 = read32(r3+28);
+	r2 = 0x1f850;
+	if (r1 >= 0)
+		goto x1c610;
+	r2 = r3;
+x1c610:
+	r1 = r2;
+
+	x13970();
+	
+	r17 = 0x10000;
+	r1 = r17 | 0xf428;
+	r1 = read32(r1);
+	r14 = 0x1f46c;
+	r6 = 0x1f42c;
+	r13 = 0x1ee0c;
+	r12 = r1 & 2;
+	r5 = 0x10000;
+	if (r12 == 0)
+		goto x14004;
+	r2 = 0x1d944;
+	r2 = read32(r2);
+	r4 = 0x1f44c;
+	r1 = 0;
+	r3 = 0x1dea8;
+	write32(r4, r1);
+	write32(r4+4, r1);
+	write32(r4+8, r1);
+	write32(r4+16, r1);
+	write32(r4+12, r1);
+	write32(r3, r2);
+	write32(r6, r1);
+	r4 = 0x1f5e8;
+	r2 = 0x1dd94;
+	write32(r4+8, r1);
+	write32(r4, r1);
+	write32(r4+4, r1);
+	r3 = 0x1ddf4;
+	write32(r2+16, r1);
+	write16(r2+2, r1);
+	write16(r2, r1);
+	write16(r2+6, r1);
+	write16(r2+4, r1);
+	write16(r2+10, r1);
+	write16(r2+8, r1);
+	write32(r2+12, r1);
+	r12 = r1;
+	r1 = 0x2c;
+x13e60:
+	write32(r3, r12);
+	r1--;
+	r3 += 4;
+	if (r1 == 0)
+		goto x13e60;
+	r1 = read32(r11+24);
+	r1 <<= 2;
+	r2 = 0xe0400000;
+	r1 += r1;
+	write32(r2, r3);
+
+	write32(r11+28, r1);
+	r1 = read32(r11+32);
+	r1 <<= 2;
+	r2 = 0xe0400000;
+	r1 += r1;
+	write32(r2, r3);
+
+	r3 = 0x1ddd4;
+	r2 = 0x08000001;
+	write32(r11+36, r1);
+	write32(r3, r2);
+	write32(r3+4, r13);
+	r1 = read32(r11+8);
+	r4 = 0xe0400000;
+	r1 <<= 2;
+	r5 = r13 + 4;
+	r1 += r4;
+	write32(r3+8, r1);
+	write32(r3+12, r2);
+	write32(r3+16, r5);
+	r2 = read32(r11+16);
+	r1 = 0x1ddf0;
+	write32(r1, r12);
+	r2 <<= 2;
+	r1 = read8(r14+1);
+	r2 += r4;
+	write32(r3+20, r2);
+	write8(r15+1, r1);
+	r14 = read8(r14+1);
+	r2 = 0x1dd8b;
+	write8(r16+1, r14);
+	r3 = 1;
+	r1 = 0xe0100000;
+	write8(r2, r3);
+	r3 = read32(r1+16780);
+	r2 = 0x1dd8c;
+	r4 = 0x1ded0;
+	r1 = 0x1d998;
+	r3 &= 1;
+	write8(r2, r3);
+	write32(r4, r1);
+	r3 ^= 1;
+	if (r3 != 0)
+		goto x13f60;
+	r2 = 0x1f428;
+	r1 = read32(r2);
+	*value = r1;
+	r1 = (*value >> 24) & 0xff;
+	r1 |= 0x10;
+	*value = (*value & ~0xff000000) | ((r1 & 0xff) << 24);
+	r1 = *value;
+	write32(r2, r1);
+	config_htc();
+
+x13f60:
+	r1 = read32(r11+144);
+	r1 <<= 2;
+	r2 = 0xe0400000;
+	r1 += r1;
+	write32(r2, r3);
+
+	r3 = r1 >> 10;
+	r2 = 0x1dd90;
+	write32(r11+148, r1);
+	r3 &= 1;
+	write8(r2, r3);
+	r1 = read32(r11+148);
+	r2 = 0x1dd8f;
+	r1 >>= 26;
+	r3 = 0x1dd8e;
+	write8(r2, r1);
+	r2 = 0x1dd8d;
+	r1 &= 1;
+	write8(r3, r1);
+	r1 = read32(r11+148);
+	r4 = 0xfbffffff;
+	r1 >>= 25;
+	r3 = 0xfdffffff;
+	r1 &= 1;
+	write8(r2, r1);
+	r2 = read32(r11+148);
+	r1 = 0xfbff;
+	r2 &= r1;
+	r2 &= r4;
+	r1 = 0xfdff;
+	r2 &= r1;
+	r1 = read32(r11+144);
+	r2 &= r3;
+	write32(r11+148, r2);
+	r1 <<= 2;
+	r3 = 0xe0400000;
+	r1 += r3;
+	write32(r1, r2);
+
+	goto x14110;
+x14004:
+	write8(r15+1, r12);
+	write8(r16+1, r12);
+	r2 = 0x1deac;
+	r1 = read32(r2+24);
+	r5 = 0x1dd94;
+	r13 = 0x1dd8b;
+	write16(r5+46, r1);
+	r1 = read8(r2+3);
+	write8(r11+29, r1);
+	r3 = read32(r2+12);
+	r1 = read32(r11+24);
+	r2 = read32(r11+28);
+	write8(r11+39, r3);
+	r1 <<= 2;
+	r3 = 0xe0400000;
+	r1 += r3;
+	write32(r1, r2);
+
+	r1 = read32(r11+32);
+	r2 = read32(r11+36);
+	r1 <<= 2;
+	r3 = 0xe0400000;
+	r1 += r3;
+	write32(r1, r2);
+
+	r1 = read8(r13);
+	r1 = (r1 != 1);
+	if (r1 != 0)
+		goto x1410c;
+	r1 = read32(r11+144);
+	r1 <<= 2;
+	r2 = 0xe0400000;
+	r1 += r1;
+	write32(r2, r3);
+
+	r2 = r1;
+	r1 = 0x1dd90;
+	write32(r11+148, r2);
+	r1 = read8(r1);
+	r3 = 0xfbff;
+	r2 &= r3;
+	r1 &= 1;
+	r1 <<= 10;
+	r3 = 0x1dd8f;
+	r2 |= r1;
+	write32(r11+148, r2);
+	r1 = read8(r3);
+	r3 = 0xfbffffff;
+	r1 &= 1;
+	r1 <<= 26;
+	r2 &= r3;
+	r2 |= r1;
+	r1 = 0x1dd8e;
+	write32(r11+148, r2);
+	r1 = read8(r1);
+	r3 = 0xfdff;
+	r2 &= r3;
+	r1 &= 1;
+	r1 <<= 9;
+	r3 = 0x1dd8d;
+	r3 = read8(r3);
+	r1 = 0xfdffffff;
+	r3 &= 1;
+	r2 &= r1;
+	r3 <<= 25;
+	r1 = read32(r11+144);
+	r2 |= r3;
+	write32(r11+148, r2);
+	r1 <<= 2;
+	r3 = 0xe0400000;
+	r1 += r3;
+	write32(r1, r2);
+
+x1410c:
+	write8(r13, r12);
+x14110:
+	return;
+}
+
+static void config_tdc(void)
+{
+	u32 r1, r2;
+
+	r2 = read32(0x1f428) & 4;
+	if (r2 == 0)
+		goto skip;
+	write8(0x1dcf4, read8(0x1f638+3));
+	write8(read32(0x1d8f0), read8(0x1f638+3));
+	write32(0x1f634, 0);
+	write32(0x1f624, 0);
+
+	r1 = read32(0xe0400000 + (read32(0x1d9a4+64) << 2));
+	r1 |= 1;
+	write32(0x1d9a4+68, r1);
+	goto end;
+skip:
+	write8(0x1dcf4, 0);
+	write8(read32(0x1df80), 0);
+	write8(0x1d950, 0);
+end:
+	return;
+}
+
+static void config_lpmx(void)
+{
 }
 
 static void config_thermal(void)
@@ -2833,6 +3081,7 @@ static void config_tdp(void)
 	u32 r11, r12, r13, r14, r15, r16;
 
 	//x1c5f4();
+	r16 = 0x1f160;
 	r3 = 0x1dff4;
 	r1 = read32(r3+28);
 	r2 = 0x1f850;
@@ -3315,7 +3564,7 @@ x14e24:
 		config_lpmx();
 		config_tdc();
 		config_tdp();
-		config_bapm();
+		config_bapm(bapmon);
 
 		r2 = 0x80010800;
 		write8(r12+3, r11);
@@ -3427,7 +3676,7 @@ x14e24:
 		write32(r3, r1);
 
 		config_htc();
-		config_bapm();
+		config_bapm(bapmoff);
 		config_tdc();
 		config_vpc();
 		config_lpmx();
@@ -3489,8 +3738,8 @@ end:
 
 void smu_service_request(void)
 {
-	static u32 bapmoff = 0;
-	static u32 bapmon = 0;
+	static u32 bapm = 0;
+
 	int requestid;
 	
 	write32(0xe0003004, 1);
@@ -3536,7 +3785,7 @@ void smu_service_request(void)
 		config_vpc();
 		break;
 	case SMC_MSG_CONFIG_BAPM:
-		config_bapm();
+		config_bapm(&bapm);
 		break;
 	case SMC_MSG_CONFIG_TDC_LIMIT:
 		config_tdc();
@@ -3578,10 +3827,10 @@ void smu_service_request(void)
 		pciepllswitch();
 		break;
 	case SMC_MSG_ENABLE_BAPM:
-		set_bapm(ON, &bapmoff, &bapmon);
+		set_bapm(ON, &bapm, &bapm);
 		break;
 	case SMC_MSG_DISABLE_BAPM:
-		set_bapm(OFF, &bapmoff, &bapmon);
+		set_bapm(OFF, &bapm, &bapm);
 		break;
 	default:
 		break;
