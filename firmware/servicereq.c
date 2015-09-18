@@ -630,12 +630,6 @@ static void halt(void)
 	return;
 }
 
-static void set_ddiphy(int onoff)
-{
-	
-}
-
-
 static void x1a200(void)
 {
 	u32 r1, r2, r3, r4;
@@ -2118,6 +2112,11 @@ x183dc:
 	return;
 }
 
+static void set_ddiphy(int onoff)
+{
+	
+}
+
 static void set_phyln(int onoff)
 {
 	u32 r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16;
@@ -2744,6 +2743,26 @@ end:
 
 static void config_thermal(void)
 {
+	u32 r1, r2, r3, r11, r12;
+
+	r1 = 0x1d8f0;
+	r12 = r1;
+	r1 = 0x1dcf4;
+	r11 = 0x1f460;
+	r2 = read8(r11+2);
+	r3 = 0x1d998;
+	r2 &= 0xff;
+	write8(r1+5, r2);
+	write8(r12+5, r2);
+	r2 = 0;
+	r1 = 0x1f308;
+	write8(r3+8, r2);
+	write8(r3+9, r2);
+	write8(r1+1, r2);
+	r2 = read8(r3+8);
+	r1 = 0x1f108;
+	write8(r1+1, r2);
+	return;
 }
 
 static void config_voltage(void)
