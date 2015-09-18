@@ -828,6 +828,7 @@ x1b324:
 skip4:
 	r1 = r2 & 0xff;
 
+
 	r4 = r1 & 0xff;
 	r1 = 0xff;
 	if (r4 == 0)
@@ -2826,6 +2827,152 @@ end:
 
 static void reconfigure()
 {
+	u32 r1, r2, r3, r4, r11, r12, r13;
+
+	r1 = 0x1f630;
+	r1 = read32(r1);
+	r1 = r1 & 0xff00;
+	r11 = r1 >> 8;
+	r1 = 3;
+	if (r1 >= r11)
+		goto x1aa10;
+	goto end;
+x1aa10:
+	r1 = 0xe0002028;
+	r2 = read32(r1);
+	r1 = 0x64;
+	r13 = r2 & 0x7f;
+// 1b2d0
+	r2 = 0xe0003020;
+	r2 = read32(r2);
+	r2 = r2 * 100;
+	r2 = r2 << 8;
+	r3 = r2 / r1;
+	r1 = r3 >> 8;
+	r2 = r3 >> 6;
+	r4 = r1 + 64;
+	r2 = r2 & 0xff;
+	r1 = 0x1fff;
+	if (r1 >= r3)
+		goto skip3;
+	r2 = r4 & 0xff;
+		goto x1b324;
+skip3:
+	r1 = r3 + r3;
+	r1 = r1 - 0x2000;
+	r4 = r1 >> 8;
+	r1 = 0xfff;
+	if (r1 >= r3)
+		goto x1b324;
+	r1 = r4 + 0x40;
+	r2 = r1 & 0xff;
+x1b324:
+	r1 = (r2 > 7);
+	if (r1 != 0)
+		goto skip4;
+	r2 = 8;
+skip4:
+	r1 = r2 & 0xff;
+
+	//x1b280();
+	r4 = r1 & 0xff;
+	r1 = 0xff;
+	if (r4 == 0)
+		goto x1b2cc;
+	r2 = 0xe000205c;
+x1b294:
+	r1 = read32(r2);
+	r1 &= 1;
+	if (r1 == 0)
+		goto x1b294;
+	r1 = 0xe0002058;
+	r3 = 0xe000205c;
+	write32(r1, r4);
+x1b2b4:
+	r1 = read32(r3);
+	r1 ^= 1;
+	r2 = r1 & 1;
+	r1 = (r2 == 0);
+	if (r1 == 0)
+		goto x1b2b4;
+	r1 = r2;
+x1b2cc:
+
+	if (r11 != 0)
+		goto x1aa3c;
+	r12 = 0x01308060;
+	goto x1aa74;
+x1aa3c:
+	r1 = (r11 != 1);
+	if (r1 != 0)
+		goto x1aa50;
+	r12 = 0x01318060;
+	goto x1aa74;
+x1aa50:
+	r1 = (r11 != 2);
+	if (r1 != 0)
+		goto x1aa64;
+	r12 = 0x01328060;
+	goto x1aa74;
+x1aa64:
+	r1 = (r11 != 3);
+	if (r1 != 0)
+		goto x1aa74;
+	r12 = 0x01338060;
+x1aa74:
+	r2 = 1;
+	r1 = r12;
+	r3 = 0x80080000;
+	write32(r3+160, r1);
+	r1 = read32(r3+164);
+	r1 |= r2;
+	write32(r3+164, r1);
+
+	r1 = 1;
+	r1 = r12;
+	r3 = 0x80080000;
+	write32(r3+160, r1);
+x1705c:
+	r1 = read32(r3+164);
+	r1 = r2 & r1;
+	if (r1 == r2)
+		goto x1705c;
+
+	r1 = r12;
+	r2 = 4;
+	r3 = 0x80080000;
+	write32(r3+160, r1);
+x17040:
+	r1 = read32(r3+164);
+	r1 = r2 & r1;
+	if (r1 != r2)
+		goto x17040;
+
+	r1 = r13;
+	//x1b280();
+	r4 = r1 & 0xff;
+	r1 = 0xff;
+	if (r4 == 0)
+		goto end;
+	r2 = 0xe000205c;
+x1b294_1:
+	r1 = read32(r2);
+	r1 &= 1;
+	if (r1 == 0)
+		goto x1b294_1;
+	r1 = 0xe0002058;
+	r3 = 0xe000205c;
+	write32(r1, r4);
+x1b2b4_1:
+	r1 = read32(r3);
+	r1 ^= 1;
+	r2 = r1 & 1;
+	r1 = (r2 == 0);
+	if (r1 == 0)
+		goto x1b2b4_1;
+	r1 = r2;
+end:
+	return;
 }
 
 static void pciepllswitch()
