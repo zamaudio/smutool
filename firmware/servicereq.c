@@ -217,6 +217,7 @@ static void x18b20(void)
 	u32 r1, r2, r3, r4, r5, r6, r7, r8, r9;
 	u32 r10, r11, r12, r13, r14, r15, r16, ra;
 	
+	r6 = 0; // compiler
 	r3 = 0x1dff4;
 	r1 = read32(r3+28);
 	r2 = 0x1f850;
@@ -3199,12 +3200,12 @@ static void pciepllswitch()
 	write32(reg, read32(reg) & 0xfffd);
 }
 
-static void set_bapm(int onoff, u32 *value)
+static void set_bapm(int onoff, u32 *bapmoff, u32 *bapmon)
 {
 	u32 r1, r2, r3, r4, r5, r6, r11, r12, r13;
 	switch (onoff) {
 	case ON:
-		// disable interrupts (already off)
+		// disable interrupts (nah)
 		r1 = 0x1d9a4;
 		r11 = r1;
 		r1 = 0x1dd8b;
@@ -3268,44 +3269,44 @@ static void set_bapm(int onoff, u32 *value)
 		r6 = 0x1f428;
 		r1 = read32(r6);
 		r5 = 0x1ddec;
-		*value = r1; // arg? sp
+		*bapmon = r1; // arg? sp
 		r3 = read8(r5+3);
 		r2 = 0xfffd;
 		r4 = 0x1dd8c;
-		r1 = ((*value) >> 24) & 0xff;  // sp+23
+		r1 = ((*bapmon) >> 24) & 0xff;  // sp+23
 		r3 &= 2;
 		r1 &= r2;
 		r1 |= r3;
-		*value = (*value & ~0xff000000) | ((r1 & 0xff) << 24);
+		*bapmon = (*bapmon & ~0xff000000) | ((r1 & 0xff) << 24);
 		r2 = read8(r5+3);
 		r4 = read8(r4);
-		r1 = ((*value) >> 24) & 0xff;
+		r1 = ((*bapmon) >> 24) & 0xff;
 		r2 &= 1;
 		r1 &= r13;
 		r1 |= r2;
-		*value = (*value & ~0xff000000) | ((r1 & 0xff) << 24);
+		*bapmon = (*bapmon & ~0xff000000) | ((r1 & 0xff) << 24);
 		r3 = read8(r5+3);
 		r2 = 0xfff7;
-		r1 = ((*value) >> 24) & 0xff;
+		r1 = ((*bapmon) >> 24) & 0xff;
 		r3 &= 8;
 		r1 &= r2;
 		r1 |= r3;
-		*value = (*value & ~0xff000000) | ((r1 & 0xff) << 24);
+		*bapmon = (*bapmon & ~0xff000000) | ((r1 & 0xff) << 24);
 		r3 = read8(r5+3);
 		r2 = 0xfffb;
-		r1 = ((*value) >> 24) & 0xff;
+		r1 = ((*bapmon) >> 24) & 0xff;
 		r3 &= 4;
 		r1 &= r2;
 		r1 |= r3;
-		*value = (*value & ~0xff000000) | ((r1 & 0xff) << 24);
+		*bapmon = (*bapmon & ~0xff000000) | ((r1 & 0xff) << 24);
 		if (r4 != 0)
 			goto x14e24;
-		r1 = ((*value) >> 24) & 0xff;
+		r1 = ((*bapmon) >> 24) & 0xff;
 		r2 = 0xffef;
 		r1 &= r2;
-		*value = (*value & ~0xff000000) | ((r1 & 0xff) << 24);
+		*bapmon = (*bapmon & ~0xff000000) | ((r1 & 0xff) << 24);
 x14e24:
-		r1 = *value;
+		r1 = *bapmon;
 		r11 = 1;
 		write32(r6, r1);
 
@@ -3336,9 +3337,150 @@ x14e24:
 		r1 = 0x1d95c;
 
 		write8(r1+8, r11);
-		// enable interrupts (disabled)
+		// enable interrupts (nah)
 		break;
 	case OFF:
+		// disable interrupts (nah)
+		r1 = 0x1d9a4;
+		r12 = r1;
+		r1 = 0x1dd8b;
+		r1 = read8(r1);
+		if (r1 == 0)
+			goto end;
+		r1 = read32(r12+128);
+		r11 = 0xfffe;
+		r1 <<= 2;
+		r2 = 0xe0400000;
+		r1 += r2;
+		r1 = read32(r1);
+
+		write32(r12+132, r1);
+		r2 = 0x1dd8a;
+		r1 &= 3;
+		write8(r2, r1);
+		r1 = read32(r12+132);
+		r2 = 0x1dd89;
+		r1 >>= 7;
+		r1 &= 1;
+		write8(r2, r1);
+		r3 = read32(r12+132);
+		r2 = 0xfffc;
+		r1 = read32(r12+128);
+		r3 &= r2;
+		r2 = 0xff7f;
+		r3 &= r2;
+		r2 = r3;
+		write32(r12+132, r3);
+		r1 <<= 2;
+		r3 = 0xe0400000;
+		r1 += r3;
+		write32(r1, r2);
+		
+		r1 = read32(r12+104);
+		r1 <<= 2;
+		r2 = 0xe0400000;
+		r1 += r2;
+		r1 = read32(r1);
+		
+		r3 = r1 >> 9;
+		r2 = 0x1dd88;
+		write32(r12+108, r1);
+		r3 &= 7;
+		write8(r2, r3);
+		r3 = read32(r12+108);
+		r1 = read32(r12+104);
+		r2 = 0xfff1;
+		r3 &= r2;
+		r2 = r3;
+		write32(r12+108, r3);
+		r1 <<= 2;
+		r3 = 0xe0400000;
+		r1 += r3;
+		write32(r1, r2);
+		
+		r3 = 0x1f428;
+		r2 = read32(r3);
+		r1 = 0x1ddec;
+		*bapmoff = r2;
+		r2 = *bapmoff;
+		write32(r1, r2);
+		r1 = ((*bapmoff) >> 24) & 0xff;
+		r2 = 0xfffd;
+		r1 &= r2;
+		*bapmoff = (*bapmoff & ~0xff000000) | ((r1 & 0xff) << 24);
+		
+		r1 = ((*bapmoff) >> 24) & 0xff;
+		r2 = 0xfff7;
+		r1 &= r11;
+		*bapmoff = (*bapmoff & ~0xff000000) | ((r1 & 0xff) << 24);
+		r1 = ((*bapmoff) >> 24) & 0xff;
+		r1 &= r2;
+		*bapmoff = (*bapmoff & ~0xff000000) | ((r1 & 0xff) << 24);
+		r1 = ((*bapmoff) >> 24) & 0xff;
+		r2 = 0xfffb;
+		r1 &= r2;
+		*bapmoff = (*bapmoff & ~0xff000000) | ((r1 & 0xff) << 24);
+		r1 = ((*bapmoff) >> 24) & 0xff;
+		r1 |= 0x10;
+		*bapmoff = (*bapmoff & ~0xff000000) | ((r1 & 0xff) << 24);
+		r1 = *bapmoff;
+		write32(r3, r1);
+
+		config_htc();
+		config_bapm();
+		config_tdc();
+		config_vpc();
+		config_lpmx();
+		
+		//x12ea8
+		r1 = 0x1dcf4;
+		r5 = 0;
+		r4 = 0xe000228c;
+		write8(r1+14, r5);
+		r3 = read32(r4);
+		r1 = 0xbfffffff;
+		r2 = 0x40000000;
+		r3 &= r1;
+		r3 |= r2;
+		write32(r4, r3);
+		r3 = read32(r4);
+		r1 = 0x7fffffff;
+		r2 = 0x80000000;
+		r3 &= r1;
+		r3 |= r2;
+		write32(r4, r3);
+		r2 = read32(r4);
+		r1 = 0xffff7fff;
+		r2 &= r1;
+		write32(r4, r2);
+		r1 = 0x1f160;
+		write8(r1+2, r5);
+		write8(r1+3, r5);
+
+		r1 = 0x1f468;
+		r2 = read32(r1);
+		r3 = 0x80010800;
+		r1 = 0x1d940;
+		write32(r1, r2);
+		r1 = read32(r3);
+		r4 = 0x80010810;
+		r1 &= r11;
+		write32(r3, r1);
+		r1 = read32(r3);
+		r2 = 0x0007a120;
+		r1 |= 0x100;
+		write32(r3, r1);
+		r1 = read32(r4);
+		write32(r4, r2);
+		r1 = read32(r3);
+		r1 &= r11;
+		r1 |= 1;
+		write32(r3, r1);
+		r1 = 0x1d95c;
+		r2 = 0;
+		write8(r1+8, r2);
+
+		// enable interrupts (nah)
 		break;
 	}
 end:
@@ -3347,7 +3489,8 @@ end:
 
 void smu_service_request(void)
 {
-	static u32 bapm = 0;
+	static u32 bapmoff = 0;
+	static u32 bapmon = 0;
 	int requestid;
 	
 	write32(0xe0003004, 1);
@@ -3435,10 +3578,10 @@ void smu_service_request(void)
 		pciepllswitch();
 		break;
 	case SMC_MSG_ENABLE_BAPM:
-		set_bapm(ON, &bapm);
+		set_bapm(ON, &bapmoff, &bapmon);
 		break;
 	case SMC_MSG_DISABLE_BAPM:
-		set_bapm(OFF, &bapm);
+		set_bapm(OFF, &bapmoff, &bapmon);
 		break;
 	default:
 		break;

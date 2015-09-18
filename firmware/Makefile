@@ -23,6 +23,7 @@ ASMS=MicoSleepHelper.S crt0ram-smu.S
 OBJS=$(SRCS:.c=.o)
 OBJS2=$(ASMS:.S=.o)
 TARGET=smu.elf
+OPT=-Os
 
 all: $(TARGET)
 
@@ -31,10 +32,10 @@ $(TARGET): $(OBJS) $(OBJS2)
 	$(OC) -S -I elf32-lm32 -O binary $(TARGET) smu.rom
 
 .c.o:
-	$(CC) $(LIBS) -fPIC -O0 -Wall -ffreestanding -c $< -o $@
+	$(CC) $(LIBS) $(OPT) -Wall -ffreestanding -c $< -o $@
 
 .S.o:
-	$(CC) $(LIBS) -fPIC -O0 -Wall -ffreestanding -c $< -o $@
+	$(CC) $(LIBS) $(OPT) -Wall -ffreestanding -c $< -o $@
 
 clean:
 	rm -f *.o *~ $(TARGET) smu.rom
