@@ -3199,13 +3199,157 @@ static void pciepllswitch()
 	write32(reg, read32(reg) & 0xfffd);
 }
 
-static void set_bapm(int onoff)
+static void set_bapm(int onoff, u32 *value)
 {
+	u32 r1, r2, r3, r4, r5, r6, r11, r12, r13;
+	switch (onoff) {
+	case ON:
+		// disable interrupts (already off)
+		r1 = 0x1d9a4;
+		r11 = r1;
+		r1 = 0x1dd8b;
+		r1 = read8(r1);
+		r12 = 0x1f160;
+		r1 = (r1 != 1);
+		if (r1 == 0)
+			goto end;
+		r1 = read32(r11+128);
+		r13 = 0xfffe;
+		r1 <<= 2;
+		r2 = 0xe0400000;
+		r1 += r2;
+		r1 = read32(r1);
+		
+		r3 = r1;
+		r1 = 0x1dd8a;
+		write32(r11+132, r3);
+		r2 = 0xfffc;
+		r3 = r3 & r2;
+		r1 &= 3;
+		r3 |= r1;
+		r1 = 0x1dd89;
+		write32(r11+132, r3);
+		r2 = read8(r1);
+		r1 = 0xff7f;
+		r2 &= 1;
+		r3 &= r1;
+		r2 <<= 7;
+		r1 = read32(r1+128);
+		r3 |= r2;
+		r2 = r3;
+		write32(r11+132, r3);
+		r1 <<= 2;
+		r3 = 0xe0400000;
+		r1 += r3;
+		write32(r1, r2);
+
+		r1 = read32(r11+104);
+		r1 <<= 2;
+		r2 = 0xe0400000;
+		r1 += r2;
+		r1 = read32(r1);
+
+		r2 = r1;
+		r1 = 0x1dd88;
+		write32(r11+108, r2);
+		r3 = read8(r1);
+		r1 = 0xf1ff;
+		r3 &= 7;
+		r3 <<= 9;
+		r2 &= r1;
+		r1 = read32(r11+104);
+		r2 |= r3;
+		write32(r11+108, r2);
+		r1 <<= 2;
+		r3 = 0xe0400000;
+		r1 += r3;
+		write32(r1, r2);
+
+		r6 = 0x1f428;
+		r1 = read32(r6);
+		r5 = 0x1ddec;
+		*value = r1; // arg? sp
+		r3 = read8(r5+3);
+		r2 = 0xfffd;
+		r4 = 0x1dd8c;
+		r1 = ((*value) >> 24) & 0xff;  // sp+23
+		r3 &= 2;
+		r1 &= r2;
+		r1 |= r3;
+		*value = (*value & ~0xff000000) | ((r1 & 0xff) << 24);
+		r2 = read8(r5+3);
+		r4 = read8(r4);
+		r1 = ((*value) >> 24) & 0xff;
+		r2 &= 1;
+		r1 &= r13;
+		r1 |= r2;
+		*value = (*value & ~0xff000000) | ((r1 & 0xff) << 24);
+		r3 = read8(r5+3);
+		r2 = 0xfff7;
+		r1 = ((*value) >> 24) & 0xff;
+		r3 &= 8;
+		r1 &= r2;
+		r1 |= r3;
+		*value = (*value & ~0xff000000) | ((r1 & 0xff) << 24);
+		r3 = read8(r5+3);
+		r2 = 0xfffb;
+		r1 = ((*value) >> 24) & 0xff;
+		r3 &= 4;
+		r1 &= r2;
+		r1 |= r3;
+		*value = (*value & ~0xff000000) | ((r1 & 0xff) << 24);
+		if (r4 != 0)
+			goto x14e24;
+		r1 = ((*value) >> 24) & 0xff;
+		r2 = 0xffef;
+		r1 &= r2;
+		*value = (*value & ~0xff000000) | ((r1 & 0xff) << 24);
+x14e24:
+		r1 = *value;
+		r11 = 1;
+		write32(r6, r1);
+
+		config_htc();
+		config_vpc();
+		config_lpmx();
+		config_tdc();
+		config_tdp();
+		config_bapm();
+
+		r2 = 0x80010800;
+		write8(r12+3, r11);
+		r1 = read32(r2);
+		r3 = 0x80010810;
+		r1 &= r13;
+		write32(r2, r1);
+		r1 = read32(r2);
+		r4 = 0x1d940;
+		r1 |= 0x100;
+		write32(r2, r1);
+		r1 = read32(r3);
+		r1 = read32(r4);
+		write32(r3, r1);
+		r1 = read32(r2);
+		r1 &= r13;
+		r1 |= r11;
+		write32(r2, r1);
+		r1 = 0x1d95c;
+
+		write8(r1+8, r11);
+		// enable interrupts (disabled)
+		break;
+	case OFF:
+		break;
+	}
+end:
+	return;
 }
 
 void smu_service_request(void)
 {
+	static u32 bapm = 0;
 	int requestid;
+	
 	write32(0xe0003004, 1);
 	requestid = read32(0xe0003000);
 	requestid &= 0x1fffe;
@@ -3291,10 +3435,10 @@ void smu_service_request(void)
 		pciepllswitch();
 		break;
 	case SMC_MSG_ENABLE_BAPM:
-		set_bapm(ON);
+		set_bapm(ON, &bapm);
 		break;
 	case SMC_MSG_DISABLE_BAPM:
-		set_bapm(OFF);
+		set_bapm(OFF, &bapm);
 		break;
 	default:
 		break;
