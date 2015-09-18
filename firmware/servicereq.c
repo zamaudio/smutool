@@ -2438,8 +2438,205 @@ end:
 	return;
 }
 
+static u32 x11cb0(u32 rr1, u32 rr2)
+{
+	u32 r1, r2, r3, r4, r5;
+	u32 r11, r12, r13, r14, r15;
+	r15 = rr1;
+	r1 = read32(rr1);
+	r11 = 0x1d8ac;
+	r3 = read32(r11+56);
+	r1 <<= 5;
+	r14 = 0x1d989;
+	r1 = r1 + r3;
+	r1 = read8(r1+3);
+	r13 = rr2 & 0xff;
+	r12 = 0;
+	r2 = 0xff;
+	if (r1 == r12)
+		goto x11d74;
+	write32(r11+24, r12);
+	write32(r11+28, r12);
+	write32(r11+32, r12);
+	write8(r11+5, r12);
+	write8(r11+3, r13);
+	write8(r11+12, r12);
+	return r1;
+
+	r3 = 0xe0000124;
+	r1 = (r13 != 1);
+	if (r1 != r12)
+		goto x11d34;
+	write32(r3, r12);
+x11d34:
+	r12 = read32(r15);
+	r2 = read32(r11+56);
+	r3 = read8(r14+8);
+	r1 = r12 << 5;
+	r1 = r1 + r2;
+	r1 = read8(r1+1);
+	r1 &= 0xff;
+	write8(r14+1, r1);
+	if (r1 >= r3)
+		goto x11d68;
+	r3 = read8(r14+5);
+	r2 = 1;
+	if (r3 == 0)
+		goto x11d68;
+	//x1b5c4();
+	r12 = 0x1d989;
+	r3 = read8(r12+11);
+	r11 = r1 & 0xff;
+	r13 = r2 & 0xff;
+	if (r1 >= r3)
+		goto x1b5f4;
+	r11 = r3;
+x1b5f4:
+	r2 = 0xe00021b4;
+x1b5fc:
+	r1 = read32(r2);
+	r1 = r1 & 1;
+	if (r1 == 0)
+		goto x1b5fc;
+	write8(r12+9, r11);
+	adjust_loadline();
+	r1 = read8(r12+10);
+	r2 = 0xe00021b0;
+	r1 = r11 + r1;
+	r1 <<= 1;
+	r3 = 0xe00021b4;
+	r1 |= r13;
+	write32(r2, r1);
+x1b634:
+	r1 = read32(r3);
+	r1 &= 1;
+	if (r1 == 0)
+		goto x1b634;
+	write8(r12+8, r11);
+
+x11d68:
+	r1 = r12;
+	
+	r11 = 0x1d8ac;
+	r2 = read32(r11+56);
+	r3 = r1 << 5;
+	r12 = 0x1f304;
+	r2 = r2 & r3;
+	write32(r11+52, r2);
+	write32(r11+20, r1);
+	write8(r12+2, r1);
+	r1 = read32(r11+52);
+	r1 = read8(r1+2);
+	r1 &= 0xff;
+	
+	r12 = r1 & 0xff;
+	r1 = r12;
+	r11 = 0x10000;
+	
+	r4 = r1 & 0xff;
+	r1 = 0xff;
+	if (r4 == 0)
+		goto x1b2cc;
+	r2 = 0xe000205c;
+x1b294:
+	r1 = read32(r2);
+	r1 = r1 & 1;
+	if (r1 == 0)
+		goto x1b294;
+	r1 = 0xe0002058;
+	r3 = 0xe000205c;
+	write32(r1, r4);
+x1b2b4:
+	r1 = read32(r3);
+	r1 ^= 1;
+	r2 = r1 & 1;
+	r1 = (r2 == 0);
+	if (r1 == 0)
+		goto x1b2b4;
+	r1 = r2;
+x1b2cc:
+
+	r11 |= 0xd8ac;
+	r1 = 1;
+	write8(r11+4, r12);
+	
+	r1 = read32(r11+20);
+	write8(r12+3, r1);
+	r1 = read32(r11+20);
+	r2 = read32(r11+56);
+	r3 = r5 << 5;
+	write32(r11+16, r1);
+	r2 = r2 & r3;
+	write32(r11+48, r2);
+	r1 <<= 2;
+	r2 = 0x1f900;
+	r1 = r1 + r2;
+	r1 = read32(r1+64);
+	write32(r2+12, r1);
+
+	r3 = read32(r11+48);
+	r2 = 0;
+	r1 = r2;
+	write16(r3+8, r2);
+
+	r2 = 0;
+x11d74:
+	r1 = r2;
+	return r1;
+}
+
 static void config_lclkdpm(void)
 {
+	u32 r1, r2, r3, r4, r5, r6, r7;
+	u32 r11, r12, r13, r14;
+
+	r1 = 0x1d8f0;
+	r1 = read32(r1);
+	r14 = r1;
+	r1 = 0x1dcf4;
+	r5 = 0x1f300;
+	r3 = read8(r5+3);
+	r13 = r1;
+	r7 = 0xff000000;
+	r6 = 0xe0000124;
+	r12 = 0x1f460;
+	r4 = 0x1d989;
+	r11 = 0x1d8ac;
+	r2 = 0;
+
+	if (r3 != r2)
+		goto x11e1c;
+	write8(r4+5, r3);
+	write8(r11, r3);
+	write8(r13+3, r3);
+	write8(r14+3, r3);
+	write32(r6, r3);
+	write8(r11+5, r3);
+	goto x11e64;
+x11e1c:
+	r3 = read8(r5+1);
+	//write32(sp+24, r3);
+	r3 = read32(r5);
+	r3 = r3 & r7;
+	r3 >>= 24;
+	write8(r4+5, r3);
+	r1 = x11cb0(r1, r2);
+	
+	r3 = 0xe0000124;
+	r2 = (r1 != 0xff);
+	r4 = 1;
+	if (r2 == 0)
+		goto end;
+	write8(r11, r4);
+	r1 = read8(r12+3);
+	r1 &= 0xff;
+	write8(r13+3, r1);
+	write8(r14+3, r1);
+	write32(r3, r4);
+x11e64:
+	r1 = 0;
+end:
+	return;
 }
 
 static void flush_datacache(void)
