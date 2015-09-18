@@ -2987,8 +2987,270 @@ end:
 	return;
 }
 
+static void x13b8c(void)
+{
+	
+}
+
 static void config_lpmx(void)
 {
+	u32 r1, r2, r3, r4, r5, r6, r7, r8, r9, r10;
+	u32 r11, r12, r13, r14, r15, r16, r17, r18, r19, r20;
+	u32 r21, r22;
+
+	r1 = 0x1d9a4;
+	r12 = r1;
+
+	x13b8c();
+
+	r11 = r1;
+	r1 = 0x1d8f0;
+	r1 = read32(r1);
+
+	r15 = r1;
+	r1 = 0x1dcf4;
+	
+	r14 = r1;
+	r3 = 0x1dff4;
+	r1 = read32(r3+28);
+	r2 = 0x1f850;
+	if (r1 >= 0)
+		goto x1c610;
+	r2 = r3;
+x1c610:
+	r1 = r2;
+
+	r2 = 0x1f428;
+	r6 = read32(r2);
+	r19 = 0x10000;
+	r18 = 0x10000;
+	r13 = 0x10000;
+	r2 = 0x10000;
+	r3 = r19;
+	r21 = r18;
+	r13 |= 0xded8;
+	r5 = r1 + 0x7c;
+	r2 |= 0xdf20;
+	r11 += 20;
+	r7 = 0x10000;
+	r17 = 0x10000;
+	r16 = 0x10000;
+	r22 = 0x10000;
+	r20 = 0x10000;
+	r3 |= 0xdf24;
+	r4 = r1 + 0x74;
+	r21 |= 0xdedc;
+	write32(r2, r11);
+	write32(r3, r1);
+	write32(r13, r4);
+	write32(r21, r5);
+	r7 |= 0xf46c;
+	r17 |= 0xf63c;
+	r16 |= 0xf644;
+	r22 |= 0xf64c;
+	r20 |= 0xf3fc;
+	r6 &= 8;
+	if (r6 == 0)
+		goto x15d68;
+	r1 = read8(r7);
+	write8(r14+8, r1);
+	r7 = read8(r7);
+	write8(r15+8, r7);
+	r1 = read32(r12+72);
+	r1 <<= 2;
+	r2 = 0xe0400000;
+	r1 += r2;
+	r1 = read32(r1);
+
+	write32(r12+76, r1);
+	r1 = read32(r12+80);
+	r1 <<= 2;
+	r2 = 0xe0400000;
+	r1 += r2;
+	r1 = read32(r1);
+
+	write32(r12+84, r1);
+	r1 = read32(r12+88);
+	r1 <<= 2;
+	r2 = 0xe0400000;
+	r1 += r2;
+	r1 = read32(r1);
+
+	write32(r12+92, r1);
+	r1 = read32(r12+96);
+	r1 <<= 2;
+	r2 = 0xe0400000;
+	r1 += r2;
+	r1 = read32(r1);
+	
+	r7 = 0x10000;
+	r6 = r7;
+	write32(r12+100, r1);
+	r7 |= 0xdee0;
+	r8 = r13;
+	r6 |= 0xdee8;
+	r9 = r21;
+	r5 = 0;
+x15b3c:
+	r1 = read32(r8);
+	r2 = r5 + r7;
+	r3 = r17 + r5;
+	r1 += r5;
+	r4 = read8(r1);
+	write8(r2, r4);
+	r1 = read8(r1);
+	r2 = r5 + r6;
+	r4 = r16 + r5;
+	write8(r3, r1);
+	r1 = read32(r9);
+	r1 += r5;
+	r3 = read8(r1);
+	r5++;
+	write8(r2, r3);
+	r1 = read8(r1);
+	r2 = (r5 > 7);
+	write8(r4, r1);
+	if (r2 == 0)
+		goto x15b3c;
+	r2 = read32(r8);
+	r1 = read8(r2);
+	if (r1 != 0)
+		goto x15b9c;
+	r1 = 0x40;
+	write8(r2, r1);
+x15b9c:
+	r18 |= 0xdedc;
+	r2 = read32(r18);
+	r1 = read8(r2);
+	if (r1 != 0)
+		goto x15bb4;
+	
+	r1 = 0x40;
+	write8(r2, r1);
+x15bb4:
+	r19 |= 0xdf24;
+	r1 = read32(r19);
+	r6 = 0x1def0;
+	r9 = r6;
+	r8 = r1 + 0x84;
+	r5 = 0;
+	r10 = r6;
+x15bd4:
+	r3 = r8 + r5;
+	r1 = r5 + r5;
+	r2 = read8(r3);
+	r4 = r1 + r6;
+	r1 += r9;
+	r7 = r5 + 1;
+	if (r2 == 0)
+		goto x15c14;
+	r1 = read16(r20+2);
+	write16(r4, r1);
+	r3 = read8(r3);
+	r2 = read16(r20);
+	r2 = r2 * r3;
+	r1 = r1 - r2;
+	r1 >>= 2;
+	write16(r4, r1);
+	goto x15c18;
+x15c14:
+	write16(r1, r2);
+x15c18:
+	r1 = r5 + r5;
+	r2 = r1 + r10;
+	r2 = read16(r2);
+	r1 = r1 + r22;
+	r5 = r7;
+	write16(r1, r2);
+	r1 = (r7 > 7);
+	if (r1 == 0)
+		goto x15bd4;
+	
+	r14 = 0x1def0;
+	r13 = 0x1ded8;
+	r12 = 0x1dedc;
+	r9 = 0x1df00;
+	r8 = 0x1df10;
+	r11 = 0x1f65c;
+	r10 = 0x1f66c;
+
+	r5 = 0;
+x15c74:
+	r1 = r5 + r5;
+	r1 = r1 + r14;
+	r2 = read8(r1);
+	r3 = 0;
+	if (r2 == r3)
+		goto x15ce8;
+	r1 = read8(r1+2);
+	r6 = r2 - r1;
+	if (r1 == r3)
+		goto x15ce8;
+	r1 = read32(r13);
+	r2 = read32(r12);
+	r1 += r5;
+	r3 = read8(r1+1);
+	r2 += r5;
+	r4 = read8(r2+1);
+	r1 = read8(r1);
+	r2 = read8(r2);
+	r1 -= r3;
+	r3 = r1 << 16;
+	r2 -= r4;
+	r1 = r2 << 16;
+	if (r6 == 0)
+		goto x15cdc;
+	r1 = r1 / r6;
+	r2 = r3 / r6;
+	write16(r8, r1);
+	write16(r9, r2);
+	goto x15cf0;
+
+x15cdc:
+	write16(r8, r6);
+	write16(r9, r6);
+	goto x15cf0;
+
+x15ce8:
+	write16(r8, r3);
+	write16(r9, r3);
+
+x15cf0:
+	r7 = 0x1df00;
+	r1 = r5 + r5;
+	r2 = r1 + r7;
+	r2 = read16(r2);
+	r6 = 0x1df10;
+	r4 = r1 + r11;
+	r3 = r1 + r10;
+	write16(r4, r2);
+	r1 = r1 + r6;
+	r1 = read16(r1);
+	r5++;
+	r2 = (r5 > 6);
+	r9 += 2;
+	r8 += 2;
+	write16(r3, r1);
+	if (r2 == 0)
+		goto x15c74;
+
+	r4 = read16(r6+12);
+	r3 = read16(r7+12);
+	r2 = 0x1f66a;
+	write16(r6+14, r4);
+	write16(r7+14, r3);
+	write16(r2, r3);
+	r6 = read16(r6+12);
+	r1 = 0x1f67a;
+	write16(r1, r6);
+	goto end;
+
+x15d68:
+	write8(r14+8, r6);
+	write8(r15+8, r6);
+
+end:
+	return;
 }
 
 static void config_thermal(void)
