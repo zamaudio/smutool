@@ -2828,6 +2828,161 @@ x1b634:
 
 static void config_tdp(void)
 {
+	u32 r1, r2, r3, r4, r5, r6;
+	u32 r11, r12, r13, r14, r15, r16;
+
+	//x1c5f4();
+	r3 = 0x1dff4;
+	r1 = read32(r3+28);
+	r2 = 0x1f850;
+	if (r1 >= 0)
+		goto x1c610;
+	r2 = r3;
+x1c610:
+	r1 = r2;
+
+	r15 = r1;
+	r1 = 0x1f428;
+	r1 = read8(r1);
+	r11 = 0x1f464;
+	r1 >>= 5;
+	r14 = 0x1f900;
+	r1 &= 1;
+	r1 ^= 1;
+	r1 = -r1;
+	r13 = r1 & 0x271;
+	r1 = 0x1d8f0;
+	r1 = read32(r1);
+	r12 = r1;
+	r1 = 0x1dcf4;
+	r2 = read8(r11);
+	r16 = 0x1f160;
+	r2 &= 0xff;
+	write8(r1+14, r2);
+	write8(r12+14, r2);
+	r1 = read8(r14+26);
+	r13 = r13 + 0x271;
+	if (r1 == 0)
+		goto x12dac;
+	r1 = read32(r15+76);
+	r2 = 0x000fffff;
+	r1 &= 0x3fff;
+	write32(r14, r1);
+	r1 = read32(r15);
+	r5 = 0x1f850;
+	r1 >>= 10;
+	r1 &= r2;
+	write32(r14+16, r1);
+	r1 = read32(r15+12);
+	r1 &= r2;
+	write32(r14+20, r1);
+	r2 = read32(r5+144);
+	r1 = read32(r5+152);
+	r2 >>= 16;
+	r1 >>= 16;
+	r2 &= 0xff;
+	r1 &= 0xff;
+	if (r2 >= r1)
+		goto x12d30;
+	r3 = read8(r5+153);
+	goto x12d34;
+x12d30:
+	r3 = read8(r5+145);
+x12d34:
+	write8(r14+42, r3);
+	r4 = read8(r5+150);
+	r1 = read8(r5+148);
+	if (r1 >= r4)
+		goto x12d48;
+	r4 = r1;
+x12d48:
+	r2 = r4 & 0xff;
+	r3 &= 0xff;
+	r2 = r2 * r13;
+	r3 = r3 * r13;
+	r1 = 100;
+	r2 = r2 / r1;
+	write8(r14+43, r4);
+	r6 = r15 + 96;
+	r4 = 0;
+	r5 = r14 + 96;
+	r3 = r3 / r1;
+	r1 = 1550;
+	r1 = r1 - r2;
+	write16(r14+36, r1);
+	r1 = 1520;
+	r1 = r1 - r3;
+	write16(r14+38, r1);
+x12d8c:
+	r1 = r6 + r4;
+	r1 = read8(r1);
+	r4++;
+	r2 = (r4 > 0xf);
+	r1 <<= 6;
+	write32(r5, r1);
+	if (r2 == 0)
+		goto x12d8c;
+x12dac:
+	r1 = 0xe0002294;
+	r3 = read32(r1);
+	r2 = 0x1d938;
+	r1 = 0xe0002298;
+	r1 = read32(r1);
+	r3 = r3 & 0xfff;
+	r11 = 0x1dd18;
+	r1 = r1 & 0x1ff;
+	r1++;
+	r3 = r3 * r1;
+	write32(r2, r3);
+	r1 = 0x1dd28;
+
+	write32(r11, r1);
+	r2 = 0;
+	r1 = 0x1dd10;
+	r6 = 0xe0000000;
+	write8(r16+2, r2);
+	r3 = r6;
+	write32(r1+4, r2);
+	r3 |= 0x228c;
+	r4 = r2;
+	r2 = read32(r3);
+	r1 = 0xbfffffff;
+	r2 &= r1;
+	write32(r3, r2);
+	r2 = read32(r3);
+	r1 = 0x7fffffff;
+	r2 &= r1;
+	
+	r5 = 0xe0500400;
+	write32(r3, r2);
+x12e44:
+	r1 = r4 << 2;
+	r2 = r1 + r14;
+	r2 = read32(r2+160);
+	r1 += r5;
+	r4++;
+	write32(r1, r2);
+	r1 = (r4 > 0x60);
+	if (r1 == 0)
+		goto x12e44;
+	r3 = r6;
+	r3 = 0xe000228c;
+	r2 = read32(r3);
+	r1 = 0xffff7fff;
+	r2 &= r1;
+
+	//x128f4();
+	r4 = 0xe000228c;
+	r2 = read32(r4);
+	r3 = 0xfffeffff;
+	r1 = 0x10000;
+	r2 &= r3;
+	r2 |= r1;
+	write32(r4, r2);
+	r1 = read32(r4);
+	r1 &= r3;
+	write32(r4, r1);
+	return;
 }
 
 static void set_pm(int onoff)
