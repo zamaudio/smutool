@@ -16,15 +16,7 @@
 #ifndef _OPS_H
 #define _OPS_H
 
-extern int __mulsi3 (int a, int b);
-extern int __lshrsi3 (int a, int b);
-extern int __lshlsi3 (int a, int b);
-extern int __ashrsi3 (int a, int b);
-extern int __ashlsi3 (int a, int b);
-extern unsigned int __udivsi3 (unsigned int a, unsigned int b);
-extern int __divsi3 (int a, int b);
-
-extern int __mulsi3 (int a, int b)
+inline int __mulsi3 (int a, int b)
 {
 	int c;
 	asm ("mul %0, %1, %2"
@@ -35,17 +27,7 @@ extern int __mulsi3 (int a, int b)
 	return c;
 }
 
-extern int __lshrsi3 (int a, int b)
-{
-	return __ashrsi3(a,b);
-}
-
-extern int __lshlsi3 (int a, int b)
-{
-	return __ashlsi3(a,b);
-}
-
-extern int __ashrsi3 (int a, int b)
+inline int __lshrsi3 (int a, int b)
 {
 	int c;
 	asm ("sr %0, %1, %2"
@@ -56,7 +38,7 @@ extern int __ashrsi3 (int a, int b)
 	return c;
 }
 
-extern int __ashlsi3 (int a, int b)
+inline int __lshlsi3 (int a, int b)
 {
 	int c;
 	asm ("sl %0, %1, %2"
@@ -67,7 +49,29 @@ extern int __ashlsi3 (int a, int b)
 	return c;
 }
 
-extern unsigned int __udivsi3 (unsigned int a, unsigned int b)
+inline int __ashrsi3 (int a, int b)
+{
+	int c;
+	asm ("sr %0, %1, %2"
+		:"=r"(c)
+		:"r"(a),"r"(b)
+		:
+		);
+	return c;
+}
+
+inline int __ashlsi3 (int a, int b)
+{
+	int c;
+	asm ("sl %0, %1, %2"
+		:"=r"(c)
+		:"r"(a),"r"(b)
+		:
+		);
+	return c;
+}
+
+inline unsigned int __udivsi3 (unsigned int a, unsigned int b)
 {
 	unsigned int c;
 	asm ("divu %0, %1, %2"
@@ -78,8 +82,14 @@ extern unsigned int __udivsi3 (unsigned int a, unsigned int b)
 	return c;
 }
 
-extern int __divsi3 (int a, int b)
+inline int __divsi3 (int a, int b)
 {
-	return ((int)__udivsi3((unsigned int)a, (unsigned int)b));
+	unsigned int c;
+	asm ("divu %0, %1, %2"
+		:"=r"(c)
+		:"r"(a),"r"(b)
+		:
+		);
+	return c;
 }
 #endif
