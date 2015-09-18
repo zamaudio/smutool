@@ -2666,6 +2666,123 @@ static void flush_instcache(void)
 
 static void config_vpc(void)
 {
+	u32 r1, r2, r3, r4, r5, r6;
+	u32 r11, r12, r13;
+
+	r1 = 0x1d9a4;
+	r11 = r1;
+	r1 = 0x1f428;
+	r1 = read32(r1);
+	r13 = 0x1f46e;
+	r5 = 0x1f408;
+	r6 = 0x1ee00;
+	r2 = r1 & 1;
+	r1 = (r2 == 0);
+	if (r1 == 0)
+		goto x132c4;
+	
+	r3 = 0;
+	r12 = 0x1dd28;
+	r4 = r3;
+x13198:
+	r1 = r4 + r4;
+	r4++;
+	r1 += r12;
+	write32(r5, r3);
+	r2 = (r4 > 7);
+	write16(r1+16, r3);
+	r5 += 4;
+	write16(r1, r3);
+	if (r2 == 0)
+		goto x13198;
+	
+	r2 = 0x1f3e8;
+	write32(r12+36, r3);
+	write32(r12+44, r3);
+	write32(r2, r3);
+	r1 = 0x1f3ec;
+	r2 = 0x1f3f0;
+	write32(r1, r3);
+	write32(r2, r3);
+	r1 = 0x1f3f4;
+	r2 = 0x1dd64;
+	r5 = 0x08000001;
+	write32(r1, r3);
+	write32(r2, r5);
+	write32(r2+4, r6);
+	write16(r12+32, r3);
+	write16(r12+34, r3);
+	write16(r12+40, r3);
+	write16(r12+42, r3);
+	r1 = read32(r11+40);
+	r3 = 0xe0400000;
+	r1 <<= 2;
+	r4 = r6 + 4;
+	r1 += r3;
+	write32(r2+16, r4);
+	write32(r2+12, r5);
+	write32(r2+8, r1);
+	r1 = read32(r11);
+	r4 = r6 + 8;
+	r1 <<= 2;
+	write32(r2+24, r5);
+	r1 += r3;
+	write32(r2+28, r4);
+	write32(r2+20, r1);
+	r1 = read32(r11+112);
+	r1 <<= 2;
+	r1 += r3;
+	write32(r2+32, r1);
+	r1 = read32(r11+48);
+	r1 <<= 2;
+	r2 = 0xe0400000;
+	r1 += r2;
+	r1 = read32(r1);
+
+	write32(r11+52, r1);
+	r1 = read32(r11+104);
+	r1 <<= 2;
+	r2 = 0xe0400000;
+	r1 += r2;
+	r1 = read32(r1);
+
+	write32(r11+108, r1);
+	r1 = 0x1d989;
+	r2 = read16(r13);
+	write32(r12+52, r1);
+	r1 = 2;
+	r3 = r1 << 3;
+	r4 = 0x80010800;
+	r3 += r1;
+	r3 <<= 2;
+	r3 += r4;
+	r1 = 1;
+	write32(r3+12, r1);
+	write32(r3+16, r2);
+	write32(r3+8, r1);
+	write8(r3+1, r1);
+	write8(r3, r1);
+
+	r2 = 0x80010000;
+	r1 = read32(r2+84);
+	r3 = 0x1dbd8;
+	r1 |= 0x100;
+	write32(r2+84, r1);
+	r1 = read32(r3+4);
+	r1 |= 0x100;
+	goto x132e4;
+
+x132c4:
+	r1 = 0x80010848;
+	r3 = 0x1dbd8;
+	write8(r1, r2);
+	r1 = read32(r3+4);
+	r2 = 0xfeff;
+	r1 &= r2;
+x132e4:
+	write32(r3+4, r1);
+	
+	return;
 }
 
 static void x13970()
