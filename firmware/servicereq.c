@@ -2768,6 +2768,62 @@ static void config_thermal(void)
 
 static void config_voltage(void)
 {
+	u32 r1, r2, r3, r4;
+	u32 r11, r12, r13;
+
+	r1 = 0x1d8f0;
+	r1 = read32(r1);
+	r12 = r1;
+	r11 = 0x1f460;
+	r1 = 0x1dcf4;
+	r3 = read8(r11+1);
+	r2 = 1;
+	r4 = 0x1f384;
+	r3 &= 0xff;
+	write8(r1+4, r3);
+	write8(r12+4, r3);
+	r3 = read8(r1+4);
+	if (r3 == 0)
+		goto x1b90c;
+	r1 = read32(r4);
+	goto x1b918;
+x1b90c:
+	r1 = read32(r4);
+	r2 = r3;
+x1b918:
+	r1 &= 0xff;
+	
+	r12 = 0x1d989;
+	r3 = read8(r12+11);
+	r11 = r1 & 0xff;
+	r13 = r2 & 0xff;
+	if (r1 >= r3)
+		goto x1b5f4;
+	r11 = r3;
+x1b5f4:
+	r2 = 0xe00021b4;
+x1b5fc:
+	r1 = read32(r2);
+	r1 = r1 & 1;
+	if (r1 == 0)
+		goto x1b5fc;
+	write8(r12+9, r11);
+	adjust_loadline();
+	r1 = read8(r12+10);
+	r2 = 0xe00021b0;
+	r1 = r11 + r1;
+	r1 <<= 1;
+	r3 = 0xe00021b4;
+	r1 |= r13;
+	write32(r2, r1);
+x1b634:
+	r1 = read32(r3);
+	r1 &= 1;
+	if (r1 == 0)
+		goto x1b634;
+
+	write8(r12+8, r11);
+	return;
 }
 
 static void config_tdp(void)
