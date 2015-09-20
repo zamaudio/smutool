@@ -1895,10 +1895,546 @@ x19124:
 
 static void x18490(phy_t *phy, u32 rr2)
 {
-	/*r3 = 0;
-	r4 = 0x10000;
+	u32 r1, r2, r3, r4, r5, r6, r7, r8;
+	u32 r11, r12, r13, r14, r15, r16;
+	r3 = 0;
+	r4 = 0x1f6c8;
 	r13 = (u32)&(phy->p1);
-*/
+	phy->p1 = 0;
+	phy->p2 = phy->p2 & ~0xff;
+	r12 = 0;
+	r7 = rr2 & 1;
+	r8 = (u32)&(phy->p1);
+x184d4:
+	r2 = r13 + r12;
+	r3 = read8(r2);
+	if (r3 == 0)
+		goto x1851c;
+	r6 = r8 + r12;
+	r5 = 1;
+	if (r7 != 0)
+		goto x184f4;
+	r1 = read8(r4+56);
+	if (r1 != 0)
+		goto x1851c;
+x184f4:
+	r1 = read8(r4+56);
+	r1 = ~r1;
+	r1 &= r3;
+	if (r1 == r3)
+		goto x18508;
+	r5 = read8(r6);
+x18508:
+	write8(r6, r5);
+	r2 = read8(r2);
+	r1 = read8(r4+56);
+	r1 |= r2;
+	write8(r4+56, r1);
+x1851c:
+	r12++;
+	r1 = (r12 > 4);
+	r4++;
+	if (r1 == 0)
+		goto x184d4;
+	
+	r12 = 0;
+x18538:
+	r3 = r12 << 2;
+	r1 = 0x1df88;
+	r14 = r3 + r1;
+	r16 = (u32)&(phy->p1);
+	r1 = r16 + r12;
+	r2 = 0x1d844;
+	r1 = read8(r1);
+	r3 += r2;
+	r15 = 0xffdf;
+	r12++;
+	if (r1 == 0)
+		goto x18590;
+	r11 = read32(r3);
+	r2 = read32(r14);
+	r1 = r11 + 11;
+	r2 &= r15;
+	x16fb0();
+
+	r2 = read32(r14+20);
+	r1 = r11 + 12;
+	r2 &= r15;
+	x16fb0();
+
+x18590:
+	r1 = (r12 > 4);
+	if (r1 == 0)
+		goto x18538;
+	r1 = phy->p1 & 0xff;
+	if (r1 == 0)
+		goto x185b0;
+	r2 = read8(r13);
+	r1 = 0x01308023;
+	x16fd8();
+
+x185b0:
+	r7 = (phy->p1 & 0xff00) >> 8;
+	r4 = 0;
+	r3 = r4;
+	if (r7 == r4)
+		goto x185e4;
+	r2 = read8(r13+1);
+	r1 = r2 & 0xf;
+	if (r1 == r4)
+		goto x185d4;
+	r4 = 1;
+	r3 = 7;
+x185d4:
+	r1 = r2 & 0xf0;
+	if (r1 == 0)
+		goto x185e4;
+	r4 |= 0x100;
+	r3 |= 0x700;
+x185e4:
+	r6 = (phy->p1 & 0xff0000) >> 16;
+	if (r6 == 0)
+		goto x18630;
+	r5 = read8(r13+2);
+	r1 = r5 & 0xf;
+	if (r1 == 0)
+		goto x18610;
+	
+	r1 = 0x10000;
+	r2 = 0x70000;
+	r4 |= r1;
+	r3 |= r2;
+x18610:
+	r1 = r5 & 0xf0;
+	if (r1 == 0)
+		goto x18630;
+	r1 = 0x01000000;
+	r2 = 0x07000000;
+	r4 |= r1;
+	r3 |= r2;
+x18630:
+	if (r7 != 0)
+		goto x18638;
+	if (r6 == 0)
+		goto x18648;
+x18638:
+	r1 = 0x01318025;
+	r2 = r4;
+	x17010();
+
+x18648:
+	r1 = (phy->p1 & 0xff000000) >> 24;
+	r4 = 0;
+	r3 = r4;
+	if (r1 == r4)
+		goto x1868c;
+	r2 = read8(r13+3);
+	r1 = r2 & 0xf;
+	if (r1 == r4)
+		goto x1866c;
+	r4 = 1;
+	r3 = 7;
+x1866c:
+	r1 = r2 & 0xf0;
+	if (r1 == 0)
+		goto x1867c;
+	r4 |= 0x100;
+	r3 |= 0x700;
+x1867c:
+	r1 = 0x01328025;
+	r2 = r4;
+	x17010();
+
+x1868c:
+	r1 = phy->p2 & 0xff;
+	r4 = 0;
+	r3 = r4;
+	if (r1 == r4)
+		goto x186d0;
+	r2 = read8(r13+4);
+	r1 = r2 & 0xf;
+	if (r1 == r4)
+		goto x186b0;
+	r4 = 1;
+	r3 = 7;
+x186b0:
+	r1 = r2 & 0xf0;
+	if (r1 == 0)
+		goto x186c0;
+	r4 |= 0x100;
+	r3 |= 0x700;
+x186c0:
+	r1 = 0x01338025;
+	r2 = r4;
+	x17010();
+x186d0:
+	r12 = 0;
+x186d4:
+	r2 = r12 << 2;
+	r1 = 0x1d830;
+	r3 = r2 + r1;
+	r1 = r16 + r12;
+	r1 = read8(r1);
+	r12++;
+	r2 = 0xff;
+	if (r1 == 0)
+		goto x18704;
+	r1 = read32(r3);
+	r1 += 21;
+	x17034();
+
+x18704:
+	r1 = (r12 > 4);
+	if (r1 == 0)
+		goto x186d4;
+	
+	r5 = (phy->p1 & 0xff00) >> 8;
+	r4 = 0;
+	if (r5 == r4)
+		goto x18734;
+	r2 = read8(r13+1);
+	r1 = r2 & 0xf;
+	if (r1 == r4)
+		goto x18728;
+	r4 = 24;
+x18728:
+	r1 = r2 & 0xf0;
+	if (r1 == 0)
+		goto x18734;
+	r4 |= 0x1800;
+x18734:
+	r3 = (phy->p1 & 0xff0000) >> 16;
+	if (r3 == 0)
+		goto x18768;
+	r2 = read8(r13+2);
+	r1 = r2 & 0xf;
+	if (r1 == 0)
+		goto x18754;
+	r1 = 0x180000;
+	r4 |= r1;
+x18754:
+	r1 = r2 & 0xf0;
+	if (r1 == 0)
+		goto x18768;
+	r1 = 0x18000000;
+	r4 |= r1;
+x18768:
+	if (r5 != 0)
+		goto x18770;
+	if (r3 == 0)
+		goto x18780;
+x18770:
+	r1 = 0x01318025;
+	r2 = ~r4;
+	x16ff4();
+
+x18780:
+	r1 = (phy->p1 & 0xff000000) >> 24;
+	r4 = 0;
+	if (r1 == r4)
+		goto x187b8;
+	r2 = read8(r13+3);
+	r1 = r2 & 0xf;
+	if (r1 == r4)
+		goto x1879c;
+	r4 = 24;
+x1879c:
+	r1 = r2 & 0xf0;
+	if (r1 == 0)
+		goto x187a8;
+	r4 |= 0x1800;
+x187a8:
+	r1 = 0x01328025;
+	r2 = ~r4;
+	x16ff4();
+
+x187b8:
+	r1 = phy->p2 & 0xff;
+	r4 = 0;
+	if (r1 == r4)
+		goto x187f0;
+	r2 = read8(r13+4);
+	r1 = r2 & 0xf;
+	if (r1 == r4)
+		goto x187d4;
+	r4 = 24;
+x187d4:
+	r1 = r2 & 0xf0;
+	if (r1 == 0)
+		goto x187e0;
+	r4 |= 0x1800;
+
+x187e0:
+	r1 = 0x01338025;
+	r2 = ~r4;
+	x16ff4();
+
+x187f0:
+	r12 = 0;
+x187f4:
+	r2 = r12 << 2;
+	r1 = 0x1d844;
+	r4 = r2 + r1;
+	r1 = r16 + r12;
+	r1 = read8(r1);
+	r3 = r13 + r12;
+	r12++;
+	if (r1 == 0)
+		goto x18830;
+	r4 = read32(r4);
+	r3 = read8(r3);
+	r1 = 0xc00b;
+	r1 = r4 + r1;
+	x18420();
+
+x18830:
+	r1 = (r12 > 4);
+	if (r1 == 0)
+		goto x187f4;
+	r1 = 0xc350;
+	x1c300(r1);
+
+	r12 = 0;
+x18844:
+	r2 = r12 << 2;
+	r1 = 0x1d844;
+	r2 = r2 + r1;
+	r1 = r16 + r12;
+	r1 = read8(r1);
+	r3 = r13 + r12;
+	r12++;
+	r2 = 0;
+	if (r1 == r2)
+		goto x18880;
+	r4 = read32(r4);
+	r3 = read8(r3);
+	r1 = 0xc00b;
+	r1 = r4 + r1;
+	x18420();
+
+x18880:
+	r1 = (r12 > 4);
+	if (r1 == 0)
+		goto x18844;
+	
+	r5 = (phy->p1 & 0xff00) >> 8;
+	r4 = 0;
+	if (r5 == r4)
+		goto x188b0;
+	r2 = read8(r13+1);
+	r1 = r2 & 0xf;
+	if (r1 == r4)
+		goto x188a4;
+	r4 = 24;
+x188a4:
+	r1 = r2 & 0xf0;
+	if (r1 == 0)
+		goto x188b0;
+	r4 |= 0x1800;
+x188b0:
+	r3 = (phy->p1 & 0xff0000) >> 16;
+	if (r3 == 0)
+		goto x188e4;
+	r2 = read8(r13+2);
+	r1 = r2 & 0xf;
+	if (r1 == 0)
+		goto x188d0;
+	r1 = 0x180000;
+	r4 |= r1;
+x188d0:
+	r1 = r2 & 0xf0;
+	if (r1 == 0)
+		goto x188e4;
+	r1 = 0x18000000;
+	r4 |= r1;
+x188e4:
+	if (r5 != 0)
+		goto x188ec;
+	if (r3 == 0)
+		goto x188fc;
+x188ec:
+	r1 = 0x01318025;
+	r2 = r4;
+	x16fd8();
+
+x188fc:
+	r1 = (phy->p1 & 0xff000000) >> 24;
+	r4 = 0;
+	if (r1 == r4)
+		goto x18934;
+	r2 = read8(r13+3);
+	r1 = r2 & 0xf;
+	if (r1 == r4)
+		goto x18918;
+	r4 = 24;
+x18918:
+	r1 = r2 & 0xf0;
+	if (r1 == 0)
+		goto x18924;
+	r4 |= 0x1800;
+x18924:
+	r1 = 0x01328025;
+	r2 = r4;
+	x16fd8();
+
+x18934:
+	r1 = phy->p2 & 0xff;
+	r4 = 0;
+	if (r1 == r4)
+		goto x1896c;
+	r2 = read8(r13+4);
+	r1 = r2 & 0xf;
+	if (r1 == r4)
+		goto x18950;
+	r4 = 24;
+x18950:
+	r1 = r2 & 0xf0;
+	if (r1 == 0)
+		goto x1895c;
+	r4 |= 0x1800;
+x1895c:
+	r1 = 0x01338025;
+	r2 = r4;
+	x16fd8();
+
+x1896c:
+	r1 = phy->p1 & 0xff;
+	if (r1 = 0)
+		goto x18988;
+	r2 = read8(r13);
+	r1 = 0x01308023;
+	r2 = ~r2;
+	x16ff4();
+
+x18988:
+	r5 = (phy->p1 & 0xff00) >> 8;
+	r4 = 0;
+	if (r5 == r4)
+		goto x189b0;
+	r2 = read8(r13+1);
+	r1 = r2 & 0xf;
+	if (r1 == r4)
+		goto x189a4;
+	r4 = 7;
+x189a4:
+	r1 = r2 & 0xf0;
+	if (r1 == 0)
+		goto x189b0;
+	r4 |= 0x700;
+x189b0:
+	r3 = (phy->p1 & 0xff0000) >> 16;
+	if (r3 == 0)
+		goto x189e4;
+	r2 = read8(r13+2);
+	r1 = r2 & 0xf;
+	if (r1 == 0)
+		goto x189d0;
+	r1 = 0x70000;
+	r4 |= r1;
+x189d0:
+	r1 = r2 & 0xf0;
+	if (r1 == 0)
+		goto x189e4;
+	r1 = 0x7000000;
+	r4 |= r1;
+x189e4:
+	if (r5 != 0)
+		goto x189ec;
+	if (r3 == 0)
+		goto x189fc;
+x189ec:
+	r1 = 0x01318025;
+	r2 = r4;
+	x16fd8();
+
+x189fc:
+	r1 = (phy->p1 & 0xff000000) >> 24;
+	r4 = 0;
+	if (r1 == r4)
+		goto x18a34;
+	r2 = read8(r13+3);
+	r1 = r2 & 0xf;
+	if (r1 == r4)
+		goto x18a18;
+	r4 = 7;
+x18a18:
+	r1 = r2 & 0xf0;
+	if (r1 == 0)
+		goto x18a24;
+	r4 |= 0x700;
+x18a24:
+	r1 = 0x01328025;
+	r2 = r4;
+	x16fd8();
+
+x18a34:
+	r1 = phy->p2 & 0xff;
+	r4 = 0;
+	if (r1 == r4)
+		goto x18a6c;
+	r2 = read8(r13+4);
+	r1 = r2 & 0xf;
+	if (r1 == r4)
+		goto x18a50;
+	r4 = 7;
+x18a50:
+	r1 = r2 & 0xf0;
+	if (r1 == 0)
+		goto x18a5c;
+	r4 |= 0x700;
+x18a5c:
+	r1 = 0x01338025;
+	r2 = r4;
+	x16fd8();
+
+x18a6c:
+	r12 = 0;
+x18a70:
+	r2 = r12 << 2;
+	r1 = 0x1d830;
+	r3 = r2 + r1;
+	r1 = r16 + r12;
+	r1 = read8(r1);
+	r12++;
+	r2 = 0xff;
+	if (r1 == 0)
+		goto x18aa0;
+	r1 = read32(r3);
+	r1 += 21;
+	x17034();
+
+x18aa0:
+	r1 = (r12 > 4);
+	if (r1 == 0)
+		goto x18a70;
+	
+	r12 = 0;
+x18aac:
+	r3 = r12 << 2;
+	r1 = 0x1d844;
+	r11 = r3 + r1;
+	r1 = r16 + r12;
+	r2 = 0x1df88;
+	r1 = read8(r1);
+	r13 = r3 + r2;
+	r12++;
+	if (r1 == 0)
+		goto x18af4;
+	r11 = read32(r11);
+	r2 = read32(r13);
+	r1 = r11 + 11;
+	x16fb0();
+
+	r2 = read32(r13+20);
+	r1 = r11 + 12;
+	x16fb0();
+
+x18af4:
+	r1 = (r12 > 4);
+	if (r1 == 0)
+		goto x18aac;
+
+	return;
 }
 
 static void x180f0(phy_t *phy, u32 rr2)
