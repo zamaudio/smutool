@@ -929,9 +929,9 @@ end:
 	return;
 }
 
-static void x17bdc(u32 r1, u32 r2)
+static void x17bdc(ddi_t *ddi, u32 r2)
 {
-	u32 r3, r4, r5, r6, r7, r8, r9, r10;
+	u32 r1, r3, r4, r5, r6, r7, r8, r9, r10;
 	u32 r11, r12, r13;
 
 	r5 = r2 >> 16;
@@ -939,7 +939,7 @@ static void x17bdc(u32 r1, u32 r2)
 	r9 = r2;
 	r12 = 0x1f6c8;
 	r2 = -r11;
-	r13 = r1;
+	r13 = (u32)ddi;
 	r5 &= 0xff;
 	r2 = r2 + 7;
 	r7 = 8;
@@ -1014,13 +1014,13 @@ x17cd0:
 	return;
 }
 
-static void x1916c(u32 r1, u32 r2)
+static void x1916c(ddi_t *ddi, u32 r2)
 {
-	u32 r3, r4, r5, r6, r7, r8, r9, r10;
+	u32 r1, r3, r4, r5, r6, r7, r8, r9, r10;
 	u32 r11, r12, r13, r14, r15, r16, r17, r18, r19, r20;
 	u32 r21, r22, r23, r24, r25, fp;
-	
-	r18 = r1;
+	r6 = 0;// compiler
+	r18 = (u32)ddi;
 	r22 = 0x1f6c8;
 	r1 = 0;
 	r23 = 0x1f3c4;
@@ -1878,7 +1878,11 @@ x19124:
 
 static void x18490(u32 rr1, u32 rr2)
 {
-	
+	/*r3 = 0;
+	r4 = 0x10000;
+	r13 = rr1;
+*/
+
 }
 
 static void x180f0(u32 rr1, u32 rr2)
@@ -2222,10 +2226,8 @@ x1a640:
 		r1 &= 8;
 		if (r1 != 0)
 			goto x1a70c;
-		r11 = (u32)ddi; //sp+28;
-		r1 = r11;
 		r2 = r12;
-		x17bdc(r1, r2);
+		x17bdc(ddi, r2);
 
 		r5 = 1;
 x1a674:
@@ -2274,9 +2276,8 @@ x1a6ec:
 		if (r2 == 0)
 			goto x1a70c;
 x1a700:
-		r1 = r11;
 		r2 = r12;
-		x1916c(r1, r2);
+		x1916c(ddi, r2);
 
 x1a70c:
 		r1 = read8(r14);
@@ -2636,7 +2637,7 @@ end:
 	return;
 }
 
-static void set_phyln(int onoff)
+static void set_phyln(int onoff, ddi_t *ddi)
 {
 	u32 r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16;
 	u32 r11a, r12a, r13a;
@@ -2651,13 +2652,10 @@ static void set_phyln(int onoff)
 			goto x1a9a0;
 		if (r3 != 0)
 			goto x1a9a0;
-		r11 = 0;
-		r1 = r11;
-		x17bdc(r1, r2);
+		x17bdc(ddi, r2);
 		
 		r2 = read32(0x1f39c);
-		r1 = r11;
-		x1916c(r1, r2);
+		x1916c(ddi, r2);
 x1a9a0:
 		r1 = read32(0x1f39c);
 		r1 = r1 >> 2;
@@ -4907,10 +4905,10 @@ void smu_service_request(void)
 		halt();
 		break;
 	case SMC_MSG_PHY_LN_OFF:
-		set_phyln(OFF);
+		set_phyln(OFF, &ddi);
 		break;
 	case SMC_MSG_PHY_LN_ON:
-		set_phyln(ON);
+		set_phyln(ON, &ddi);
 		break;
 	case SMC_MSG_DDI_PHY_OFF:
 		set_ddiphy(OFF, &ddi);
