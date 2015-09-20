@@ -43,6 +43,9 @@ void main(void)
 	while (1) {
 		mdelay(10);
 		
-		smu_service_request();
+		if (read32(0xe0003000) & 1) {
+			smu_service_request();
+			write32(0xe0003000, 0);
+		}
 	}
 }
