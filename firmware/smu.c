@@ -40,12 +40,16 @@ void main(void)
 	ie |= 0x1;
 	asm volatile ("wcsr ie, %0"::"r"(ie));
 */
+	write32(0xe0003004, 3); // Assume interrupt is done and acked
+	
 	while (1) {
 		mdelay(10);
-		
-		if (read32(0xe0003000) & 1) {
-			smu_service_request();
-			write32(0xe0003000, 0);
+
+		if (read32(0xe0003000)) {
+			write32(0xe0003004, 1); // Interrupt ack
+			smu_service_request();  // Do service request
+			write32(0xe0003000, 0); // Clear service request
+			write32(0xe0003004, 3); // Interrupt done + ack
 		}
 	}
 }

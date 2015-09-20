@@ -5558,7 +5558,6 @@ void smu_service_request(void)
 	static u32 bapm = 0;
 	int requestid;
 	
-	write32(0xe0003004, 1);
 	requestid = read32(0xe0003000);
 	requestid &= 0x1fffe;
 	requestid >>= 1;
@@ -5651,8 +5650,6 @@ void smu_service_request(void)
 	default:
 		break;
 	}
-
-	write32(0xe0003004, 3);
 }
 
 void MicoISRHandler(void)
