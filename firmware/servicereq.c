@@ -33,6 +33,20 @@ typedef struct {
 	u8 d10;
 } ddi_t;
 
+typedef struct {
+	u32 p1;
+	u32 p2;
+	u32 p3;
+	u32 p4;
+	u32 p5;
+	u32 p6;
+} phy_t;
+
+typedef struct {
+	ddi_t d;
+	phy_t p;
+} ddiphy_t;
+
 static void x1c300(u32 r1)
 {
 	u32 reg, r3;
@@ -929,7 +943,7 @@ end:
 	return;
 }
 
-static void x17bdc(ddi_t *ddi, u32 r2)
+static void x17bdc(ddi_t *d, u32 r2)
 {
 	u32 r1, r3, r4, r5, r6, r7, r8, r9, r10;
 	u32 r11, r12, r13;
@@ -939,7 +953,7 @@ static void x17bdc(ddi_t *ddi, u32 r2)
 	r9 = r2;
 	r12 = 0x1f6c8;
 	r2 = -r11;
-	r13 = (u32)ddi;
+	r13 = (u32)&(d->d1);
 	r5 &= 0xff;
 	r2 = r2 + 7;
 	r7 = 8;
@@ -1014,13 +1028,13 @@ x17cd0:
 	return;
 }
 
-static void x1916c(ddi_t *ddi, u32 r2)
+static void x1916c(ddiphy_t *dp, u32 r2)
 {
 	u32 r1, r3, r4, r5, r6, r7, r8, r9, r10;
 	u32 r11, r12, r13, r14, r15, r16, r17, r18, r19, r20;
 	u32 r21, r22, r23, r24, r25, fp;
 	r6 = 0;// compiler
-	r18 = (u32)ddi;
+	r18 = (u32)(dp->d.d1);
 	r22 = 0x1f6c8;
 	r1 = 0;
 	r23 = 0x1f3c4;
@@ -1144,7 +1158,8 @@ x192f8:
 	goto x193d4;
 
 x19374:
-	r2 = r18 + r14; // arg?
+	r1 = (u32)&(dp->p.p6);
+	r2 = r1 + r14;
 	r1 = 1;
 	write8(r2-20, r1);
 	r1 = read8(r5);
@@ -1175,7 +1190,8 @@ x193d4:
 		goto x1940c;
 	r3 = read8(r13);
 	r2 = read8(r16+56);
-	r1 = r24 + r14; // arg?
+	r1 = (u32)&(dp->p.p3);
+	r1 = r1 + r14; // arg?
 	r2 = r3 & r2;
 	r2 = r2 & 0xff;
 	r4 = 1;
@@ -1194,7 +1210,8 @@ x1940c:
 		goto x19448;
 	r3 = read8(r13+5);
 	r2 = read8(r16+64);
-	r1 = r24 + r14; // arg?
+	r1 = (u32)&(dp->p.p5);
+	r1 = r1 + r14;
 	r2 = r3 & r2;
 	r2 &= 0xff;
 	r4 = 1;
@@ -1213,8 +1230,8 @@ x19448:
 		goto x1920c;
 	
 	r14 = 0;
-	r11 = r24; // arg?
-	r10 = r24; // arg?
+	r11 = (u32)&(dp->p.p3);
+	r10 = (u32)&(dp->p.p5);
 	r3 = r23;
 x1946c:
 	r4 = r18 + r14;
@@ -1350,12 +1367,12 @@ x19678:
 	return;
 }
 
-static void x17e94(u32 r1)
+static void x17e94(phy_t *p)
 {
-	u32 r2, r3;
+	u32 r1, r2, r3;
 	u32 r11, r12, r13, r14, r15, r16, r17, r18, r19, r20;
 	r19 = 0;
-	r20 = r1;
+	r20 = (u32)(p->p1);
 	r17 = r19;
 x17ed0:
 	r1 = r20 + r19;
@@ -1552,11 +1569,11 @@ x180ac:
 	return;
 }
 
-static void x18d04(u32 rr1, u32 rr2, u32 rr3)
+static void x18d04(phy_t *phy, u32 rr2, u32 rr3)
 {
 	u32 r1, r2, r3, r4, r5, r6, r7, r8, r9, r10;
 	u32 r11, r12, r13, r14, r15, r16, r17, r18, r19, r20, r21;
-	r15 = rr1;
+	r15 = (u32)phy;
 	r16 = 0x00010000;
 	r1 = 0;
 	r16 |= 0xf3c4;
@@ -1640,7 +1657,7 @@ x18e64:
 	
 	r1 = read8(r12+56);
 	r3 = read8(r11);
-	r2 = r15; // arg?
+	r2 = (u32)phy; // arg?
 	r1 = ~r1;
 	r2 = r2 + r13;
 	r1 = r1 & r3;
@@ -1659,7 +1676,7 @@ x18e9c:
 		goto x18ed8;
 	r1 = read8(r12+64);
 	r3 = read8(r11+5);
-	r2 = rr3; // arg?
+	r2 = (u32)&(phy->p3); // arg?
 	r1 = ~r1;
 	r2 += r13;
 	r1 &= r3;
@@ -1670,7 +1687,7 @@ x18e9c:
 x18ed4:
 	write8(r2, r4);
 x18ed8:
-	r1 = rr1; // arg?
+	r1 = (u32)phy; // arg?
 	r4 = r1 + r13;
 	r1 = read8(r4);
 	if (r1 == 0)
@@ -1681,7 +1698,7 @@ x18ed8:
 	r1 &= r2;
 	write8(r14+1, r1);
 x18efc:
-	r1 = rr3; // arg?
+	r1 = (u32)&(phy->p3); // arg?
 	r3 = r1 + r13;
 	r1 = read8(r3);
 	if (r1 == 0)
@@ -1733,10 +1750,10 @@ x18f68:
 	r12 = r13;
 x18f98:
 	r1 = 0x1d844;
-	r14 = rr3; // arg?
+	r14 = (u32)&(phy->p3); // arg?
 	r6 = r12 + r1;
 	r3 = r14 + r13;
-	r16 = rr1; // arg?
+	r16 = (u32)phy; // arg?
 	r1 = read8(r3);
 	r2 = r15 + r13;
 	r4 = r16 + r13;
@@ -1876,23 +1893,24 @@ x19124:
 	return;
 }
 
-static void x18490(u32 rr1, u32 rr2)
+static void x18490(phy_t *phy, u32 rr2)
 {
-	/*r3 = 0;
+/*
+	r3 = 0;
 	r4 = 0x10000;
 	r13 = rr1;
 */
 
 }
 
-static void x180f0(u32 rr1, u32 rr2)
+static void x180f0(phy_t *phy, u32 rr2)
 {
 	u32 r1, r2, r3, r4, r5, r6, r7, r8, r9;
 	u32 r11, r12, r13, r14, r15, r16, r17, r18, r19, r20;
 	r4 = rr2 >> 1;
 	r3 = 0;
 	r18 = 0x1f6c8;
-	r16 = rr1;
+	r16 = (u32)phy;
 	r4 &= 1;
 	r13 = r3;
 	r9 = rr2 & 1;
@@ -1914,7 +1932,7 @@ x18174:
 	r1 &= 0xff;
 	if (r1 != 0)
 		goto x181a4;
-	r1 = rr1; // arg?
+	r1 = (u32)phy; // arg?
 	r2 = r1 + r13;
 	r1 = 1;
 	r8 = r1;
@@ -1944,7 +1962,7 @@ x181d8:
 		goto x1820c;
 	r1 = read8(r6+64);
 	r3 = read8(r7+5);
-	r2 = 0; // sp+56
+	r2 = (u32)&(phy->p3); // sp+56
 	r1 = ~r1;
 	r2 = r2 + r13;
 	r1 = r1 & r3;
@@ -1964,7 +1982,7 @@ x1820c:
 	r13 = 0;
 	r15 = r16;
 x18228:
-	r20 = 0; // sp+56
+	r20 = (u32)&(phy->p3); // sp+56
 	r1 = r20 + r13;
 	r1 = read8(r1);
 	if (r1 == 0)
@@ -1975,7 +1993,7 @@ x18228:
 	r2 |= r3;
 	write8(r1+64, r2);
 x1824c:
-	r19 = 0; // sp+48
+	r19 = (u32)phy; // sp+48
 	r1 = r19 + r13;
 	r1 = read8(r1);
 	if (r1 == 0)
@@ -2099,7 +2117,7 @@ x18364:
 	write32(r3+164, r1);
 
 
-	r2 = rr1; // sp+68;
+	r2 = (u32)&(phy->p6); // sp+68;
 	r1 = r2 + r13;
 	r1 = read8(r1-4);
 	if (r1 == 0)
@@ -2131,7 +2149,7 @@ x183dc:
 	return;
 }
 
-static void set_ddiphy(int onoff, ddi_t *ddi)
+static void set_ddiphy(int onoff, ddiphy_t *dp)
 {
 	u32 r1, r2, r3, r4, r5, r6, r7, r8, r9, r10;
 	u32 r11, r12, r13, r14, r15, r16, r17;
@@ -2139,16 +2157,16 @@ static void set_ddiphy(int onoff, ddi_t *ddi)
 	default:
 	case OFF:
 		r1 = 0;
-		ddi->d1 = 0; // sp+28
-		ddi->d2 = 0;
-		ddi->d3 = 0;
-		ddi->d4 = 0;
-		ddi->d5 = 0;
-		ddi->d6 = 0;
-		ddi->d7 = 0;
-		ddi->d8 = 0;
-		ddi->d9 = 0;
-		ddi->d10 = 0;
+		dp->d.d1 = 0; // sp+28
+		dp->d.d2 = 0;
+		dp->d.d3 = 0;
+		dp->d.d4 = 0;
+		dp->d.d5 = 0;
+		dp->d.d6 = 0;
+		dp->d.d7 = 0;
+		dp->d.d8 = 0;
+		dp->d.d9 = 0;
+		dp->d.d10 = 0;
 		r14 = 0x1f478;
 		r2 = read32(r14);
 		r3 = 0xff00ffff;
@@ -2227,12 +2245,12 @@ x1a640:
 		if (r1 != 0)
 			goto x1a70c;
 		r2 = r12;
-		x17bdc(ddi, r2);
+		x17bdc(&(dp->d), r2);
 
 		r5 = 1;
 x1a674:
-		r1 = ddi->d2;
-		r2 = ddi->d7;
+		r1 = dp->d.d2;
+		r2 = dp->d.d7;
 		r4 = r13 + r5;
 		r1 |= r2;
 		r1 &= 0xff;
@@ -2252,8 +2270,8 @@ x1a6a4:
 		r1 &= 0xf;
 		write8(r2+16, r1);
 x1a6b8:
-		r1 = ddi->d2;
-		r2 = ddi->d7;
+		r1 = dp->d.d2;
+		r2 = dp->d.d7;
 		r5++;
 		r3 = (r5 > 4);
 		r1 |= r2;
@@ -2277,7 +2295,7 @@ x1a6ec:
 			goto x1a70c;
 x1a700:
 		r2 = r12;
-		x1916c(ddi, r2);
+		x1916c(dp, r2);
 
 x1a70c:
 		r1 = read8(r14);
@@ -2314,16 +2332,16 @@ x1a70c:
 		r5 = read32(r1);
 		r7 = 0x1f478;
 		r1 = 0;
-		ddi->d1 = 0;
-		ddi->d2 = 0;
-		ddi->d3 = 0;
-		ddi->d4 = 0;
-		ddi->d5 = 0;
-		ddi->d6 = 0;
-		ddi->d7 = 0;
-		ddi->d8 = 0;
-		ddi->d9 = 0;
-		ddi->d10 = 0;
+		dp->d.d1 = 0;
+		dp->d.d2 = 0;
+		dp->d.d3 = 0;
+		dp->d.d4 = 0;
+		dp->d.d5 = 0;
+		dp->d.d6 = 0;
+		dp->d.d7 = 0;
+		dp->d.d8 = 0;
+		dp->d.d9 = 0;
+		dp->d.d10 = 0;
 		r2 = read32(r7);
 		r15 = 0x00ff0000;
 		r4 = r15;
@@ -2454,7 +2472,7 @@ x19c14:
 		if (r1 != 0)
 			goto x19cec;
 		
-		r1 = (u32)ddi;  //sp+36
+		r1 = (u32)&(dp->d.d1);  //sp+36
 		r2 = r12;
 		
 		//x17d88
@@ -2532,7 +2550,7 @@ x17e74:
 			goto x17e1c;
 		
 		r11 = 1;
-		r5 = (u32)&(ddi->d6);
+		r5 = (u32)&(dp->d.d6);
 x19c48:
 		r1 = r13 + r11;
 		r2 = r5 + r11;
@@ -2578,13 +2596,11 @@ x19c94:
 		write32(r3+160, r1);
 		write32(r3+164, r2);
 
-		r1 = r13;
 		r2 = r12;
-		x18d04(r1, r2, r3);
+		x18d04(&(dp->p), r2, r3);
 
-		r1 = r13;
 		r2 = r12;
-		x180f0(r1, r2);
+		x180f0(&(dp->p), r2);
 
 		r1 = 0x01318014;
 		r2 = r11;
@@ -2637,7 +2653,7 @@ end:
 	return;
 }
 
-static void set_phyln(int onoff, ddi_t *ddi)
+static void set_phyln(int onoff, ddiphy_t *dp)
 {
 	u32 r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16;
 	u32 r11a, r12a, r13a;
@@ -2652,10 +2668,10 @@ static void set_phyln(int onoff, ddi_t *ddi)
 			goto x1a9a0;
 		if (r3 != 0)
 			goto x1a9a0;
-		x17bdc(ddi, r2);
+		x17bdc(&(dp->d), r2);
 		
 		r2 = read32(0x1f39c);
-		x1916c(ddi, r2);
+		x1916c(dp, r2);
 x1a9a0:
 		r1 = read32(0x1f39c);
 		r1 = r1 >> 2;
@@ -2756,7 +2772,7 @@ x1a0e4:
 		write32(r3+164, r2);
 
 		r2 = read32(r13);
-		r12 = 0; // sp+32
+		r12 = (u32)&(dp->p.p1); // sp+32
 		r1 = r12;
 		r11a = r11;
 		r12a = r12;
@@ -2842,18 +2858,18 @@ x17e74:
 
 		r2 = read32(r13);
 		r1 = r12;
-		x18d04(r1, r2, r3);
+		x18d04(&(dp->p), r2, r3);
 
 		r2 = read32(r13);
 		r1 = r12;
-		x180f0(r1, r2);
+		x180f0(&(dp->p), r2);
 
 		r2 = read32(r13);
 		r1 = r12;
-		x18490(r1, r2);
+		x18490(&(dp->p), r2);
 
 		r1 = r12;
-		x17e94(r1);
+		x17e94(&(dp->p));
 
 		r1 = 0x01318014;
 		r2 = r11;
@@ -4891,7 +4907,7 @@ end:
 void smu_service_request(void)
 {
 
-	static ddi_t ddi = {0};
+	static ddiphy_t ddiphy = {{0}};
 	static u32 bapm = 0;
 	int requestid;
 	
@@ -4905,16 +4921,16 @@ void smu_service_request(void)
 		halt();
 		break;
 	case SMC_MSG_PHY_LN_OFF:
-		set_phyln(OFF, &ddi);
+		set_phyln(OFF, &ddiphy);
 		break;
 	case SMC_MSG_PHY_LN_ON:
-		set_phyln(ON, &ddi);
+		set_phyln(ON, &ddiphy);
 		break;
 	case SMC_MSG_DDI_PHY_OFF:
-		set_ddiphy(OFF, &ddi);
+		set_ddiphy(OFF, &ddiphy);
 		break;
 	case SMC_MSG_DDI_PHY_ON:
-		set_ddiphy(ON, &ddi);
+		set_ddiphy(ON, &ddiphy);
 		break;
 	case SMC_MSG_CASCADE_PLL_OFF:
 		set_cascadepll(OFF);
