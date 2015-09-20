@@ -3304,7 +3304,270 @@ x132e4:
 
 static void x13970()
 {
+	u32 r1, r2, r3, r4, r5, r6, r7, r8, r9, r10;
+	u32 r11, r12;
+	r11 = 0x10000;
+	r3 = 0x1dff4;
+	r1 = read32(r3+28);
+	r2 = 0x1f850;
+	r2 = r3;
+	r1 = r2;
 	
+	r12 = r11;
+	r11 = 0x1f6ac;
+	r9 = r1;
+	r1 = read8(r11);
+	r2 = 0x1deac;
+	write32(r2, r1);
+	r1 = read8(r11+1);
+	write32(r2+8, r1);
+	r1 = read8(r11+2);
+	write32(r2+12, r1);
+	r1 = read8(r11+3);
+	write32(r2+20, r1);
+	r1 = read16(r11+4);
+	write32(r2+24, r1);
+	r1 = read16(r11+6);
+	r11 = 0x1f6b8;
+	write32(r2+32, r1);
+	r1 = read8(r11);
+	write32(r2+4, r1);
+	r1 = read8(r11+1);
+	write32(r2+16, r1);
+	r1 = read16(r11+2);
+	write32(r2+28, r1);
+	r1 = read32(r9+28);
+	if (r1 >= 0)
+		goto x13a20;
+	r3 = r2;
+	r4 = 0;
+	r5 = 8;
+x13a00:
+	r2 = read32(r3);
+	r5 = r5 - 1;
+	r1 = (r4 >= r2);
+	r1 = -r1;
+	r2 &= r1;
+	write32(r3, r2);
+	r3 += 4;
+	if (r5 >= 0)
+		goto x13a00;
+x13a20:
+	r3 = read32(r9+24);
+	r2 = 0x1deac;
+	r1 = read32(r2);
+	r3 >>= 16;
+	r4 = read32(r2+4);
+	r3 &= 0xff;
+	r1 += r3;
+	write32(r2, r1);
+	r1 = read32(r9+112);
+	r3 = read32(r2+8);
+	r5 = read32(r2+12);
+	r1 >>= 24;
+	r6 = read32(r2+16);
+	r4 += r1;
+	write32(r2+4, r4);
+	r1 = read32(r9+24);
+	r4 = read32(r2+20);
+	r7 = read32(r2+24);
+	r1 >>= 24;
+	r8 = read32(r2+28);
+	r3 += r1;
+	write32(r2+8, r3);
+	r1 = read32(r9+24);
+	r3 = read32(r2+32);
+	r10 = r2;
+	r1 &= 0xff;
+	r5 += r1;
+	write32(r2+12, r5);
+	r1 = read32(r9+112);
+	r5 = 0;
+	r11 = r2;
+	r1 >>= 16;
+	r1 &= 0xff;
+	r6 += r1;
+	write32(r2+16, r6);
+	r1 = read32(r9+24);
+	r1 >>= 8;
+	r1 &= 0xff;
+	r4 += r1;
+	write32(r2+20, r4);
+	r1 = read32(r9+72);
+	r1 &= 0xffff;
+	r7 += r1;
+	write32(r2+24, r7);
+	r1 = read32(r9+112);
+	r1 &= 0xffff;
+	r8 += r1;
+	write32(r2+28, r8);
+	r1 = read32(r9+72);
+	r1 >>= 16;
+	r3 += r1;
+	write32(r2+32, r3);
+x13af4:
+	r5++;
+	r1 = read32(r11);
+	r3 = (r5 > 5);
+	r2 = 0xfe;
+	if (r1 >= 0)
+		goto x13b84;
+	r1 = read32(r9+24);
+	r1 >>= 16;
+	r1 &= 0xff;
+	write32(r10, r1);
+	r1 = read32(r9+112);
+	r1 >>= 24;
+	write32(r10+4, r1);
+	r1 = read32(r9+24);
+	r1 >>= 24;
+	write32(r10+8, r1);
+	r1 = read32(r9+24);
+	r1 &= 0xff;
+	write32(r10+12, r1);
+	r1 = read32(r9+112);
+	r1 >>= 16;
+	r1 &= 0xff;
+	write32(r10+16, r1);
+	r1 = read32(r9+24);
+	r1 >>= 8;
+	r1 &= 0xff;
+	write32(r10+20, r1);
+	r1 = read32(r9+72);
+	r1 &= 0xffff;
+	write32(r10+24, r1);
+	r1 = read32(r9+112);
+	r1 &= 0xffff;
+	write32(r10+28, r1);
+	r1 = read32(r9+72);
+	r1 >>= 16;
+	write32(r10+32, r1);
+	goto x13b94;
+	
+x13b84:
+	if (r2 >= r1)
+		goto x13b8c;
+	write32(r11, r2);
+x13b8c:
+	r11 += 4;
+	if (r3 == 0)
+		goto x13af4;
+
+x13b94:
+	r3 = 0x1deac;
+	r5 = 6;
+	r2 = r3 + 24;
+x13ba4:
+	r5++;
+	r1 = read32(r2);
+	r6 = (r5 > 8);
+	r4 = 0xffff;
+	if (r1 == 0)
+		goto x13c34;
+	r1 = read32(r9+24);
+	r1 >>= 16;
+	r1 &= 0xff;
+	write32(r3, r1);
+	r1 = read32(r9+112);
+	r1 >>= 24;
+	write32(r3+4, r1);
+	r1 = read32(r9+24);
+	r1 >>= 24;
+	write32(r3+8, r1);
+	r1 = read32(r9+24);
+	r1 &= 0xff;
+	write32(r3+12, r1);
+	r1 = read32(r9+112);
+	r1 >>= 16;
+	r1 &= 0xff;
+	write32(r3+16, r1);
+	r1 = read32(r9+24);
+	r1 >>= 8;
+	r1 &= 0xff;
+	write32(r3+20, r1);
+	r1 = read32(r9+72);
+	r1 &= r4;
+	write32(r3+24, r1);
+	r1 = read32(r9+112);
+	r1 &= r4;
+	write32(r3+28, r1);
+	r1 >>= 16;
+	write32(r3+32, r1);
+	goto x13c44;
+
+x13c34:
+	if (r4 >= r1)
+		goto x13c3c;
+	write32(r2, r4);
+x13c3c:
+	r2 += 4;
+	if (r6 == 0)
+		goto x13ba4;
+	
+x13c44:
+	r11 = 0x1f6ac;
+	r4 = read8(r11+11);
+	r1 = read32(r9+28);
+	if (r1 >= 0)
+		goto x13c68;
+	r1 = r4;
+	if (r4 >= 0)
+		goto x13c64;
+
+	r1 = 0;
+x13c64:
+	r4 = (r1 << 24) >> 24;
+x13c68:
+	r2 = read32(r9+32);
+	r3 = 0x1dd94;
+	r2 &= 0xff;
+	r2 += r4;
+	r2 <<= 2;
+	write32(r3+32, r2);
+	write32(r3+36, r2);
+	write32(r3+40, r2);
+	r1 = read32(r9+32);
+	r1 >>= 24;
+	r1 = r2 + r1;
+	r1 <<= 18;
+	write32(r3+32, r1);
+	r1 = read32(r9+32);
+	r1 <<= 8;
+	r1 >>= 24;
+	r1 = r2 + r1;
+	r1 <<= 18;
+	write32(r3+36, r1);
+	r1 = read32(r9+32);
+	r1 = (r1 << 16) >> 16;
+	r1 >>= 8;
+	r2 += r1;
+	r2 <<= 18;
+	write32(r3+40, r2);
+	r1 = read32(r9+16);
+	r2 = r1 >> 16;
+	r1 = r1 >> 24;
+	r2 &= 0xff;
+	r2 <<= 12;
+	r1 <<= 16;
+	r1 = r1 - r2;
+	write32(r3+48, r1);
+	r2 = read32(r9+16);
+	r1 = r2 >> 8;
+	r2 &= 0xff;
+	r1 &= 0xff;
+	r2 <<= 12;
+	r1 <<= 16;
+	write32(r3+52, r1);
+	r1 = read32(r9+20);
+	r2 = r1 >> 16;
+	r1 >>= 24;
+	r2 &= 0xff;
+	r2 <<= 12;
+	r1 <<= 16;
+	r1 = r1 - r2;
+	write32(r3+56, r1);
+
+	return;
 }
 
 static void config_htc(void)
@@ -3622,11 +3885,6 @@ end:
 	return;
 }
 
-static void x13b8c(void)
-{
-	
-}
-
 static void config_lpmx(void)
 {
 	u32 r1, r2, r3, r4, r5, r6, r7, r8, r9, r10;
@@ -3636,8 +3894,7 @@ static void config_lpmx(void)
 	r1 = 0x1d9a4;
 	r12 = r1;
 
-	x13b8c();
-
+	r1 = 0x1dd94;
 	r11 = r1;
 	r1 = 0x1d8f0;
 	r1 = read32(r1);
