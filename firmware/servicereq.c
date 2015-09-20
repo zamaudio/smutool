@@ -1895,12 +1895,10 @@ x19124:
 
 static void x18490(phy_t *phy, u32 rr2)
 {
-/*
-	r3 = 0;
+	/*r3 = 0;
 	r4 = 0x10000;
-	r13 = rr1;
+	r13 = (u32)&(phy->p1);
 */
-
 }
 
 static void x180f0(phy_t *phy, u32 rr2)
@@ -1910,7 +1908,7 @@ static void x180f0(phy_t *phy, u32 rr2)
 	r4 = rr2 >> 1;
 	r3 = 0;
 	r18 = 0x1f6c8;
-	r16 = (u32)phy;
+	r16 = (u32)&(phy->p1);
 	r4 &= 1;
 	r13 = r3;
 	r9 = rr2 & 1;
@@ -1932,7 +1930,7 @@ x18174:
 	r1 &= 0xff;
 	if (r1 != 0)
 		goto x181a4;
-	r1 = (u32)phy; // arg?
+	r1 = (u32)&(phy->p1); // arg?
 	r2 = r1 + r13;
 	r1 = 1;
 	r8 = r1;
@@ -1945,7 +1943,7 @@ x181a4:
 		goto x181d8;
 	r1 = read8(r6+56);
 	r3 = read8(r7);
-	r2 = 0; // sp+48
+	r2 = (u32)&(phy->p1); // sp+48
 	r1 = ~r1;
 	r2 = r2 + r13;
 	r1 = r1 + r3;
@@ -1993,7 +1991,7 @@ x18228:
 	r2 |= r3;
 	write8(r1+64, r2);
 x1824c:
-	r19 = (u32)phy; // sp+48
+	r19 = (u32)&(phy->p1); // sp+48
 	r1 = r19 + r13;
 	r1 = read8(r1);
 	if (r1 == 0)
