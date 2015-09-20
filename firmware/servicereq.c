@@ -122,7 +122,7 @@ x1b698:
 	if (r1 != 0)
 		goto x1b6f8;
 	r2 = read32(r4+124);
-	r3 = 0xfffc;
+	r3 = -4;
 	r1 = read32(r4+120);
 	r2 &= r3;
 	r2 |= 1;
@@ -412,7 +412,7 @@ static void x196e0(void)
 	r11 = r16;
 	r11 |= 0xc;
 	r4 = read32(r11);
-	r2 = 0xfffb;
+	r2 = -5;
 	r1 = 0x01328014;
 	r4 = r4 & r2;
 	r2 = 0x20000000;
@@ -427,7 +427,7 @@ static void x196e0(void)
 	write32(r4+164, r1);
 
 	r1 = read32(r11);
-	r15 = 0xfffe;
+	r15 = -2;
 	r2 = 0x1f3a0;
 	r1 = r1 & r15;
 	write32(r11, r1);
@@ -551,7 +551,7 @@ x198d8:
 		goto x1991c;
 	
 	r1 = 0x01318074;
-	r2 = 0xfffe;
+	r2 = -2;
 	r3 = 0x80080000;
 	write32(r3+160, r1);
 	r1 = read32(r3+164);
@@ -605,7 +605,7 @@ x19944:
 	r2 = r16;
 	r2 |= 0xc;
 	r3 = read32(r2);
-	r4 = 0xfffd;
+	r4 = -3;
 	r1 = 0x01318060;
 	r3 &= r4;
 	write32(r2, r3);
@@ -789,7 +789,7 @@ try0:
 	write32(r4+164, r1);
 	
 	r1 = 0x01110010;
-	r2 = 0xfffe;
+	r2 = -2;
 	
 	r3 = 0x80080000;
 	write32(r3+160, r1);
@@ -929,7 +929,7 @@ skip1:
 
 	r2 = 0x1f604;
 	r1 = read32(r2);
-	r3 = 0xfffd;
+	r3 = -3;
 	r1 = r1 & r3;
 	write32(r2, r1);
 
@@ -1098,7 +1098,7 @@ x19224:
 	write32(r2+160, r1);
 	r1 = read32(r2+164);
 
-	r2 = 0xfffd;
+	r2 = -3;
 	r1 &= r2;
 	write32(r11+20, r1);
 x192ac:
@@ -1978,7 +1978,7 @@ x18538:
 	r2 = 0x1d844;
 	r1 = read8(r1);
 	r3 += r2;
-	r15 = 0xffdf;
+	r15 = -33;
 	r12++;
 	if (r1 == 0)
 		goto x18590;
@@ -3237,7 +3237,7 @@ x19c94:
 
 		r11 = r1;
 		r1 = 0x01318014;
-		r2 = 0xffc3;
+		r2 = -61;
 		r2 = r11 & r2;
 		r3 = 0x80080000;
 		write32(r3+160, r1);
@@ -3412,7 +3412,7 @@ x1a0e4:
 
 		r11 = r1;
 		r1 = 0x01318014;
-		r2 = 0xffc3;
+		r2 = -61;
 		r2 = r11 & r2;
 		r3 = 0x80080000;
 		write32(r3+160, r1);
@@ -3955,7 +3955,7 @@ x132c4:
 	r3 = 0x1dbd8;
 	write8(r1, r2);
 	r1 = read32(r3+4);
-	r2 = 0xfeff;
+	r2 = -257;
 	r1 &= r2;
 x132e4:
 	write32(r3+4, r1);
@@ -4257,7 +4257,7 @@ static void config_htc(void)
 skip1:
 	r2 = read32(r4+68);
 	r1 = read32(r4+64);
-	r3 = 0xfff1;
+	r3 = -15;
 	r2 = r2 & r3;
 	write32(r4+68, r2);
 
@@ -4428,10 +4428,10 @@ x13f60:
 	r1 &= 1;
 	write8(r2, r1);
 	r2 = read32(r11+148);
-	r1 = 0xfbff;
+	r1 = -1025;
 	r2 &= r1;
 	r2 &= r4;
-	r1 = 0xfdff;
+	r1 = -513;
 	r2 &= r1;
 	r1 = read32(r11+144);
 	r2 &= r3;
@@ -4482,7 +4482,7 @@ x14004:
 	r1 = 0x1dd90;
 	write32(r11+148, r2);
 	r1 = read8(r1);
-	r3 = 0xfbff;
+	r3 = -1025;
 	r2 &= r3;
 	r1 &= 1;
 	r1 <<= 10;
@@ -4498,7 +4498,7 @@ x14004:
 	r1 = 0x1dd8e;
 	write32(r11+148, r2);
 	r1 = read8(r1);
-	r3 = 0xfdff;
+	r3 = -513;
 	r2 &= r3;
 	r1 &= 1;
 	r1 <<= 9;
@@ -5061,7 +5061,7 @@ static void set_pm(int onoff)
 	case OFF:
 		write8(pm3, 0);
 		write32(pm2, read32(pm2) | 1);
-		write32(pm4, read32(pm4) & 0xfffe);
+		write32(pm4, read32(pm4) & -2);
 		break;
 	case ON:
 		write32(pm3+12, 1);
@@ -5261,7 +5261,7 @@ static void pciepllswitch()
 
 	x1c300(r1);
 
-	write32(reg, read32(reg) & 0xfffd);
+	write32(reg, read32(reg) & -3);
 }
 
 static void set_bapm(int onoff, u32 *bapmoff, u32 *bapmon)
@@ -5279,7 +5279,7 @@ static void set_bapm(int onoff, u32 *bapmoff, u32 *bapmon)
 		if (r1 == 0)
 			goto end;
 		r1 = read32(r11+128);
-		r13 = 0xfffe;
+		r13 = -2;
 		r1 <<= 2;
 		r2 = 0xe0400000;
 		r1 += r2;
@@ -5288,14 +5288,14 @@ static void set_bapm(int onoff, u32 *bapmoff, u32 *bapmon)
 		r3 = r1;
 		r1 = 0x1dd8a;
 		write32(r11+132, r3);
-		r2 = 0xfffc;
+		r2 = -4;
 		r3 = r3 & r2;
 		r1 &= 3;
 		r3 |= r1;
 		r1 = 0x1dd89;
 		write32(r11+132, r3);
 		r2 = read8(r1);
-		r1 = 0xff7f;
+		r1 = -129;
 		r2 &= 1;
 		r3 &= r1;
 		r2 <<= 7;
@@ -5318,7 +5318,7 @@ static void set_bapm(int onoff, u32 *bapmoff, u32 *bapmon)
 		r1 = 0x1dd88;
 		write32(r11+108, r2);
 		r3 = read8(r1);
-		r1 = 0xf1ff;
+		r1 = -3585;
 		r3 &= 7;
 		r3 <<= 9;
 		r2 &= r1;
@@ -5335,7 +5335,7 @@ static void set_bapm(int onoff, u32 *bapmoff, u32 *bapmon)
 		r5 = 0x1ddec;
 		*bapmon = r1; // arg? sp
 		r3 = read8(r5+3);
-		r2 = 0xfffd;
+		r2 = -3;
 		r4 = 0x1dd8c;
 		r1 = ((*bapmon) >> 24) & 0xff;  // sp+23
 		r3 &= 2;
@@ -5350,14 +5350,14 @@ static void set_bapm(int onoff, u32 *bapmoff, u32 *bapmon)
 		r1 |= r2;
 		*bapmon = (*bapmon & ~0xff000000) | ((r1 & 0xff) << 24);
 		r3 = read8(r5+3);
-		r2 = 0xfff7;
+		r2 = -9;
 		r1 = ((*bapmon) >> 24) & 0xff;
 		r3 &= 8;
 		r1 &= r2;
 		r1 |= r3;
 		*bapmon = (*bapmon & ~0xff000000) | ((r1 & 0xff) << 24);
 		r3 = read8(r5+3);
-		r2 = 0xfffb;
+		r2 = -5;
 		r1 = ((*bapmon) >> 24) & 0xff;
 		r3 &= 4;
 		r1 &= r2;
@@ -5366,7 +5366,7 @@ static void set_bapm(int onoff, u32 *bapmoff, u32 *bapmon)
 		if (r4 != 0)
 			goto x14e24;
 		r1 = ((*bapmon) >> 24) & 0xff;
-		r2 = 0xffef;
+		r2 = -17;
 		r1 &= r2;
 		*bapmon = (*bapmon & ~0xff000000) | ((r1 & 0xff) << 24);
 x14e24:
@@ -5412,7 +5412,7 @@ x14e24:
 		if (r1 == 0)
 			goto end;
 		r1 = read32(r12+128);
-		r11 = 0xfffe;
+		r11 = -2;
 		r1 <<= 2;
 		r2 = 0xe0400000;
 		r1 += r2;
@@ -5428,10 +5428,10 @@ x14e24:
 		r1 &= 1;
 		write8(r2, r1);
 		r3 = read32(r12+132);
-		r2 = 0xfffc;
+		r2 = -4;
 		r1 = read32(r12+128);
 		r3 &= r2;
-		r2 = 0xff7f;
+		r2 = -129;
 		r3 &= r2;
 		r2 = r3;
 		write32(r12+132, r3);
@@ -5453,7 +5453,7 @@ x14e24:
 		write8(r2, r3);
 		r3 = read32(r12+108);
 		r1 = read32(r12+104);
-		r2 = 0xfff1;
+		r2 = -15;
 		r3 &= r2;
 		r2 = r3;
 		write32(r12+108, r3);
@@ -5469,19 +5469,19 @@ x14e24:
 		r2 = *bapmoff;
 		write32(r1, r2);
 		r1 = ((*bapmoff) >> 24) & 0xff;
-		r2 = 0xfffd;
+		r2 = -3;
 		r1 &= r2;
 		*bapmoff = (*bapmoff & ~0xff000000) | ((r1 & 0xff) << 24);
 		
 		r1 = ((*bapmoff) >> 24) & 0xff;
-		r2 = 0xfff7;
+		r2 = -9;
 		r1 &= r11;
 		*bapmoff = (*bapmoff & ~0xff000000) | ((r1 & 0xff) << 24);
 		r1 = ((*bapmoff) >> 24) & 0xff;
 		r1 &= r2;
 		*bapmoff = (*bapmoff & ~0xff000000) | ((r1 & 0xff) << 24);
 		r1 = ((*bapmoff) >> 24) & 0xff;
-		r2 = 0xfffb;
+		r2 = -5;
 		r1 &= r2;
 		*bapmoff = (*bapmoff & ~0xff000000) | ((r1 & 0xff) << 24);
 		r1 = ((*bapmoff) >> 24) & 0xff;
