@@ -4927,7 +4927,7 @@ x1c610:
 	write8(r12+14, r2);
 	r1 = read8(r14+26);
 	r13 = r13 + 0x271;
-	if (r1 == 0)
+	if (r1 != 0)
 		goto x12dac;
 	r1 = read32(r15+76);
 	r2 = 0x000fffff;
@@ -4985,6 +4985,7 @@ x12d8c:
 	r2 = (r4 > 0xf);
 	r1 <<= 6;
 	write32(r5, r1);
+	r5 += 4;
 	if (r2 == 0)
 		goto x12d8c;
 x12dac:
