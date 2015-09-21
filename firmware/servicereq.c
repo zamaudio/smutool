@@ -5036,6 +5036,7 @@ x12e44:
 	r2 = read32(r3);
 	r1 = 0xffff7fff;
 	r2 &= r1;
+	write32(r3, r2);
 
 	//x128f4();
 	r4 = 0xe000228c;
