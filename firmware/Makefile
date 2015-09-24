@@ -28,7 +28,7 @@ OPT=-Os
 all: $(TARGET)
 
 $(TARGET): $(OBJS) $(OBJS2)
-	$(LD) $(OPT) $(LIBS) $(OBJS) $(OBJS2) -static -M -T smu.ld -o $(TARGET) >/dev/null
+	$(LD) $(LIBS) $(OBJS) $(OBJS2) -static -M -T smu.ld -o $(TARGET) >/dev/null
 	$(OC) -S -I elf32-lm32 -O binary $(TARGET) smu.rom
 
 .c.o:
