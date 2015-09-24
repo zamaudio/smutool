@@ -20,36 +20,28 @@
 void main(void)
 {
 	int ie;
-//	int mask, im;
-//	int irq = 1;
-//	mask = 0x1 << irq; // << irq
+	int mask, im;
+	int irq = 2;
+	mask = 0x1 << irq;
 
 	/* disable interrupts */
 	asm volatile ("rcsr %0,ie":"=r"(ie));
 	ie &= (~0x1);
 	asm volatile ("wcsr ie, %0"::"r"(ie));
 
-/**** Enable interrupts and handler
 	ISREntryTable[irq].Callback = &smu_service_request;
-	ISREntryTable[irq].Context = 0; //?
+	ISREntryTable[irq].Context = 0;
 
+	/* enable interrupt handler 2 */
 	asm volatile ("rcsr %0, im":"=r"(im));
 	im |= mask;
 	asm volatile ("wcsr im, %0"::"r"(im));
 
+	/* enable interrupts */
 	ie |= 0x1;
 	asm volatile ("wcsr ie, %0"::"r"(ie));
-*/
-	write32(0xe0003004, 3); // Assume interrupt is done and acked
-	
+
 	while (1) {
 		mdelay(10);
-
-		if (read32(0xe0003000)) {
-			write32(0xe0003004, 1); // Interrupt ack
-			smu_service_request();  // Do service request
-			write32(0xe0003000, 0); // Clear service request
-			write32(0xe0003004, 3); // Interrupt done + ack
-		}
 	}
 }

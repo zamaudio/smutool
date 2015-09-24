@@ -5553,7 +5553,7 @@ end:
 	return;
 }
 
-void smu_service_request(void)
+void smu_service_request(unsigned int level, void* dummy)
 {
 
 	static ddiphy_t ddiphy = {{0}};
@@ -5652,11 +5652,11 @@ void smu_service_request(void)
 	default:
 		break;
 	}
+	write32(0xe0003004, 3);
 }
 
 void MicoISRHandler(void)
 {
-/*
 	unsigned int ip, im, Mask, IntLevel;
 	asm volatile ("rcsr %0,im":"=r"(im));
 
@@ -5669,23 +5669,23 @@ void MicoISRHandler(void)
 		IntLevel = 0;
 
 		if( ip!=0 ){
-		do {
-			if(Mask & ip) {
-				if(ISREntryTable[IntLevel].Callback != 0){
-					(ISREntryTable[IntLevel].Callback)(IntLevel, ISREntryTable[IntLevel].Context);
-					asm volatile ("wcsr ip, %0"::"r"(Mask));
-					break;
-				} else {
-					asm volatile ("rcsr %0,im":"=r"(im));
-					im &= ~Mask;
-					asm volatile ("wcsr im, %0"::"r"(im));
-					asm volatile ("wcsr ip, %0"::"r"(Mask));
-					break;
+			do {
+				if(Mask & ip) {
+					if(ISREntryTable[IntLevel].Callback != 0){
+						(ISREntryTable[IntLevel].Callback)(IntLevel, ISREntryTable[IntLevel].Context);
+						asm volatile ("wcsr ip, %0"::"r"(Mask));
+						break;
+					} else {
+						asm volatile ("rcsr %0,im":"=r"(im));
+						im &= ~Mask;
+						asm volatile ("wcsr im, %0"::"r"(im));
+						asm volatile ("wcsr ip, %0"::"r"(Mask));
+						break;
+					}
 				}
-			}
-			Mask = Mask << 0x1;
-			++IntLevel;
-		} while(1);
+				Mask = Mask << 0x1;
+				++IntLevel;
+			} while(1);
 
 		} else {
 			break;
@@ -5694,6 +5694,5 @@ void MicoISRHandler(void)
 	} while(1);
 
 	//OSIntExit();
-*/	
 	return;
 }
