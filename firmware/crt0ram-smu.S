@@ -44,13 +44,13 @@ _start:
         .type 	_reset_handler, @function
 _reset_handler:
 	xor 	r0, r0, r0
+	xor 	r0, r0, r0
 	wcsr    IE, r0
-	wcsr    IM, r0
 	mvhi    r1, hi(_reset_handler)
 	ori     r1, r1, lo(_reset_handler)
 	wcsr    EBA, r1
+	wcsr    DEBA, r1
 	calli   _crt0
-	nop
         .size	_reset_handler, .-_reset_handler
 
         .global _breakpoint_handler

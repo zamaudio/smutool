@@ -21,25 +21,34 @@ void main(void)
 {
 	int ie;
 	int mask, im;
-	int irq = 2;
-	mask = 0x1 << irq;
+	int irq;
+
 
 	/* disable interrupts */
 	asm volatile ("rcsr %0,ie":"=r"(ie));
 	ie &= (~0x1);
 	asm volatile ("wcsr ie, %0"::"r"(ie));
 
-	ISREntryTable[irq].Callback = &smu_service_request;
-	ISREntryTable[irq].Context = 0;
+	for (irq = 0; irq < 32; irq++) {
+		mask = 0x1 << irq;
 
-	/* enable interrupt handler 2 */
-	asm volatile ("rcsr %0, im":"=r"(im));
-	im |= mask;
-	asm volatile ("wcsr im, %0"::"r"(im));
+		ISREntryTable[irq].Callback = &smu_service_request;
+		ISREntryTable[irq].Context = 0;
+
+		/* enable interrupt handler */
+		asm volatile ("rcsr %0, im":"=r"(im));
+		im |= mask;
+		asm volatile ("wcsr im, %0"::"r"(im));
+	}
 
 	/* enable interrupts */
 	ie |= 0x1;
 	asm volatile ("wcsr ie, %0"::"r"(ie));
+	
+	/* tell x86 that interrupts are ready */
+	write32(0x1f380, 1);
+	
+	write32(0x80000008, 1);
 
 	while (1) {
 		mdelay(10);
