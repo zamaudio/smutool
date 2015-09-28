@@ -60,6 +60,9 @@ typedef unsigned int u32;
 #define write32(addr, val) (*((volatile u32 *)(addr))) = (val)
 #define read32(addr) (*((volatile u32 *)(addr)))
 
+#define INTACK 1
+#define INTDONE 2
+
 /// x1F200
 typedef union {
   struct {

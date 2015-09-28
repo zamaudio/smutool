@@ -5560,7 +5560,9 @@ void smu_service_request(unsigned int level, void* dummy)
 	static u32 bapm = 0;
 	int requestid;
 	
-	write32(0xe0003004, 1);
+	// Acknowledge and clear all other pending interrupts
+	write32(0xe0003004, INTACK);
+	asm volatile ("wcsr ip, %0"::"r"(0xffffffff));
 
 	requestid = read32(0xe0003000);
 	requestid &= 0x1fffe;
@@ -5654,8 +5656,7 @@ void smu_service_request(unsigned int level, void* dummy)
 	default:
 		break;
 	}
-	write32(0xe0003004, 3);
-	write32(0xe0003000, 1);
+	write32(0xe0003004, INTACK | INTDONE);
 }
 
 void MicoISRHandler(void)

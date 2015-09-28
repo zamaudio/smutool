@@ -41,6 +41,9 @@ void main(void)
 		asm volatile ("wcsr im, %0"::"r"(im));
 	}
 
+	/* clear all pending interrupts */
+	asm volatile ("wcsr ip, %0"::"r"(0xffffffff));
+	
 	/* enable interrupts */
 	ie |= 0x1;
 	asm volatile ("wcsr ie, %0"::"r"(ie));
