@@ -19,41 +19,39 @@
 
 void main(void)
 {
+	int i;
 	int ie;
-	int mask, im;
-	int irq;
-
+	int e3;
+	int toggle = 0;
 
 	/* disable interrupts */
 	asm volatile ("rcsr %0,ie":"=r"(ie));
 	ie &= (~0x1);
 	asm volatile ("wcsr ie, %0"::"r"(ie));
 
-	for (irq = 0; irq < 32; irq++) {
-		mask = 0x1 << irq;
-
-		ISREntryTable[irq].Callback = &smu_service_request;
-		ISREntryTable[irq].Context = 0;
-
-		/* enable interrupt handler */
-		asm volatile ("rcsr %0, im":"=r"(im));
-		im |= mask;
-		asm volatile ("wcsr im, %0"::"r"(im));
+	for (i = 0; i < 32; i++) {
+		ISREntryTable[i].Callback = 0;
+		ISREntryTable[i].Context = 0;
 	}
 
 	/* clear all pending interrupts */
 	asm volatile ("wcsr ip, %0"::"r"(0xffffffff));
 	
-	/* enable interrupts */
-	ie |= 0x1;
-	asm volatile ("wcsr ie, %0"::"r"(ie));
-	
 	/* tell x86 that interrupts are ready */
+	write32(0xe0003004, INTACK | INTDONE);
 	write32(0x1f380, 1);
 	
-	write32(0x80000008, 1);
+	toggle = read32(0xe0003000) & 1;
 
 	while (1) {
-		mdelay(10);
+		e3 = read32(0xe0003000);
+		if (toggle != (e3 & 1)) {
+			write32(0xe0003004, INTACK);
+			smu_service_request(e3);
+			write32(0xe0003004, INTACK | INTDONE);
+		}
+
+		toggle = read32(0xe0003000) & 1;
+		mdelay(30);
 	}
 }

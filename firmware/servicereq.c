@@ -4524,24 +4524,46 @@ x14110:
 
 static void config_tdc(void)
 {
-	u32 r1, r2;
+	u32 r1, r2, r3, r4, r5, r6, r7, r8;
+	u32 r11;
 
-	r2 = read32(0x1f428) & 4;
+	r1 = 0x1d9a4;
+	r11 = r1;
+	r1 = 0x1f428;
+	r1 = read32(r1);
+	r4 = 0x1f638;
+	r6 = 0x1f634;
+	r7 = 0x1f624;
+	r5 = 0x1d950;
+	r2 = r1 & 4;
+	r8 = 0;
+	r3 = 0x1dcf4;
+	r1 = 0x1d8f0;
 	if (r2 == 0)
-		goto skip;
-	write8(0x1dcf4, read8(0x1f638+3));
-	write8(read32(0x1d8f0), read8(0x1f638+3));
-	write32(0x1f634, 0);
-	write32(0x1f624, 0);
+		goto x12428;
+	r2 = read8(r4+3);
+	write8(r3, r2);
+	r1 = read32(r1);
+	r4 = read8(r4+3);
+	write8(r1, r4);
+	write32(r6, r8);
+	write32(r7, r8);
+	r1 = read32(r11+64);
+	r1 = r1 << 2;
+	r2 = 0xe0400000;
+	r1 = r1 + r2;
+	r1 = read32(r1);
 
-	r1 = read32(0xe0400000 + (read32(0x1d9a4+64) << 2));
 	r1 |= 1;
-	write32(0x1d9a4+68, r1);
+	write32(r11+68, r1);
 	goto end;
-skip:
-	write8(0x1dcf4, 0);
-	write8(read32(0x1df80), 0);
-	write8(0x1d950, 0);
+x12428:
+	r1 = 0x1d8f0;
+	r1 = read32(r1);
+	r3 = 0x1dcf4;
+	write8(r3, r2);
+	write8(r1, r2);
+	write8(r5, r2);
 end:
 	return;
 }
@@ -5553,18 +5575,14 @@ end:
 	return;
 }
 
-void smu_service_request(unsigned int level, void* dummy)
+void smu_service_request(unsigned int e3)
 {
 
 	static ddiphy_t ddiphy = {{0}};
 	static u32 bapm = 0;
 	int requestid;
 	
-	// Acknowledge and clear all other pending interrupts
-	write32(0xe0003004, INTACK);
-	asm volatile ("wcsr ip, %0"::"r"(0xffffffff));
-
-	requestid = read32(0xe0003000);
+	requestid = e3;
 	requestid &= 0x1fffe;
 	requestid >>= 1;
 
@@ -5656,7 +5674,6 @@ void smu_service_request(unsigned int level, void* dummy)
 	default:
 		break;
 	}
-	write32(0xe0003004, INTACK | INTDONE);
 }
 
 void MicoISRHandler(void)
