@@ -22,7 +22,6 @@ void main(void)
 	int i;
 	int ie;
 	int e3;
-	int toggle = 0;
 
 	/* disable interrupts */
 	asm volatile ("rcsr %0,ie":"=r"(ie));
@@ -41,17 +40,14 @@ void main(void)
 	write32(0xe0003004, INTACK | INTDONE);
 	write32(0x1f380, 1);
 	
-	toggle = read32(0xe0003000) & 1;
-
 	while (1) {
 		e3 = read32(0xe0003000);
-		if (toggle != (e3 & 1)) {
+		if ((e3 & ~1)) {
 			write32(0xe0003004, INTACK);
 			smu_service_request(e3);
 			write32(0xe0003004, INTACK | INTDONE);
 		}
 
-		toggle = read32(0xe0003000) & 1;
 		mdelay(30);
 	}
 }
