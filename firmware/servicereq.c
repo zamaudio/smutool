@@ -47,6 +47,48 @@ typedef struct {
 	phy_t p;
 } ddiphy_t;
 
+
+static u32 x1d9a4[38] = {
+	0x3178,
+	0x0000,
+	0x3171,
+	0x0000,
+	0x3172,
+	0x0000,
+	0x7103,
+	0x0000,
+	0x7116,
+	0x0000,
+	0x317d,
+	0x0000,
+	0x7103,
+	0x0000,
+	0x712e,
+	0x0000,
+	0x710f,
+	0x0000,
+	0x7110,
+	0x0000,
+	0x7111,
+	0x0000,
+	0x7112,
+	0x0000,
+	0x7113,
+	0x0000,
+	0x715c,
+	0x0000,
+	0x715d,
+	0x0000,
+	0x7162,
+	0x0000,
+	0x7117,
+	0x0000,
+	0x7157,
+	0x0000,
+	0x7106,
+	0x0000,
+};
+
 static void x1c300(u32 r1)
 {
 	u32 reg, r3;
@@ -94,7 +136,7 @@ static void x1b65c(u32 rr1)
 	u32 r1, r2, r3, r4, r5, r6;
 	u32 r11, r12, r13;
 	r13 = rr1 & 0xff;
-	r1 = 0x1d9a4;
+	r1 = (u32)&x1d9a4[0];
 	
 	r11 = 0x1d989;
 	r4 = rr1;
@@ -3847,7 +3889,7 @@ static void config_vpc(void)
 	u32 r1, r2, r3, r4, r5, r6;
 	u32 r11, r12, r13;
 
-	r1 = 0x1d9a4;
+	r1 = (u32)&x1d9a4[0];
 	r11 = r1;
 	r1 = 0x1f428;
 	r1 = read32(r1);
@@ -4235,7 +4277,7 @@ static void config_htc(void)
 {
 	u32 r1, r2, r3, r4, r11, r12, r13;
 	
-	r4 = 0x1d9a4;
+	r4 = (u32)&x1d9a4[0];
 	r1 = 0x1f428;
 	r1 = read32(r1);
 	r11 = r1 & 0x10;
@@ -4278,7 +4320,7 @@ static void config_bapm(u32 *value)
 	u32 r1, r2, r3, r4, r5, r6;
 	u32 r11, r12, r13, r14, r15, r16, r17;
 
-	r1 = 0x1d9a4;
+	r1 = (u32)&x1d9a4[0];
 	r11 = r1;
 	r1 = 0x1d8f0;
 	r1 = read32(r1);
@@ -4527,7 +4569,7 @@ static void config_tdc(void)
 	u32 r1, r2, r3, r4, r5, r6, r7, r8;
 	u32 r11;
 
-	r1 = 0x1d9a4;
+	r1 = (u32)&x1d9a4[0];
 	r11 = r1;
 	r1 = 0x1f428;
 	r1 = read32(r1);
@@ -4538,12 +4580,11 @@ static void config_tdc(void)
 	r2 = r1 & 4;
 	r8 = 0;
 	r3 = 0x1dcf4;
-	r1 = 0x1d8f0;
+	r1 = 0x1f8f0;
 	if (r2 == 0)
 		goto x12428;
 	r2 = read8(r4+3);
 	write8(r3, r2);
-	r1 = read32(r1);
 	r4 = read8(r4+3);
 	write8(r1, r4);
 	write32(r6, r8);
@@ -4574,7 +4615,7 @@ static void config_lpmx(void)
 	u32 r11, r12, r13, r14, r15, r16, r17, r18, r19, r20;
 	u32 r21, r22;
 
-	r1 = 0x1d9a4;
+	r1 = (u32)&x1d9a4[0];
 	r12 = r1;
 
 	r1 = 0x1dd94;
@@ -5294,7 +5335,7 @@ static void set_bapm(int onoff, u32 *bapmoff, u32 *bapmon)
 	switch (onoff) {
 	case ON:
 		// disable interrupts (nah)
-		r1 = 0x1d9a4;
+		r1 = (u32)&x1d9a4[0];
 		r11 = r1;
 		r1 = 0x1dd8b;
 		r1 = read8(r1);
@@ -5429,7 +5470,7 @@ x14e24:
 		break;
 	case OFF:
 		// disable interrupts (nah)
-		r1 = 0x1d9a4;
+		r1 = (u32)&x1d9a4[0];
 		r12 = r1;
 		r1 = 0x1dd8b;
 		r1 = read8(r1);
