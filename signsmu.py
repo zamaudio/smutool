@@ -43,9 +43,9 @@ for wcnt in range(0,len(firmware)/4):
 
 h = hmac.new(key1, firmware, hashlib.sha1)
 mhash = h.digest()
-print hex(struct.unpack("<5I", mhash)[0])
-print hex(struct.unpack("<5I", mhash)[1])
-print hex(struct.unpack("<5I", mhash)[2])
-print hex(struct.unpack("<5I", mhash)[3])
-print hex(struct.unpack("<5I", mhash)[4])
+print hex(struct.unpack(">5I", mhash)[0])
+print hex(struct.unpack(">5I", mhash)[1])
+print hex(struct.unpack(">5I", mhash)[2])
+print hex(struct.unpack(">5I", mhash)[3])
+print hex(struct.unpack(">5I", mhash)[4])
 

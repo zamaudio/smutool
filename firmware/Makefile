@@ -30,6 +30,7 @@ all: $(TARGET)
 $(TARGET): $(OBJS) $(OBJS2)
 	$(LD) $(LIBS) $(OBJS) $(OBJS2) -static -M -T smu.ld -o $(TARGET) >/dev/null
 	$(OC) -S -I elf32-lm32 -O binary $(TARGET) smu.rom
+	bash ./makefirmware.sh smu.rom > GnbSmuFirmwareTN.h
 
 .c.o:
 	$(CC) $(LIBS) $(OPT) -Wall -ffreestanding -c $< -o $@

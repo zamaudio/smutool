@@ -10,12 +10,13 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * See <http://www.gnu.org/licenses/>.-
  */
 
 #include "smu.h"
 #include "delay.h"
 #include "servicereq.h"
+
+#define SMU_POST(x) write32(0xe0003024, (x & 0xff))
 
 void main(void)
 {
@@ -40,6 +41,8 @@ void main(void)
 	write32(0xe0003004, INTACK | INTDONE);
 	write32(0x1f380, 1);
 	
+	SMU_POST(0xcb);
+
 	while (1) {
 		e3 = read32(0xe0003000);
 		if ((e3 & ~1)) {
