@@ -5627,16 +5627,15 @@ void smu_service_request(unsigned int e3)
 	requestid &= 0x1fffe;
 	requestid >>= 1;
 
-	// Instead of servicing the request, just dump the request number
+	// Dump the request number and service the request
 	SMU_POST(requestid);
-	return;
 
 	switch(requestid) {
 	case SMC_MSG_HALT:
 		halt();
 		break;
 	case SMC_MSG_PHY_LN_OFF:
-		set_phyln(OFF, &ddiphy);
+		//set_phyln(OFF, &ddiphy);
 		break;
 	case SMC_MSG_PHY_LN_ON:
 		set_phyln(ON, &ddiphy);
@@ -5657,7 +5656,7 @@ void smu_service_request(unsigned int e3)
 		set_x16off();
 		break;
 	case SMC_MSG_CONFIG_LCLK_DPM:
-		config_lclkdpm();
+		//config_lclkdpm();
 		break;
 	case SMC_MSG_FLUSH_DATA_CACHE:
 		flush_datacache();
@@ -5705,7 +5704,7 @@ void smu_service_request(unsigned int e3)
 		adjust_loadline();
 		break;
 	case SMC_MSG_RECONFIGURE:
-		reconfigure();
+		//reconfigure();
 		break;
 	case SMC_MSG_PCIE_PLLSWITCH:
 		pciepllswitch();
