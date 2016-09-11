@@ -50,6 +50,7 @@ typedef unsigned int u32;
 #define SMC_MSG_PCIE_PLLSWITCH             27
 #define SMC_MSG_ENABLE_BAPM                32
 #define SMC_MSG_DISABLE_BAPM               33
+#define SMC_MSG_READ_ROM_HACK              99
 
 #define MICO32_CPU_CLOCK_MHZ (25000000)
 #define MICO_SLEEP_MICROSEC  (MICO32_CPU_CLOCK_MHZ/11000000)

@@ -5616,12 +5616,22 @@ end:
 	return;
 }
 
+void read_rom_hack(void)
+{
+	// Read a byte of the ROM at an address that autoincrements every read
+	// and save it to the scratch register above the post code.
+	// Will wrap around at 0x10000 bytes.
+	static u16 wrappedromaddress = 0;
+	u32 oldpostcode = read32(0xe0003024) & 0xff;
+	write32(0xe0003024, ((u32)read8(wrappedromaddress++) << 8) | oldpostcode);
+}
+
 void smu_service_request(unsigned int e3)
 {
 
 	static ddiphy_t ddiphy = {{0}};
 	static u32 bapm = 0;
-	int requestid;
+	u32 requestid;
 	
 	requestid = e3;
 	requestid &= 0x1fffe;
@@ -5714,6 +5724,9 @@ void smu_service_request(unsigned int e3)
 		break;
 	case SMC_MSG_DISABLE_BAPM:
 		set_bapm(OFF, &bapm, &bapm);
+		break;
+	case SMC_MSG_READ_ROM_HACK:
+		read_rom_hack();
 		break;
 	default:
 		break;

@@ -34,11 +34,11 @@ void main(void)
 
 	/* clear all pending interrupts */
 	asm volatile ("wcsr ip, %0"::"r"(0xffffffff));
-	
+
 	/* tell x86 that interrupts are ready */
 	write32(0xe0003004, INTACK | INTDONE);
 	write32(0x1f380, 1);
-	
+
 	SMU_POST(0xcb);
 
 	while (1) {
