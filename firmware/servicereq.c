@@ -5627,6 +5627,10 @@ void smu_service_request(unsigned int e3)
 	requestid &= 0x1fffe;
 	requestid >>= 1;
 
+	// Instead of servicing the request, just dump the request number
+	SMU_POST(requestid);
+	return;
+
 	switch(requestid) {
 	case SMC_MSG_HALT:
 		halt();

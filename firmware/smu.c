@@ -16,8 +16,6 @@
 #include "delay.h"
 #include "servicereq.h"
 
-#define SMU_POST(x) write32(0xe0003024, (x & 0xff))
-
 void main(void)
 {
 	int i;

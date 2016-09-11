@@ -33,14 +33,6 @@ try:
 finally:
 	f.close()
 
-for wcnt in range(0,len(firmware)/4):
-	tmp = firmware[wcnt*4]
-	firmware[wcnt*4] = firmware[wcnt*4+3]
-	firmware[wcnt*4+3] = tmp
-	tmp = firmware[wcnt*4+1]
-	firmware[wcnt*4+1] = firmware[wcnt*4+2]
-	firmware[wcnt*4+2] = tmp
-
 h = hmac.new(key1, firmware, hashlib.sha1)
 mhash = h.digest()
 print hex(struct.unpack(">5I", mhash)[0])
