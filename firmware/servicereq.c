@@ -48,25 +48,26 @@ typedef struct {
 } ddiphy_t;
 
 
-static u32 x1d9a4[38] = {
-	0x3178,
+/* Align to 0x1d9a4 */
+static u32 thermal_params[38] = {
+	0x3178, // VPC
 	0x0000,
-	0x3171,
+	0x3171, // BAPM
 	0x0000,
-	0x3172,
+	0x3172, // BAPM
 	0x0000,
-	0x7103,
+	0x7103, // BAPM
+	0x0000, // BAPM
+	0x7116, // BAPM
+	0x0000, // BAPM
+	0x317d, // VPC
 	0x0000,
-	0x7116,
-	0x0000,
-	0x317d,
-	0x0000,
-	0x7103,
-	0x0000,
+	0x7103, // VPC
+	0x0000, // VPC
 	0x712e,
 	0x0000,
-	0x710f,
-	0x0000,
+	0x710f, // TDC/HTC
+	0x0000, // TDC/HTC
 	0x7110,
 	0x0000,
 	0x7111,
@@ -75,19 +76,25 @@ static u32 x1d9a4[38] = {
 	0x0000,
 	0x7113,
 	0x0000,
-	0x715c,
-	0x0000,
-	0x715d,
+	0x715c, // VPC/BAPM
+	0x0000, // VPC/BAPM
+	0x715d, // VPC
 	0x0000,
 	0x7162,
 	0x0000,
-	0x7117,
-	0x0000,
+	0x7117, // BAPM
+	0x0000, // BAPM
 	0x7157,
 	0x0000,
-	0x7106,
-	0x0000,
+	0x7106, // BAPM
+	0x0000, // BAPM
 };
+
+static void set_interrupts(int onoff)
+{
+	// TODO: re-enable when interrupts are fixed
+	//asm volatile ("wcsr ie, %0"::"r"(onoff));
+}
 
 static void x1c300(u32 r1)
 {
@@ -136,8 +143,8 @@ static void x1b65c(u32 rr1)
 	u32 r1, r2, r3, r4, r5, r6;
 	u32 r11, r12, r13;
 	r13 = rr1 & 0xff;
-	r1 = (u32)&x1d9a4[0];
-	
+	r1 = (u32)&thermal_params[0];
+
 	r11 = 0x1d989;
 	r4 = rr1;
 	r1 = read8(r11+10);
@@ -152,7 +159,7 @@ x1b698:
 	r1 = (r12 == 0);
 	if (r1 == 0)
 		goto x1b698;
-	
+
 	r1 = read8(r11+8);
 	r2 = 0xe00021b0;
 	r1 = r1 + r13;
@@ -256,7 +263,7 @@ x16f34:
 
 	r1 = r1 & 0xff;
 	x1b65c(r1);
-	
+
 	r1 = 0x1f608;
 	write32(r1, r13);
 	goto end;
@@ -285,7 +292,7 @@ static void x18b20(void)
 {
 	u32 r1, r2, r3, r4, r5, r6, r7, r8, r9;
 	u32 r10, r11, r12, r13, r14, r15, r16, ra;
-	
+
 	r6 = 0; // compiler
 	r3 = 0x1dff4;
 	r1 = read32(r3+28);
@@ -445,7 +452,7 @@ static void x196e0(void)
 	r2 = 0x6ff;
 	write32(r1+12, r2);
 	r2 = r1;
-	
+
 	while ((read32(r2+516) & 0x400) == 0);
 	r3 = 0xe0300000;
 	while ((read32(r3+516) & 0x80000) == 0);
@@ -473,7 +480,7 @@ static void x196e0(void)
 	r2 = 0x1f3a0;
 	r1 = r1 & r15;
 	write32(r11, r1);
-	
+
 	r2 = read32(r2);
 	r1 = 0x0131fff0;
 	r3 = 0x80080000;
@@ -491,7 +498,7 @@ static void x196e0(void)
 	r3 = 0x80080000;
 	write32(r3+160, r1);
 	write32(r3+164, r2);
-	
+
 	r2 = read32(r13+8);
 	r1 = 0x02110012;
 	r3 = 0x80080000;
@@ -563,7 +570,7 @@ skip1:
 	write32(r3+160, r1);
 	r1 = read32(r3+164) | r2;
 	write32(r3+164, r1);
-	
+
 	r1 = 0x01318070;
 	r2 = r15;
 	r13 = 1;
@@ -591,7 +598,7 @@ x198d8:
 	r11 = read8(r12+70);
 	if (r11 != 0)
 		goto x1991c;
-	
+
 	r1 = 0x01318074;
 	r2 = -2;
 	r3 = 0x80080000;
@@ -704,7 +711,7 @@ static void x1a200(void)
 {
 	u32 r1, r2, r3, r4;
 	u32 r11, r12, r13, r14;
-	
+
 	r14 = 0;
 	r1 = 0x1f6c4;
 	r2 = read32(r1);
@@ -721,7 +728,7 @@ static void x1a200(void)
 	r12 = r1;
 try0:
 	r1 = 0x01318010 + r12;
-	
+
 	r2 = 0x80080000;
 	write32(r2+160, r1);
 	r1 = read32(r2+164);
@@ -760,7 +767,7 @@ try0:
 	r2 = 0x80080000;
 	write32(r2+160, r1);
 	r1 = read32(r2+164);
-	
+
 	write32(r11+8, r1);
 	r1 = 0x02110013;
 
@@ -769,7 +776,7 @@ try0:
 	r1 = read32(r2+164);
 
 	write32(r11+12, r1);
-	
+
 	r1 = 0x03210009;
 	r2 = 0x81000000;
 
@@ -785,7 +792,7 @@ try0:
 	write32(r3+160, r1);
 	r1 = read32(r3+164) | r2;
 	write32(r3+164, r1);
-	
+
 	r1 = 0x01318011;
 	r2 = 0x100;
 
@@ -793,23 +800,11 @@ try0:
 	write32(r3+160, r1);
 	r1 = read32(r3+164) | r2;
 	write32(r3+164, r1);
-	
+
 	r1 = 0x01328014;
 	r2 = 0x20000000;
 	r3 = 0xf0000000;
-	
-	r4 = 0x80080000;
-	write32(r4+160, r1);
-	r1 = read32(r4+164);
-	r3 = ~r3;
-	r1 &= r3;
-	r1 |= r2;
-	write32(r4+164, r1);
-	
-	r1 = 0x01308014;
-	r2 = 0x10000000;
-	r3 = 0xf0000000;
-	
+
 	r4 = 0x80080000;
 	write32(r4+160, r1);
 	r1 = read32(r4+164);
@@ -829,10 +824,22 @@ try0:
 	r1 &= r3;
 	r1 |= r2;
 	write32(r4+164, r1);
-	
+
+	r1 = 0x01308014;
+	r2 = 0x10000000;
+	r3 = 0xf0000000;
+
+	r4 = 0x80080000;
+	write32(r4+160, r1);
+	r1 = read32(r4+164);
+	r3 = ~r3;
+	r1 &= r3;
+	r1 |= r2;
+	write32(r4+164, r1);
+
 	r1 = 0x01110010;
 	r2 = -2;
-	
+
 	r3 = 0x80080000;
 	write32(r3+160, r1);
 	r1 = read32(r3+164);
@@ -850,7 +857,7 @@ try0:
 	r1 &= r3;
 	r1 |= r2;
 	write32(r4+164, r1);
-	
+
 	r1 = 0x01328071;
 	r2 = 1;
 
@@ -865,7 +872,7 @@ back:
 	r1 = 0x64;
 	r2 = read32(0xe0002028);
 	r11 = r2 & 0x7f;
-	
+
 // 1b2d0
 	r2 = 0xe0003020;
 	r2 = read32(r2);
@@ -937,7 +944,7 @@ x1a3fc:
 	r1 = r1 & 0x400;
 	if (r1 != 0)
 		goto x1a3fc;
-	
+
 	r3 = r4;
 	r3 |= 0xc;
 	r2 = read32(r3);
@@ -1026,7 +1033,7 @@ x17c5c:
 	r2 = r2 + 8;
 	if (r1 == 0)
 		goto x17c18;
-	
+
 x17c68:
 	r8 = r9 >> 1;
 	r6 = 0;
@@ -1270,7 +1277,7 @@ x19448:
 	r16 += 1;
 	if (r1 == 0)
 		goto x1920c;
-	
+
 	r14 = 0;
 	r11 = (u32)&(dp->p.p3);
 	r10 = (u32)&(dp->p.p5);
@@ -1727,7 +1734,7 @@ x18e64:
 	r1 = (r1 == 0);
 	if (r1 == 0)
 		goto x18e9c;
-	
+
 	r1 = read8(r12+56);
 	r3 = read8(r11);
 	r2 = (u32)phy; // arg?
@@ -1869,14 +1876,14 @@ x1901c:
 	r11 += 4;
 	if (r1 == 0)
 		goto x18f98;
-	
+
 	r13 = 0;
 x1902c:
 	r1 = r14 + r13;
 	r1 = read8(r1);
 	if (r1 == 0)
 		goto x190a0;
-	
+
 	r12 = 0;
 x1903c:
 	r1 = r15 + r13;
@@ -1895,7 +1902,7 @@ x1903c:
 	r12++;
 	if (r2 == 0)
 		goto x19098;
-	
+
 	r1 = read32(r1);
 	r2 = read8(r4);
 	r1 = r1 + r5;
@@ -1919,7 +1926,7 @@ x190b0:
 	r1 = read8(r1);
 	if (r1 == 0)
 		goto x19124;
-	
+
 	r12 = 0;
 x190c0:
 	r3 = r13 << 2;
@@ -1936,7 +1943,7 @@ x190c0:
 	r12++;
 	if (r1 != 0)
 		goto x1911c;
-	
+
 	r11 = read32(r11);
 	r2 = read32(r14);
 	r11 = r11 + r3;
@@ -1961,7 +1968,7 @@ x19124:
 	r1 = (r13 > 2);
 	if (r1 == 0)
 		goto x190b0;
-	
+
 	x18b20();
 	return;
 }
@@ -2009,7 +2016,7 @@ x1851c:
 	r4++;
 	if (r1 == 0)
 		goto x184d4;
-	
+
 	r12 = 0;
 x18538:
 	r3 = r12 << 2;
@@ -2080,7 +2087,7 @@ x185e4:
 	r1 = r5 & 0xf;
 	if (r1 == 0)
 		goto x18610;
-	
+
 	r1 = 0x10000;
 	r2 = 0x70000;
 	r4 |= r1;
@@ -2191,7 +2198,7 @@ x18704:
 	r1 = (r12 > 4);
 	if (r1 == 0)
 		goto x186d4;
-	
+
 	r5 = (phy->p1 & 0xff00) >> 8;
 	r4 = 0;
 	if (r5 == r4)
@@ -2333,7 +2340,7 @@ x18880:
 	r1 = (r12 > 4);
 	if (r1 == 0)
 		goto x18844;
-	
+
 	r5 = (phy->p1 & 0xff00) >> 8;
 	r4 = 0;
 	if (r5 == r4)
@@ -2558,7 +2565,7 @@ x18aa0:
 	r1 = (r12 > 4);
 	if (r1 == 0)
 		goto x18a70;
-	
+
 	r12 = 0;
 x18aac:
 	r3 = r12 << 2;
@@ -2666,7 +2673,7 @@ x1820c:
 	r1 = (r13 > 4);
 	if (r1 == 0)
 		goto x18158;
-	
+
 	r17 = 0x1f3c0;
 	r13 = 0;
 	r15 = r16;
@@ -2834,7 +2841,7 @@ x183dc:
 	r15++;
 	if (r1 == 0)
 		goto x18228;
-	
+
 	return;
 }
 
@@ -2905,7 +2912,7 @@ x1a5d0:
 		r12 |= r2;
 		if (r1 != 0)
 			goto x1a640;
-		
+
 		r1 = r7 >> 16;
 		r6 = r3;
 		r4 = r1 & 0xff;
@@ -2994,7 +3001,7 @@ x1a70c:
 		r1 = r12 & 4;
 		if (r1 == 0)
 			goto end;
-		
+
 		r2 = 0x1f6c4;
 		r1 = read8(r2+62);
 		r4 = read8(r2+70);
@@ -3011,9 +3018,9 @@ x1a70c:
 		r1 &= 0x10;
 		if (r1 != 0)
 			goto end;
-		
+
 		x1a200();
-		
+
 		break;
 	case ON:
 		r16 = 0x10000;
@@ -3111,7 +3118,7 @@ x19bd8:
 		r2 = r12 >> 16;
 		r1 = r12 >> 24;
 		r2 &= 0xff;
-		
+
 		//x17d20;
 		r6 = 0x00ffffff;
 		r8 = r6 << r2;
@@ -3160,10 +3167,10 @@ x19c14:
 		r1 &= 8;
 		if (r1 != 0)
 			goto x19cec;
-		
+
 		r1 = (u32)&(dp->d.d1);  //sp+36
 		r2 = r12;
-		
+
 		//x17d88
 		r5 = r2 >> 16;
 		r1 = r2 >> 24;
@@ -3237,7 +3244,7 @@ x17e74:
 		r1 = (r6 > 4);
 		if (r1 == 0)
 			goto x17e1c;
-		
+
 		r11 = 1;
 		r5 = (u32)&(dp->d.d6);
 x19c48:
@@ -3245,7 +3252,7 @@ x19c48:
 		r2 = r5 + r11;
 		r1 = read8(r1);
 		r2 = read8(r2); //sp+41
-		
+
 		r4 = r14 + r11;
 		r1 |= r2;
 		r1 &= 0xff;
@@ -3269,7 +3276,7 @@ x19c94:
 		r1 = (r11 > 4);
 		if (r1 == 0)
 			goto x19c48;
-		
+
 		r1 = 0x01318014;
 		r2 = 0x80080000;
 		write32(r3+160, r1);
@@ -3303,7 +3310,7 @@ x19cec:
 		r1 &= 0x10;
 		if (r1 == 0)
 			goto end;
-		
+
 		r13 = 0x01318010;
 		r12 = 0x1f688;
 		if (r17 != 0)
@@ -3334,7 +3341,7 @@ x19d34:
 		r3 = 0x80080000;
 		write32(r3+160, r1);
 		write32(r3+164, r2);
-		
+
 		break;
 	}
 
@@ -3358,7 +3365,7 @@ static void set_phyln(int onoff, ddiphy_t *dp)
 		if (r3 != 0)
 			goto x1a9a0;
 		x17bdc(&(dp->d), r2);
-		
+
 		r2 = read32(0x1f39c);
 		x1916c(dp, r2);
 x1a9a0:
@@ -3737,7 +3744,7 @@ x1b634:
 
 x11d68:
 	r1 = r12;
-	
+
 	r11 = 0x1d8ac;
 	r2 = read32(r11+56);
 	r3 = r1 << 5;
@@ -3749,11 +3756,11 @@ x11d68:
 	r1 = read32(r11+52);
 	r1 = read8(r1+2);
 	r1 &= 0xff;
-	
+
 	r12 = r1 & 0xff;
 	r1 = r12;
 	r11 = 0x10000;
-	
+
 	r4 = r1 & 0xff;
 	r1 = 0xff;
 	if (r4 == 0)
@@ -3780,7 +3787,7 @@ x1b2cc:
 	r11 |= 0xd8ac;
 	r1 = 1;
 	write8(r11+4, r12);
-	
+
 	r1 = read32(r11+20);
 	write8(r12+3, r1);
 	r1 = read32(r11+20);
@@ -3842,7 +3849,7 @@ x11e1c:
 	r3 >>= 24;
 	write8(r4+5, r3);
 	r1 = x11cb0(r1, r2);
-	
+
 	r3 = 0xe0000124;
 	r2 = (r1 != 0xff);
 	r4 = 1;
@@ -3887,12 +3894,9 @@ static void flush_instcache(void)
 static void config_vpc(void)
 {
 	u32 r1, r2, r3, r4, r5, r6;
-	u32 r11, r12, r13;
+	u32 r12, r13;
 
-	r1 = (u32)&x1d9a4[0];
-	r11 = r1;
-	r1 = 0x1f428;
-	r1 = read32(r1);
+	r1 = read32(0x1f428);
 	r13 = 0x1f46e;
 	r5 = 0x1f408;
 	r6 = 0x1ee00;
@@ -3900,7 +3904,7 @@ static void config_vpc(void)
 	r1 = (r2 == 0);
 	if (r1 == 0)
 		goto x132c4;
-	
+
 	r3 = 0;
 	r12 = 0x1dd28;
 	r4 = r3;
@@ -3915,7 +3919,7 @@ x13198:
 	write16(r1, r3);
 	if (r2 == 0)
 		goto x13198;
-	
+
 	r2 = 0x1f3e8;
 	write32(r12+36, r3);
 	write32(r12+44, r3);
@@ -3934,7 +3938,8 @@ x13198:
 	write16(r12+34, r3);
 	write16(r12+40, r3);
 	write16(r12+42, r3);
-	r1 = read32(r11+40);
+	r1 = thermal_params[10];
+
 	r3 = 0xe0400000;
 	r1 <<= 2;
 	r4 = r6 + 4;
@@ -3942,35 +3947,37 @@ x13198:
 	write32(r2+16, r4);
 	write32(r2+12, r5);
 	write32(r2+8, r1);
-	r1 = read32(r11);
+	r1 = thermal_params[0];
 	r4 = r6 + 8;
 	r1 <<= 2;
 	write32(r2+24, r5);
 	r1 += r3;
 	write32(r2+28, r4);
 	write32(r2+20, r1);
-	r1 = read32(r11+112);
+	r1 = thermal_params[28];
 	r1 <<= 2;
 	r1 += r3;
 	write32(r2+32, r1);
-	r1 = read32(r11+48);
+
+	r1 = thermal_params[12];
 	r1 <<= 2;
 	r2 = 0xe0400000;
 	r1 += r2;
 	r1 = read32(r1);
+	thermal_params[13] = r1;
 
-	write32(r11+52, r1);
-	r1 = read32(r11+104);
+	r1 = thermal_params[26];
 	r1 <<= 2;
 	r2 = 0xe0400000;
 	r1 += r2;
 	r1 = read32(r1);
+	thermal_params[27] = r1;
 
-	write32(r11+108, r1);
 	r1 = 0x1d989;
 	r2 = read16(r13);
 	write32(r12+52, r1);
 	r1 = 2;
+
 	r3 = r1 << 3;
 	r4 = 0x80010800;
 	r3 += r1;
@@ -3997,11 +4004,11 @@ x132c4:
 	r3 = 0x1dbd8;
 	write8(r1, r2);
 	r1 = read32(r3+4);
-	r2 = -257;
+	r2 = ~0x100;
 	r1 &= r2;
 x132e4:
 	write32(r3+4, r1);
-	
+
 	return;
 }
 
@@ -4015,7 +4022,7 @@ static void x13970()
 	r2 = 0x1f850;
 	r2 = r3;
 	r1 = r2;
-	
+
 	r12 = r11;
 	r11 = 0x1f6ac;
 	r9 = r1;
@@ -4146,7 +4153,7 @@ x13af4:
 	r1 >>= 16;
 	write32(r10+32, r1);
 	goto x13b94;
-	
+
 x13b84:
 	if (r2 >= r1)
 		goto x13b8c;
@@ -4206,7 +4213,7 @@ x13c3c:
 	r2 += 4;
 	if (r6 == 0)
 		goto x13ba4;
-	
+
 x13c44:
 	r11 = 0x1f6ac;
 	r4 = read8(r11+11);
@@ -4275,11 +4282,9 @@ x13c68:
 
 static void config_htc(void)
 {
-	u32 r1, r2, r3, r4, r11, r12, r13;
-	
-	r4 = (u32)&x1d9a4[0];
-	r1 = 0x1f428;
-	r1 = read32(r1);
+	u32 r1, r2, r3, r11, r12, r13;
+
+	r1 = read32(0x1f428);
 	r11 = r1 & 0x10;
 	r2 = 0x1f638;
 	r3 = 0x1f624;
@@ -4297,37 +4302,33 @@ static void config_htc(void)
 	write32(r3, r1);
 	goto end;
 skip1:
-	r2 = read32(r4+68);
-	r1 = read32(r4+64);
-	r3 = -15;
-	r2 = r2 & r3;
-	write32(r4+68, r2);
+	r1 = thermal_params[16];
+	r2 = thermal_params[17] & ~0xe;
+	thermal_params[17] = r2;
 
 	r1 = r1 << 2;
 	r3 = 0xe0400000;
 	r1 = r1 + r3;
 	write32(r1, r2);
 
-	r12 = 0x1d8f0;
-	r1 = read32(r12);
+	r1 = read32(0x1d8f0);
 	write8(r13+9, r11);
 	write8(r1+9, r11);
 end:
 	return;
 }
+
 static void config_bapm(u32 *value)
 {
 	u32 r1, r2, r3, r4, r5, r6;
-	u32 r11, r12, r13, r14, r15, r16, r17;
+	u32 r12, r13, r14, r15, r16, r17;
 
-	r1 = (u32)&x1d9a4[0];
-	r11 = r1;
 	r1 = 0x1d8f0;
 	r1 = read32(r1);
 	r16 = r1;
 	r1 = 0x1dcf4;
 	r15 = r1;
-	
+
 	r3 = 0x1dff4;
 	r1 = read32(r3+28);
 	r2 = 0x1f850;
@@ -4338,7 +4339,7 @@ x1c610:
 	r1 = r2;
 
 	x13970();
-	
+
 	r17 = 0x10000;
 	r1 = r17 | 0xf428;
 	r1 = read32(r1);
@@ -4381,16 +4382,17 @@ x13e60:
 	write32(r3, r12);
 	r1--;
 	r3 += 4;
-	if (r1 == 0)
+	if (r1 >= 0)
 		goto x13e60;
-	r1 = read32(r11+24);
+
+	r1 = thermal_params[6];
 	r1 <<= 2;
 	r2 = 0xe0400000;
 	r1 += r1;
 	write32(r2, r3);
+	thermal_params[7] = r1;
 
-	write32(r11+28, r1);
-	r1 = read32(r11+32);
+	r1 = thermal_params[8];
 	r1 <<= 2;
 	r2 = 0xe0400000;
 	r1 += r1;
@@ -4398,10 +4400,10 @@ x13e60:
 
 	r3 = 0x1ddd4;
 	r2 = 0x08000001;
-	write32(r11+36, r1);
+	thermal_params[9] = r1;
 	write32(r3, r2);
 	write32(r3+4, r13);
-	r1 = read32(r11+8);
+	r1 = thermal_params[2];
 	r4 = 0xe0400000;
 	r1 <<= 2;
 	r5 = r13 + 4;
@@ -4409,7 +4411,7 @@ x13e60:
 	write32(r3+8, r1);
 	write32(r3+12, r2);
 	write32(r3+16, r5);
-	r2 = read32(r11+16);
+	r2 = thermal_params[4];
 	r1 = 0x1ddf0;
 	write32(r1, r12);
 	r2 <<= 2;
@@ -4436,7 +4438,7 @@ x13e60:
 	r2 = 0x1f428;
 	r1 = read32(r2);
 	*value = r1;
-	r1 = (*value >> 24) & 0xff;
+	r1 = (r1 & ~0xff) | ((*value >> 24) & 0xff);
 	r1 |= 0x10;
 	*value = (*value & ~0xff000000) | ((r1 & 0xff) << 24);
 	r1 = *value;
@@ -4444,7 +4446,8 @@ x13e60:
 	config_htc();
 
 x13f60:
-	r1 = read32(r11+144);
+	r1 = thermal_params[36];
+
 	r1 <<= 2;
 	r2 = 0xe0400000;
 	r1 += r1;
@@ -4452,32 +4455,38 @@ x13f60:
 
 	r3 = r1 >> 10;
 	r2 = 0x1dd90;
-	write32(r11+148, r1);
+	thermal_params[37] = r1;
 	r3 &= 1;
 	write8(r2, r3);
-	r1 = read32(r11+148);
+	r1 = thermal_params[37];
 	r2 = 0x1dd8f;
 	r1 >>= 26;
 	r3 = 0x1dd8e;
 	write8(r2, r1);
+	r1 = thermal_params[37];
+	r1 >>= 9;
+
 	r2 = 0x1dd8d;
 	r1 &= 1;
 	write8(r3, r1);
-	r1 = read32(r11+148);
+	r1 = thermal_params[37];
+
 	r4 = 0xfbffffff;
 	r1 >>= 25;
 	r3 = 0xfdffffff;
 	r1 &= 1;
 	write8(r2, r1);
-	r2 = read32(r11+148);
-	r1 = -1025;
+	r2 = thermal_params[37];
+
+	r1 = ~0x400;
 	r2 &= r1;
 	r2 &= r4;
-	r1 = -513;
+	r1 = ~0x200;
 	r2 &= r1;
-	r1 = read32(r11+144);
+	r1 = thermal_params[36];
 	r2 &= r3;
-	write32(r11+148, r2);
+	thermal_params[37] = r2;
+
 	r1 <<= 2;
 	r3 = 0xe0400000;
 	r1 += r3;
@@ -4493,18 +4502,22 @@ x14004:
 	r13 = 0x1dd8b;
 	write16(r5+46, r1);
 	r1 = read8(r2+3);
-	write8(r11+29, r1);
+	thermal_params[7] = (thermal_params[7] & ~0xff00)
+				| ((r1 & 0xff) << 8);
 	r3 = read32(r2+12);
-	r1 = read32(r11+24);
-	r2 = read32(r11+28);
-	write8(r11+39, r3);
+	r1 = thermal_params[6];
+	r2 = thermal_params[7];
+	thermal_params[9] = (thermal_params[9] & ~0xff000000)
+				| ((r3 & 0xff) << 24);
+
 	r1 <<= 2;
 	r3 = 0xe0400000;
 	r1 += r3;
 	write32(r1, r2);
 
-	r1 = read32(r11+32);
-	r2 = read32(r11+36);
+	r1 = thermal_params[8];
+	r2 = thermal_params[9];
+
 	r1 <<= 2;
 	r3 = 0xe0400000;
 	r1 += r3;
@@ -4514,7 +4527,8 @@ x14004:
 	r1 = (r1 != 1);
 	if (r1 != 0)
 		goto x1410c;
-	r1 = read32(r11+144);
+	r1 = thermal_params[36];
+
 	r1 <<= 2;
 	r2 = 0xe0400000;
 	r1 += r1;
@@ -4522,15 +4536,15 @@ x14004:
 
 	r2 = r1;
 	r1 = 0x1dd90;
-	write32(r11+148, r2);
+	thermal_params[37] = r2;
 	r1 = read8(r1);
-	r3 = -1025;
+	r3 = ~0x400;
 	r2 &= r3;
 	r1 &= 1;
 	r1 <<= 10;
 	r3 = 0x1dd8f;
 	r2 |= r1;
-	write32(r11+148, r2);
+	thermal_params[37] = r2;
 	r1 = read8(r3);
 	r3 = 0xfbffffff;
 	r1 &= 1;
@@ -4538,21 +4552,24 @@ x14004:
 	r2 &= r3;
 	r2 |= r1;
 	r1 = 0x1dd8e;
-	write32(r11+148, r2);
+	thermal_params[37] = r2;
 	r1 = read8(r1);
-	r3 = -513;
+	r3 = ~0x200;
 	r2 &= r3;
 	r1 &= 1;
 	r1 <<= 9;
+	thermal_params[37] = r2;
+
 	r3 = 0x1dd8d;
 	r3 = read8(r3);
 	r1 = 0xfdffffff;
 	r3 &= 1;
 	r2 &= r1;
 	r3 <<= 25;
-	r1 = read32(r11+144);
+	r1 = thermal_params[36];
 	r2 |= r3;
-	write32(r11+148, r2);
+	thermal_params[37] = r2;
+
 	r1 <<= 2;
 	r3 = 0xe0400000;
 	r1 += r3;
@@ -4567,17 +4584,12 @@ x14110:
 static void config_tdc(void)
 {
 	u32 r1, r2, r3, r4, r5, r6, r7, r8;
-	u32 r11;
 
-	r1 = (u32)&x1d9a4[0];
-	r11 = r1;
-	r1 = 0x1f428;
-	r1 = read32(r1);
 	r4 = 0x1f638;
+	r5 = 0x1d950;
 	r6 = 0x1f634;
 	r7 = 0x1f624;
-	r5 = 0x1d950;
-	r2 = r1 & 4;
+	r2 = read32(0x1f428) & 4;
 	r8 = 0;
 	r3 = 0x1dcf4;
 	r1 = 0x1f8f0;
@@ -4585,18 +4597,20 @@ static void config_tdc(void)
 		goto x12428;
 	r2 = read8(r4+3);
 	write8(r3, r2);
+	r1 = read32(r1);
 	r4 = read8(r4+3);
 	write8(r1, r4);
 	write32(r6, r8);
 	write32(r7, r8);
-	r1 = read32(r11+64);
+	r1 = thermal_params[16];
+
 	r1 = r1 << 2;
 	r2 = 0xe0400000;
 	r1 = r1 + r2;
 	r1 = read32(r1);
 
 	r1 |= 1;
-	write32(r11+68, r1);
+	thermal_params[17] = r1;
 	goto end;
 x12428:
 	r1 = 0x1d8f0;
@@ -4615,7 +4629,7 @@ static void config_lpmx(void)
 	u32 r11, r12, r13, r14, r15, r16, r17, r18, r19, r20;
 	u32 r21, r22;
 
-	r1 = (u32)&x1d9a4[0];
+	r1 = (u32)&thermal_params[0];
 	r12 = r1;
 
 	r1 = 0x1dd94;
@@ -4625,7 +4639,7 @@ static void config_lpmx(void)
 
 	r15 = r1;
 	r1 = 0x1dcf4;
-	
+
 	r14 = r1;
 	r3 = 0x1dff4;
 	r1 = read32(r3+28);
@@ -4698,7 +4712,7 @@ x1c610:
 	r2 = 0xe0400000;
 	r1 += r2;
 	r1 = read32(r1);
-	
+
 	r7 = 0x10000;
 	r6 = r7;
 	write32(r12+100, r1);
@@ -4740,7 +4754,7 @@ x15b9c:
 	r1 = read8(r2);
 	if (r1 != 0)
 		goto x15bb4;
-	
+
 	r1 = 0x40;
 	write8(r2, r1);
 x15bb4:
@@ -4781,7 +4795,7 @@ x15c18:
 	r1 = (r7 > 7);
 	if (r1 == 0)
 		goto x15bd4;
-	
+
 	r14 = 0x1def0;
 	r13 = 0x1ded8;
 	r12 = 0x1dedc;
@@ -4919,7 +4933,7 @@ x1b90c:
 	r2 = r3;
 x1b918:
 	r1 &= 0xff;
-	
+
 	r12 = 0x1d989;
 	r3 = read8(r12+11);
 	r11 = r1 & 0xff;
@@ -5081,7 +5095,7 @@ x12dac:
 	r2 = read32(r3);
 	r1 = 0x7fffffff;
 	r2 &= r1;
-	
+
 	r5 = 0xe0500400;
 	write32(r3, r2);
 x12e44:
@@ -5094,7 +5108,6 @@ x12e44:
 	r1 = (r4 > 0x60);
 	if (r1 == 0)
 		goto x12e44;
-	r3 = r6;
 	r3 = 0xe000228c;
 	r2 = read32(r3);
 	r1 = 0xffff7fff;
@@ -5126,7 +5139,7 @@ static void set_pm(int onoff)
 	case OFF:
 		write8(pm3, 0);
 		write32(pm2, read32(pm2) | 1);
-		write32(pm4, read32(pm4) & -2);
+		write32(pm4, read32(pm4) & ~1);
 		break;
 	case ON:
 		write32(pm3+12, 1);
@@ -5334,46 +5347,47 @@ static void set_bapm(int onoff, u32 *bapmoff, u32 *bapmon)
 	u32 r1, r2, r3, r4, r5, r6, r11, r12, r13;
 	switch (onoff) {
 	case ON:
-		// disable interrupts (nah)
-		r1 = (u32)&x1d9a4[0];
-		r11 = r1;
+		set_interrupts(OFF);
 		r1 = 0x1dd8b;
 		r1 = read8(r1);
 		r12 = 0x1f160;
 		r1 = (r1 != 1);
 		if (r1 == 0)
 			goto end;
-		r1 = read32(r11+128);
-		r13 = -2;
+		r1 = thermal_params[32];
+		r13 = ~1;
+
 		r1 <<= 2;
 		r2 = 0xe0400000;
 		r1 += r2;
 		r1 = read32(r1);
-		
+
 		r3 = r1;
 		r1 = 0x1dd8a;
-		write32(r11+132, r3);
-		r2 = -4;
+		thermal_params[33] = r3;
+		r2 = ~0x3;
 		r3 = r3 & r2;
-		r1 &= 3;
+		r1 &= 0x3;
 		r3 |= r1;
 		r1 = 0x1dd89;
-		write32(r11+132, r3);
+		thermal_params[33] = r3;
 		r2 = read8(r1);
-		r1 = -129;
+		r1 = ~0x80;
 		r2 &= 1;
 		r3 &= r1;
 		r2 <<= 7;
-		r1 = read32(r1+128);
+		r1 = thermal_params[32];
 		r3 |= r2;
 		r2 = r3;
-		write32(r11+132, r3);
+		thermal_params[33] = r3;
+
 		r1 <<= 2;
 		r3 = 0xe0400000;
 		r1 += r3;
 		write32(r1, r2);
 
-		r1 = read32(r11+104);
+		r1 = thermal_params[26];
+
 		r1 <<= 2;
 		r2 = 0xe0400000;
 		r1 += r2;
@@ -5381,15 +5395,16 @@ static void set_bapm(int onoff, u32 *bapmoff, u32 *bapmon)
 
 		r2 = r1;
 		r1 = 0x1dd88;
-		write32(r11+108, r2);
+		thermal_params[27] = r2;
 		r3 = read8(r1);
-		r1 = -3585;
+		r1 = ~0xe00;
 		r3 &= 7;
 		r3 <<= 9;
 		r2 &= r1;
-		r1 = read32(r11+104);
+		r1 = thermal_params[26];
 		r2 |= r3;
-		write32(r11+108, r2);
+		thermal_params[27] = r2;
+
 		r1 <<= 2;
 		r3 = 0xe0400000;
 		r1 += r3;
@@ -5398,12 +5413,13 @@ static void set_bapm(int onoff, u32 *bapmoff, u32 *bapmon)
 		r6 = 0x1f428;
 		r1 = read32(r6);
 		r5 = 0x1ddec;
-		*bapmon = r1; // arg? sp
+
+		*bapmon = r1;
 		r3 = read8(r5+3);
-		r2 = -3;
+		r2 = ~0x2;
 		r4 = 0x1dd8c;
-		r1 = ((*bapmon) >> 24) & 0xff;  // sp+23
-		r3 &= 2;
+		r1 = ((*bapmon) >> 24) & 0xff;
+		r3 &= 0x2;
 		r1 &= r2;
 		r1 |= r3;
 		*bapmon = (*bapmon & ~0xff000000) | ((r1 & 0xff) << 24);
@@ -5415,28 +5431,27 @@ static void set_bapm(int onoff, u32 *bapmoff, u32 *bapmon)
 		r1 |= r2;
 		*bapmon = (*bapmon & ~0xff000000) | ((r1 & 0xff) << 24);
 		r3 = read8(r5+3);
-		r2 = -9;
+		r2 = ~0x8;
 		r1 = ((*bapmon) >> 24) & 0xff;
-		r3 &= 8;
+		r3 &= 0x8;
 		r1 &= r2;
 		r1 |= r3;
 		*bapmon = (*bapmon & ~0xff000000) | ((r1 & 0xff) << 24);
 		r3 = read8(r5+3);
-		r2 = -5;
+		r2 = ~0x4;
 		r1 = ((*bapmon) >> 24) & 0xff;
-		r3 &= 4;
+		r3 &= 0x4;
 		r1 &= r2;
 		r1 |= r3;
 		*bapmon = (*bapmon & ~0xff000000) | ((r1 & 0xff) << 24);
 		if (r4 != 0)
 			goto x14e24;
 		r1 = ((*bapmon) >> 24) & 0xff;
-		r2 = -17;
+		r2 = ~0x10;
 		r1 &= r2;
 		*bapmon = (*bapmon & ~0xff000000) | ((r1 & 0xff) << 24);
 x14e24:
 		r1 = *bapmon;
-		r11 = 1;
 		write32(r6, r1);
 
 		config_htc();
@@ -5447,7 +5462,7 @@ x14e24:
 		config_bapm(bapmon);
 
 		r2 = 0x80010800;
-		write8(r12+3, r11);
+		write8(r12+3, 1);
 		r1 = read32(r2);
 		r3 = 0x80010810;
 		r1 &= r13;
@@ -5461,72 +5476,74 @@ x14e24:
 		write32(r3, r1);
 		r1 = read32(r2);
 		r1 &= r13;
-		r1 |= r11;
+		r1 |= 1;
 		write32(r2, r1);
 		r1 = 0x1d95c;
 
-		write8(r1+8, r11);
-		// enable interrupts (nah)
+		write8(r1+8, 1);
+		set_interrupts(ON);
 		break;
 	case OFF:
-		// disable interrupts (nah)
-		r1 = (u32)&x1d9a4[0];
-		r12 = r1;
+		set_interrupts(OFF);
 		r1 = 0x1dd8b;
 		r1 = read8(r1);
 		if (r1 == 0)
 			goto end;
-		r1 = read32(r12+128);
-		r11 = -2;
+		r1 = thermal_params[32];
+		r11 = ~0x1;
+
 		r1 <<= 2;
 		r2 = 0xe0400000;
 		r1 += r2;
 		r1 = read32(r1);
 
-		write32(r12+132, r1);
+		thermal_params[33] = r1;
 		r2 = 0x1dd8a;
-		r1 &= 3;
+		r1 &= 0x3;
 		write8(r2, r1);
-		r1 = read32(r12+132);
+		r1 = thermal_params[33];
 		r2 = 0x1dd89;
 		r1 >>= 7;
 		r1 &= 1;
 		write8(r2, r1);
-		r3 = read32(r12+132);
-		r2 = -4;
-		r1 = read32(r12+128);
+		r3 = thermal_params[33];
+		r2 = ~0x3;
+		r1 = thermal_params[32];
 		r3 &= r2;
-		r2 = -129;
+		r2 = ~0x80;
 		r3 &= r2;
 		r2 = r3;
-		write32(r12+132, r3);
+		thermal_params[33] = r3;
+
 		r1 <<= 2;
 		r3 = 0xe0400000;
 		r1 += r3;
 		write32(r1, r2);
-		
-		r1 = read32(r12+104);
+
+		r1 = thermal_params[26];
+
 		r1 <<= 2;
 		r2 = 0xe0400000;
 		r1 += r2;
 		r1 = read32(r1);
-		
+
 		r3 = r1 >> 9;
 		r2 = 0x1dd88;
-		write32(r12+108, r1);
-		r3 &= 7;
+		thermal_params[27] = r1;
+		r3 &= 0x7;
 		write8(r2, r3);
-		r3 = read32(r12+108);
-		r1 = read32(r12+104);
-		r2 = -15;
+		r3 = thermal_params[27];
+		r1 = thermal_params[26];
+		r2 = ~0xe00;
 		r3 &= r2;
 		r2 = r3;
-		write32(r12+108, r3);
+		thermal_params[27] = r3;
+
 		r1 <<= 2;
 		r3 = 0xe0400000;
 		r1 += r3;
 		write32(r1, r2);
-		
+
 		r3 = 0x1f428;
 		r2 = read32(r3);
 		r1 = 0x1ddec;
@@ -5534,19 +5551,19 @@ x14e24:
 		r2 = *bapmoff;
 		write32(r1, r2);
 		r1 = ((*bapmoff) >> 24) & 0xff;
-		r2 = -3;
+		r2 = ~0x2;
 		r1 &= r2;
 		*bapmoff = (*bapmoff & ~0xff000000) | ((r1 & 0xff) << 24);
-		
+
 		r1 = ((*bapmoff) >> 24) & 0xff;
-		r2 = -9;
+		r2 = ~0x8;
 		r1 &= r11;
 		*bapmoff = (*bapmoff & ~0xff000000) | ((r1 & 0xff) << 24);
 		r1 = ((*bapmoff) >> 24) & 0xff;
 		r1 &= r2;
 		*bapmoff = (*bapmoff & ~0xff000000) | ((r1 & 0xff) << 24);
 		r1 = ((*bapmoff) >> 24) & 0xff;
-		r2 = -5;
+		r2 = ~0x4;
 		r1 &= r2;
 		*bapmoff = (*bapmoff & ~0xff000000) | ((r1 & 0xff) << 24);
 		r1 = ((*bapmoff) >> 24) & 0xff;
@@ -5560,7 +5577,7 @@ x14e24:
 		config_tdc();
 		config_vpc();
 		config_lpmx();
-		
+
 		//x12ea8
 		r1 = 0x1dcf4;
 		r5 = 0;
@@ -5609,7 +5626,7 @@ x14e24:
 		r2 = 0;
 		write8(r1+8, r2);
 
-		// enable interrupts (nah)
+		set_interrupts(ON);
 		break;
 	}
 end:
@@ -5619,11 +5636,12 @@ end:
 void read_rom_hack(void)
 {
 	// Read a byte of the ROM at an address that autoincrements every read
-	// and save it to the scratch register above the post code.
+	// and save it to the scratch register above the post code, keep code.
 	// Will wrap around at 0x10000 bytes.
-	static u16 wrappedromaddress = 0;
+	static u16 wrapcounter = 0;
 	u32 oldpostcode = read32(0xe0003024) & 0xff;
-	write32(0xe0003024, ((u32)read8(wrappedromaddress++) << 8) | oldpostcode);
+	u32 romaddr = wrapcounter++;
+	write32(0xe0003024, (read8(romaddr) << 8) | oldpostcode);
 }
 
 void smu_service_request(unsigned int e3)
@@ -5632,7 +5650,7 @@ void smu_service_request(unsigned int e3)
 	static ddiphy_t ddiphy = {{0}};
 	static u32 bapm = 0;
 	u32 requestid;
-	
+
 	requestid = e3;
 	requestid &= 0x1fffe;
 	requestid >>= 1;
@@ -5645,6 +5663,7 @@ void smu_service_request(unsigned int e3)
 		halt();
 		break;
 	case SMC_MSG_PHY_LN_OFF:
+		// TODO: b0rked
 		//set_phyln(OFF, &ddiphy);
 		break;
 	case SMC_MSG_PHY_LN_ON:
@@ -5666,6 +5685,7 @@ void smu_service_request(unsigned int e3)
 		set_x16off();
 		break;
 	case SMC_MSG_CONFIG_LCLK_DPM:
+		// TODO: b0rked
 		//config_lclkdpm();
 		break;
 	case SMC_MSG_FLUSH_DATA_CACHE:
@@ -5714,6 +5734,7 @@ void smu_service_request(unsigned int e3)
 		adjust_loadline();
 		break;
 	case SMC_MSG_RECONFIGURE:
+		// TODO: b0rked
 		//reconfigure();
 		break;
 	case SMC_MSG_PCIE_PLLSWITCH:
