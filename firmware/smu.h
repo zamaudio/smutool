@@ -22,6 +22,7 @@ typedef unsigned int u32;
 
 #define SMU_POST(x) write32(0xe0003024, (x & 0xff))
 
+#define SMC_MSG_AUTH                       0
 #define SMC_MSG_HALT                       1
 #define SMC_MSG_PHY_LN_OFF                 2
 #define SMC_MSG_PHY_LN_ON                  3
