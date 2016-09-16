@@ -46,48 +46,7 @@ typedef struct {
 	phy_t p;
 } ddiphy_t;
 
-
-/* Align to 0x1d9a4 */
-static u32 thermal_params[38] = {
-	0x3178, // VPC
-	0x0000,
-	0x3171, // BAPM
-	0x0000,
-	0x3172, // BAPM
-	0x0000,
-	0x7103, // BAPM
-	0x0000, // BAPM
-	0x7116, // BAPM
-	0x0000, // BAPM
-	0x317d, // VPC
-	0x0000,
-	0x7103, // VPC
-	0x0000, // VPC
-	0x712e,
-	0x0000,
-	0x710f, // TDC/HTC
-	0x0000, // TDC/HTC
-	0x7110, // LPMx
-	0x0000, // LPMx
-	0x7111, // LPMx
-	0x0000, // LPMx
-	0x7112, // LPMx
-	0x0000, // LPMx
-	0x7113, // LPMx
-	0x0000, // LPMx
-	0x715c, // VPC/BAPM
-	0x0000, // VPC/BAPM
-	0x715d, // VPC
-	0x0000,
-	0x7162, // LOADLINE
-	0x0000, // LOADLINE
-	0x7117, // BAPM
-	0x0000, // BAPM
-	0x7157,
-	0x0000,
-	0x7106, // BAPM
-	0x0000, // BAPM
-};
+extern u32 thermal_params[];
 
 static void set_interrupts(int onoff)
 {
@@ -3783,7 +3742,7 @@ x11d74:
 	return r1;
 }
 
-static void config_lclkdpm(void)
+static void config_lclkdpm(u32 *dpm)
 {
 	u32 r1, r2, r3, r4, r5, r6, r7;
 	u32 r11, r12, r13, r14;
@@ -3813,7 +3772,7 @@ static void config_lclkdpm(void)
 	goto x11e64;
 x11e1c:
 	r3 = read8(r5+1);
-	//write32(sp+24, r3);
+	*dpm = r3;
 	r3 = read32(r5);
 	r3 = r3 & r7;
 	r3 >>= 24;
@@ -5518,6 +5477,7 @@ void smu_service_request(unsigned int e3)
 
 	static ddiphy_t ddiphy = {{0}};
 	static u32 bapm = 0;
+	static u32 dpm = 0;
 	u32 requestid;
 
 	requestid = e3;
@@ -5558,7 +5518,7 @@ void smu_service_request(unsigned int e3)
 		break;
 	case SMC_MSG_CONFIG_LCLK_DPM:
 		// TODO: b0rked
-		//config_lclkdpm();
+		//config_lclkdpm(&dpm);
 		break;
 	case SMC_MSG_FLUSH_DATA_CACHE:
 		flush_datacache();
@@ -5570,7 +5530,8 @@ void smu_service_request(unsigned int e3)
 		config_vpc();
 		break;
 	case SMC_MSG_CONFIG_BAPM:
-		config_bapm(&bapm);
+		// TODO: b0rked
+		//config_bapm(&bapm);
 		break;
 	case SMC_MSG_CONFIG_TDC_LIMIT:
 		config_tdc();

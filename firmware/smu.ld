@@ -82,7 +82,7 @@ SECTIONS
 	} > ram
 
 	/* read/write data */
-	.data : 
+	.data :
 	{
 		. = ALIGN(4);
 		_fdata = .;
@@ -94,6 +94,50 @@ SECTIONS
 		*(.sdata .sdata.* .gnu.linkonce.s.*)
 		_edata = .;
 	} > ram
+
+	.sreg :
+	{
+		. = ABSOLUTE(0x9a4);
+		thermal_params = .;
+		LONG(0x3178); /* VPC */
+		LONG(0x0000);
+		LONG(0x3171); /* BAPM */
+		LONG(0x0000);
+		LONG(0x3172); /* BAPM */
+		LONG(0x0000);
+		LONG(0x7103); /* BAPM */
+		LONG(0x0000); /* BAPM */
+		LONG(0x7116); /* BAPM */
+		LONG(0x0000); /* BAPM */
+		LONG(0x317d); /* VPC */
+		LONG(0x0000);
+		LONG(0x7103); /* VPC */
+		LONG(0x0000); /* VPC */
+		LONG(0x712e);
+		LONG(0x0000);
+		LONG(0x710f); /* TDC/HTC */
+		LONG(0x0000); /* TDC/HTC */
+		LONG(0x7110); /* LPMx */
+		LONG(0x0000); /* LPMx */
+		LONG(0x7111); /* LPMx */
+		LONG(0x0000); /* LPMx */
+		LONG(0x7112); /* LPMx */
+		LONG(0x0000); /* LPMx */
+		LONG(0x7113); /* LPMx */
+		LONG(0x0000); /* LPMx */
+		LONG(0x715c); /* VPC/BAPM */
+		LONG(0x0000); /* VPC/BAPM */
+		LONG(0x715d); /* VPC */
+		LONG(0x0000);
+		LONG(0x7162); /* LOADLINE */
+		LONG(0x0000); /* LOADLINE */
+		LONG(0x7117); /* BAPM */
+		LONG(0x0000); /* BAPM */
+		LONG(0x7157);
+		LONG(0x0000);
+		LONG(0x7106); /* BAPM */
+		LONG(0x0000); /* BAPM */
+	} > regs =0
 
 	/* bss */
 	.bss :
